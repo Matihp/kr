@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-      domains: ['horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app'],
+      domains: ['horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app','images.unsplash.com'],
     },
   }
   
