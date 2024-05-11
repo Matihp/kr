@@ -1,54 +1,91 @@
-const defaultConfig = {
+import type { Config } from "tailwindcss"
+
+const config = {
+  darkMode: ["class"],
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
-  darkMode: 'selector',
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+	],
+  prefix: "",
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+        
+      },
+    },
     extend: {
-      colors:{
+      screens: {
+        'mxsm': { 'max': '639px' },
+        'mxmd': { 'max': '767px' },
+        'mxlg': { 'max': '1023px' },
+        'mxxl': { 'max': '1279px' },
+        'mx2xl': { 'max': '1535px' },
+      },
+      colors: {
+        border: "hsl(var(--border))",
         prBg:'#F5F7FB',
         prBlue:'#218DFA',
-      },
-      fontSize: {
-        '2xs': '.625rem',
-      },
-      spacing: {
-        '72': '18rem',
-        '84': '21rem',
-      },
-      screens: {
-        '2xl': {'max': '1535px'},
-        '3xl': {'max':'1791px'},
-      },
-      borderWidth: {
-        '3': '3px',
+        prPink:'#E9C0E9',
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
       },
       borderRadius: {
-        'xl': '1rem',
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
-      boxShadow: {
-        '2xl': '0 25px 50px -12px rgba(0, 0, 0, .25)',
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
       },
-      lineHeight: {
-        // Agrega tus propias alturas de línea
-        'extra-loose': '2.2',
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
-      opacity: {
-        // Agrega tus propias opacidades
-        '80': '0.8',
-      },
-      zIndex: {
-        // Agrega tus propios z-indices
-        '9999': 9999,
-      },
-    },
-    variants: {
-      extend: {},
     },
   },
-  plugins:[]
-};
+  plugins: [require("tailwindcss-animate")],
+} satisfies Config
 
-module.exports = defaultConfig;
+export default config

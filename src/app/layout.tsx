@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">       
-        <body className={roboto.className}>
+        <body className={inter.className}>
             <Header/>
             {children}
             <Footer/>      
