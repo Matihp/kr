@@ -12,10 +12,27 @@
   background-image: url("../ui/bg.png");
   background-repeat: no-repeat;
   background-size: cover;
+  backdrop-filter: blur(16px);
+ }
+ .bgMobile{
+  background-image: url("../ui/mobile.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+ }
+ .bgTablet{
+  background-image: url("../ui/tablet.png");
+  background-repeat: no-repeat;
+  background-size: cover;
  }
  .color-text{
   color: #E9C0E9;
  }
+ @layer utilities {
+  .animation-pause {
+    animation-play-state: paused;
+  }
+}
   @layer base {
     :root {
       --background: 0 0% 100%;
