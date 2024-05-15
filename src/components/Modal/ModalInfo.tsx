@@ -14,7 +14,7 @@ function ModalInfo() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Icon className="cursor-pointer" path={mdiPencilCircle} size={1.2} />
+        <Icon className="cursor-pointer h-6" path={mdiPencilCircle} />
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[625px]">
         <DialogHeader>

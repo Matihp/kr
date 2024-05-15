@@ -4,26 +4,28 @@ import "./globals.css";
 
 function Profile() {
   return (
-    // <>sm:bgMobile md:bgTablet lg:bg
+    // inline-flex animate-text-gradient bg-gradient-to-r
     <>
       <div className="h-[80dvh] md:h-[100dvh] flex justify-center md:justify-end lg:justify-center items-end bg-[url('../ui/mobile.png')] md:bg-[url('../ui/tablet.png')] lg:bg-[url('../ui/bg.png')] bg-cover bg-no-repeat">
         <div className="md:w-[68%] lg:w-1/2 flex flex-col mb-1 md:mb-20 lg:mb-24">  
-            <h1 className="text-4xl md:text-6xl lg-text-7xl text-center text-prPink font-[900]">
-              Certificate como freelancer
+            <h1 className="text-4xl md:text-6xl lg:text-7xl text-center text-prPink font-[900]">
+              Certificate como <span className='inline-flex animate-text-gradient bg-gradient-to-r bg-[200%_auto] from-[#ee6794] via-[#f3358e] to-[#ff1783] bg-clip-text text-7xl text-transparent'>
+      freelancer
+    </span>
             </h1>
             <h2 className="text-xl md:text-3xl text-center text-prPink leading-[2] font-extrabold">
               ¡Ahora es posible!
             </h2>
             <div className="flex justify-center gap-4">
-              <button className="bg-prPink font-semibold hover:bg-slate-300 rounded-3xl px-8 py-2 mt-5">
+              <button className="bg-[#ff8fa3] font-semibold hover:bg-red-400 rounded-3xl px-8 py-2 mt-5">
                 Cotizarme
               </button>
-              <button className="bg-prPink font-semibold hover:bg-slate-300 rounded-3xl px-8 py-2 mt-5">
+              <button className="bg-[#ff8fa3] font-semibold hover:bg-red-400 rounded-3xl px-8 py-2 mt-5">
                 Freelancer
               </button>
             </div>
             <div className="flex justify-center">
-              <button className="bg-prPink font-semibold hover:bg-slate-300 rounded-3xl px-9 py-2 mt-8">
+              <button className="bg-[#fab6b6] font-semibold hover:bg-red-500 rounded-3xl px-9 py-2 mt-8">
                 Quiero mi certificacion gratuita
               </button>
             </div>

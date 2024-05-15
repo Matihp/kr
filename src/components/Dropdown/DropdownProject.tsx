@@ -26,7 +26,7 @@ export function DropdownProject() {
     <>
         <DropdownMenu>
         <DropdownMenuTrigger asChild>
-            <Icon className="cursor-pointer" path={mdiPencilCircle} size={1.2} />
+            <Icon className="cursor-pointer h-12 md:h-9" path={mdiPencilCircle}  />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
             <DropdownMenuLabel >My Project</DropdownMenuLabel>
