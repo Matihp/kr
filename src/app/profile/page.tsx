@@ -44,8 +44,8 @@ function profile() {
 
   return (
     <main className="relative">
-      <div className="md:sticky md:top-0 bg-slate-100 md:pt-6 md:pl-2">
-        <div className="flex flex-col md:flex-row gap-4 md:gap-8 mt-16 md:mt-20">
+      <div className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 md:pl-2">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-8 pt-4 lg:mt-20">
           <div className="mx-auto md:mx-0">
             <Image
               width={100}
@@ -56,7 +56,7 @@ function profile() {
             />
           </div>
 
-          <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
+          <div className="p-2  bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
             <div className="flex justify-between">
               <h2 className="text-2xl font-semibold">Juan Perez</h2>
               <ModalInfo/>
@@ -76,7 +76,7 @@ function profile() {
         <div
           className={`flex h-16 lg:ml-20 md:mt-8 mt-3 justify-between sm:justify-start sm:gap-1  ${
             showNav
-              ? "mxmd:fixed mxmd:top-0 mxmd:z-50 mxmd:mt-0 mxmd:w-screen mxmd:bg-slate-100 mxmd:transition-all"
+              ? "mxlg:fixed mxlg:top-0 mxlg:z-50 mxlg:mt-0 mxlg:w-screen mxlg:bg-slate-100 mxmd:transition-all"
               : ""
           }`}
         >
@@ -111,7 +111,7 @@ function profile() {
         </div>
       </div>
 
-      <div className="fixed h-40 md:right-5 md:top-56 hidden md:block w-[30vw]">
+      <div className="fixed z-20 h-40 md:right-5 md:top-56 hidden md:block w-[30vw]">
         <div className=" w-full max-w-md px-8 py-4 mt-16 bg-white rounded-lg shadow-lg dark:bg-gray-800">
           <h2 className="mt-2 text-xl font-semibold text-gray-800 dark:text-white md:mt-0">
             Design Tools
@@ -130,11 +130,11 @@ function profile() {
       </div>
 
       <div className="fixed bottom-0 bg-white w-screen flex justify-center items-center h-16  md:hidden ">
-        <button className="fixed px-8 py-2 font-semibold rounded bg-violet-600 text-gray-50 hover:bg-violet-500">
+        <button className=" px-8 py-2 font-semibold rounded bg-violet-600 text-gray-50 hover:bg-violet-500">
           Quiero mi certificado
         </button>
       </div>
-      <div className={`block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${showNav ? "mxmd:mt-28" : ""} `}>
+      <div className={`block animate-tilt md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${showNav ? "mxmd:mt-28" : ""} `}>
         <div id="sobre-mi" className="flex justify-between">
           <h2   
             className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
