@@ -5,12 +5,11 @@ import Image from "next/image";
 export function Header() {
   return (
     <>
-    <header className="fixed inset-x-0 top-0 z-30 mx-auto w-full max-w-screen-md border border-gray-100 bg-white/80 py-3 shadow backdrop-blur-md md:top-4 md:rounded-3xl lg:max-w-screen-xl">
+    <header className="lg:fixed animate-fade-in duration-700 inset-x-0 top-0 z-30 mx-auto w-full max-w-screen-md border border-gray-100 bg-white/80 py-3 shadow backdrop-blur-md md:top-4 md:rounded-3xl lg:max-w-screen-xl">
       <div className="px-4">
         <div className="flex items-center justify-between">
           <div className="flex shrink-0">
             <Link aria-current="page" className="flex items-center" href="/">
-
               <Image src={logo} alt="" className="h-7 w-auto" />
               <p className="sr-only">Website Title</p>
             </Link>

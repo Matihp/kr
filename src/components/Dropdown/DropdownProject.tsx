@@ -16,9 +16,6 @@ import {
 import Icon from '@mdi/react';
 import { mdiPencilCircle } from '@mdi/js';
 import { useState } from "react";
-import ModalProject from "../Modal/ModalProject";
-import * as Dialog from "@radix-ui/react-dialog";
-import { Button } from "../ui/button";
 
 export function DropdownProject() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,7 +23,7 @@ export function DropdownProject() {
     <>
         <DropdownMenu>
         <DropdownMenuTrigger asChild>
-            <Icon className="cursor-pointer h-12 md:h-9" path={mdiPencilCircle}  />
+            <Icon className="cursor-pointer h-12 md:h-6" path={mdiPencilCircle}  />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
             <DropdownMenuLabel >My Project</DropdownMenuLabel>
