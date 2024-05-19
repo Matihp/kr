@@ -46,8 +46,8 @@ function Profile() {
   }, []);
 
   return (
-    <main className="relative">
-      <div id="sticky-element" className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 md:pl-2">
+    <div className="relative container-sticky">
+      <div id="sticky-element" className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 lg:pl-2">
         <div className="flex flex-col md:flex-row gap-4 md:gap-8 pt-4 lg:mt-20">
           <div className="mx-auto md:mx-0">
             <Image
@@ -141,7 +141,7 @@ function Profile() {
           Quiero mi certificado
         </button>
       </div>
-      <div className={`block animate-tilt md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${showNav ? "mxmd:mt-28" : ""} `}>
+      <div className={`block animate-tilt md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${showNav ? "mxmd:mt-28 mxlg:mt-52" : ""} `}>
         <div id="sobre-mi" className="flex justify-between">
           <h2   
             className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
@@ -265,7 +265,7 @@ function Profile() {
           far, in reverse chronological order.
         </p>
       </div>
-    </main>
+    </div>
   );
 }
 export default Profile;
