@@ -5,27 +5,20 @@ import Link from "next/link";
 import project from "@/ui/project.webp";
 import certs from "@/ui/certs.jpg";
 import Icon from "@mdi/react";
-import {
-  mdiMapMarker,
-  mdiAccountSchool,
-  mdiCertificateOutline,
-  mdiHeadCogOutline,
-  mdiPencilCircle,
-  mdiInformationOutline,
-  mdiTextAccount,
-} from "@mdi/js";
+import {mdiMapMarker,mdiAccountSchool, mdiCertificateOutline,mdiHeadCogOutline,mdiPencilCircle,mdiInformationOutline,mdiTextAccount,} from "@mdi/js";
 import { useEffect, useState } from "react";
 import ModalProject from "@/components/Modal/ModalProject";
 import ModalInfo from "@/components/Modal/ModalInfo";
 import { DropdownProject } from "@/components/Dropdown/DropdownProject";
 
-function profile() {
+
+function Profile() { 
   const active =
     "flex gap-1 items-center px-3 py-1 border-b-4 text-prBlue font-bold border-prBlue";
   const noActive =
     "flex gap-1 items-center px-3 py-1 border-b-4 border-slate-100";
   const [showNav, setShowNav] = useState(false);
-  const [activeSection, setActiveSection] = useState("sobre-mi");
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,9 +35,19 @@ function profile() {
     };
   }, []);
 
+  useEffect(() => {
+      const location = window.location.hash;
+      if (location !== '') {
+        const sectionName = location.substring(1);
+        setActiveSection(sectionName);        
+      } else{
+        setActiveSection('sobre-mi');
+      }
+  }, []);
+
   return (
     <main className="relative">
-      <div className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 md:pl-2">
+      <div id="sticky-element" className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 md:pl-2">
         <div className="flex flex-col md:flex-row gap-4 md:gap-8 pt-4 lg:mt-20">
           <div className="mx-auto md:mx-0">
             <Image
@@ -73,7 +76,7 @@ function profile() {
           </div>
         </div>
 
-        <div
+        <div 
           className={`flex h-16 lg:ml-20 md:mt-8 mt-3 justify-between sm:justify-start sm:gap-1  ${
             showNav
               ? "mxlg:fixed mxlg:top-0 mxlg:z-50 mxlg:mt-0 mxlg:w-screen mxlg:bg-slate-100 mxmd:transition-all"
@@ -81,28 +84,32 @@ function profile() {
           }`}
         >
           <Link
-              href={`/profile#${activeSection === "sobre-mi" ? "" : activeSection}`}
+              href={`/profile?q=#sobre-mi`}
+              onClick={() =>{setActiveSection("sobre-mi");}}
               className={activeSection === "sobre-mi" ? active : noActive}
           >
             <Icon path={mdiTextAccount} size={1} />
             <span className="hidden sm:block">Sobre Mi</span>
           </Link>
           <Link
-             href={`/profile#${activeSection === "proyectos" ? "" : activeSection}`}
+             href={`/profile?q=#proyectos`}
+             onClick={() => {setActiveSection("proyectos")}}
              className={activeSection === "proyectos" ? active : noActive}
           >
             <Icon path={mdiInformationOutline} size={1} />
             <span className="hidden sm:block">Proyectos</span>
           </Link>
           <Link
-            href={`/profile#${activeSection === "habilidades" ? "" : activeSection}`}
+            href={`/profile?q=#habilidades`}
+            onClick={() =>{setActiveSection("habilidades")}}
             className={activeSection === "habilidades" ? active : noActive}
           >
             <Icon className="w-6 h-6" path={mdiHeadCogOutline} />
             <span className="hidden sm:block">Habilidades</span>
           </Link>
           <Link
-            href={`/profile#${activeSection === "certificaciones" ? "" : activeSection}`}
+            href={`/profile?q=#certificaciones`}
+            onClick={() => {setActiveSection("certificaciones")}}
             className={activeSection === "certificaciones" ? active : noActive}
           >
             <Icon className="pt-1 h-7" path={mdiCertificateOutline} />
@@ -239,7 +246,7 @@ function profile() {
         </div>
       </div>
 
-      <div
+      <div 
       id="certificaciones"
         className="block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
       >
@@ -261,5 +268,4 @@ function profile() {
     </main>
   );
 }
-
-export default profile;
+export default Profile;
