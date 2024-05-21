@@ -31,18 +31,18 @@
  }
  @media (min-width: 320px) {
   .container-sticky div[id]{
-    scroll-margin-top: 11vh;
+    scroll-margin-top: 2vh;
    }
 }
  @media (min-width: 768px) {
  
 }
  @media (min-width: 1024px) {
-
- }
-  /* .container-sticky div[id]{
+ .container-sticky div[id]{
   scroll-margin-top: 360px;
- } */
+ }
+ }
+ 
  
  @layer utilities {
   .animation-pause {

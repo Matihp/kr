@@ -14,43 +14,69 @@ import seis from "../../ui/6.jpeg";
 import siete from "../../ui/7.jpeg";
 import ocho from "../../ui/8.jpeg";
 import nueve from "../../ui/9.jpeg";
+import useMatchMedia from "../ui/matchMedia";
+import { useEffect, useState } from "react";
 
 
 function Swipers() {
+  const [slidesPerView, setSlidesPerView] = useState(2)
+
+  const isMobile = useMatchMedia('(max-width: 480px)')
+  const isTablet = useMatchMedia('(min-width: 481px) and (max-width: 1024px)')
+
+  useEffect(() => {
+    if (isMobile) {
+      setSlidesPerView(2)
+    } else if (isTablet) {
+      setSlidesPerView(3)
+    } else {
+      setSlidesPerView(4)
+    }
+  }, [isMobile, isTablet])
+
   return (
-    <div className="bg-slate-100 h-[60vh] flex items-center">
+    <div className="bg-slate-100 h-[60vh] flex flex-col justify-center gap-7 ">
+      <div className="mb-2">
+        <h2 className="text-center text-2xl mb-2 font-bold leading-8">
+          Categorias
+        </h2>
+        <p className="text-center text-lg font-extralight leading-8 ">
+          We are trusted by the world’s most innovative teams
+        </p>
+      </div>
+      
           <Swiper
-          slidesPerView={4}
-          spaceBetween={30}
+          slidesPerView={slidesPerView}
+          spaceBetween={8}
           loop={true}
-          pagination={{
-            clickable: true,
-          }}
+          // pagination={{
+          //   clickable: true,
+          // }}
           navigation={true}
           modules={[Pagination, Navigation]}
-          className="mySwiper"
+          className="mySwiper cursor-pointer"
         >
-          <SwiperSlide>
+          <SwiperSlide >
             <p className="absolute top-0 w-full text-white">Programacion</p>
-            <Image src={dos} alt="mobile" className="w-full" />
+            <Image src={dos} alt="mobile" className="w-full " />
           </SwiperSlide>
-          <SwiperSlide>
+          <SwiperSlide >
             <p className="absolute top-0 w-full text-white">Programacion</p>
-            <Image src={tres} alt="mobile" className="w-full" />
+            <Image src={tres} alt="mobile" className="w-full " />
           </SwiperSlide>
-          <SwiperSlide>
+          <SwiperSlide >
             <p className="absolute top-0 w-full text-white">Programacion</p>
             <Image src={cuatro} alt="mobile" className="w-full" />
           </SwiperSlide>
-          <SwiperSlide>
+          <SwiperSlide >
             <p className="absolute top-0 w-full text-white">Programacion</p>
             <Image src={cinco} alt="mobile" className="w-full" />
           </SwiperSlide>
-          <SwiperSlide>
+          <SwiperSlide >
             <p className="absolute top-0 w-full text-white">Programacion</p>
             <Image src={seis} alt="mobile" className="w-full" />
           </SwiperSlide>
-          <SwiperSlide>
+          <SwiperSlide >
             <p className="absolute top-0 w-full text-white">Programacion</p>
             <Image src={siete} alt="mobile" className="w-full" />
           </SwiperSlide>
