@@ -8,6 +8,10 @@
   box-sizing: border-box;
  }
 
+ .no-scroll {
+  overflow: hidden;
+}
+
  .bg{
   /* background-color: rgb(120, 0, 22); */
   background-image: url("../ui/bg.png");

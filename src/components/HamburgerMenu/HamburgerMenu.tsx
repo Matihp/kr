@@ -1,15 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from "@/ui/logo.png"
 import Image from "next/image";
+import Icon from '@mdi/react';
+import { mdiClose } from '@mdi/js';
 
-function SideMenu() {
+interface sideMenuProps{
+  isOpen:boolean;
+  setIsOpen:any;
+}
+
+function HamburgerMenu({isOpen,setIsOpen}:sideMenuProps) {
+  
+  useEffect(() => {
+    const body = document.getElementById("bodyScroll") as HTMLElement;
+    body.classList.toggle("no-scroll", isOpen);
+    return () => {
+      body.classList.remove("no-scroll");
+    };
+  }, [isOpen]);
+
   return (
-    <div className="absolute top-10 z-50 ">
+    <div className="absolute top-0 z-50 ">
     <div className="flex h-screen flex-col justify-between border-e bg-white w-[100vw]">
       <div className="px-4 py-6">
-        <span className="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
+        <div className="flex justify-between">
+          <span className="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
           <Image src={logo} alt="logo"/>
-        </span>
+          </span>
+          <div onClick={()=>setIsOpen(false)}>
+            <Icon path={mdiClose} size={1.2}/>
+          </div>
+        </div>
+        
 
         <ul className="mt-6 space-y-1">
           <li>
@@ -163,4 +185,4 @@ function SideMenu() {
   );
 }
 
-export default SideMenu;
+export default HamburgerMenu;
