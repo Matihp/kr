@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { RefObject, useEffect, useRef } from 'react';
 import 'keen-slider/keen-slider.min.css';
 import KeenSlider, { KeenSliderInstance } from 'keen-slider';
 
@@ -11,6 +11,22 @@ const Testimonials = () => {
   const keenSliderPreviousTabletRef = useRef<HTMLButtonElement | null>(null);
   const keenSliderNextTabletRef = useRef<HTMLButtonElement | null>(null);
 
+  const addClickListener = (buttonRef: RefObject<HTMLButtonElement | null>, keenSliderRef: RefObject<KeenSliderInstance | null>, direction: 'prev' | 'next') => {
+    if (buttonRef.current) {
+      buttonRef.current.addEventListener('click', () => {
+        keenSliderRef.current?.[direction]();
+      });
+    }
+  };
+  
+  const removeClickListener = (buttonRef: RefObject<HTMLButtonElement | null>, keenSliderRef: RefObject<KeenSliderInstance | null>, direction: 'prev' | 'next') => {
+    if (buttonRef.current) {
+      buttonRef.current.removeEventListener('click', () => {
+        keenSliderRef.current?.[direction]();
+      });
+    }
+  };
+  
   useEffect(() => {
     if (sliderRef.current) {
       keenSliderRef.current = new KeenSlider(sliderRef.current, {
@@ -30,64 +46,28 @@ const Testimonials = () => {
           },
         },
       });
-
-      if (keenSliderPreviousDesktopRef.current) {
-        keenSliderPreviousDesktopRef.current.addEventListener('click', () => {
-          keenSliderRef.current?.prev();
-        });
-      }
-
-      if (keenSliderNextDesktopRef.current) {
-        keenSliderNextDesktopRef.current.addEventListener('click', () => {
-          keenSliderRef.current?.next();
-        });
-      }
-      if (keenSliderPreviousTabletRef.current) {
-        keenSliderPreviousTabletRef.current.addEventListener('click', () => {
-          keenSliderRef.current?.prev();
-        });
-      }
-
-      if (keenSliderNextTabletRef.current) {
-        keenSliderNextTabletRef.current.addEventListener('click', () => {
-          keenSliderRef.current?.next();
-        });
-      }
+  
+      addClickListener(keenSliderPreviousDesktopRef, keenSliderRef, 'prev');
+      addClickListener(keenSliderNextDesktopRef, keenSliderRef, 'next');
+      addClickListener(keenSliderPreviousTabletRef, keenSliderRef, 'prev');
+      addClickListener(keenSliderNextTabletRef, keenSliderRef, 'next');
     }
-
+  
     return () => {
       if (keenSliderRef.current) {
         keenSliderRef.current.destroy();
       }
-
-      if (keenSliderPreviousDesktopRef.current) {
-        keenSliderPreviousDesktopRef.current.removeEventListener('click', () => {
-          keenSliderRef.current?.prev();
-        });
-      }
-
-      if (keenSliderNextDesktopRef.current) {
-        keenSliderNextDesktopRef.current.removeEventListener('click', () => {
-          keenSliderRef.current?.next();
-        });
-      }
-      if (keenSliderPreviousTabletRef.current) {
-        keenSliderPreviousTabletRef.current.removeEventListener('click', () => {
-          keenSliderRef.current?.prev();
-        });
-      }
-
-      if (keenSliderNextTabletRef.current) {
-        keenSliderNextTabletRef.current.removeEventListener('click', () => {
-          keenSliderRef.current?.next();
-        });
-      }
+  
+      removeClickListener(keenSliderPreviousDesktopRef, keenSliderRef, 'prev');
+      removeClickListener(keenSliderNextDesktopRef, keenSliderRef, 'next');
+      removeClickListener(keenSliderPreviousTabletRef, keenSliderRef, 'prev');
+      removeClickListener(keenSliderNextTabletRef, keenSliderRef, 'next');
     };
   }, []);
 
   return (
-    <section className="bg-gray-50">
-      <div className="mx-auto max-w-[1340px] px-4 py-12 sm:px-6 lg:me-0 lg:py-16 lg:pe-0 lg:ps-8 xl:py-10">
+    <section className="bg-gray-50 ">
+      <div className="mx-auto max-w-[1340px] px-4 py-12 sm:px-6 lg:me-0 lg:py-16 lg:pe-0 lg:ps-8 xl:py-10 ">
         <div className="grid  grid-cols-1 gap-8 lg:grid-cols-3 lg:items-center lg:gap-16">
           <div className="max-w-xl text-center ltr:sm:text-left rtl:sm:text-right">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -146,7 +126,7 @@ const Testimonials = () => {
             </div>
           </div>
 
-          <div className="-mx-6 lg:col-span-2 lg:mx-0">
+          <div className="-mx-6 lg:col-span-2 lg:mx-0 mxmd:w-screen">
             <div
               id="keen-slider"
               className="keen-slider h-[45vh] md:h-[40vh] lg:h-[50vh]"
