@@ -35,8 +35,8 @@ function Swipers() {
   }, [isMobile, isTablet])
 
   return (
-    <div className="bg-slate-100 h-[60vh] flex flex-col justify-center gap-7 ">
-      <div className="mb-2">
+    <div className="bg-slate-100 h-[80vh] flex flex-col justify-center gap-7 ">
+      <div className="">
         <h2 className="text-center text-2xl mb-2 font-bold leading-8">
           Categorias
         </h2>

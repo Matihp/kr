@@ -5,6 +5,7 @@ import "./globals.css";
 import CompanyLogos from "@/components/CompanyLogos/CompanyLogos";
 import Swipers from "@/components/Slider/Swipers";
 import CertificactionSteps from "@/components/CertificationSteps/CertificactionSteps";
+import Testimonials from "@/components/Testimonials/Testimonials";
 function Profile() {
   return (
     // inline-flex animate-text-gradient bg-gradient-to-r
@@ -41,6 +42,8 @@ function Profile() {
       <Swipers/>
       
       <CompanyLogos/>
+
+      <Testimonials/>
     </>
   );
 }
