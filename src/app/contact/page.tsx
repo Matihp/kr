@@ -3,10 +3,10 @@ import React from "react";
 const Contact = () => {
   return (
     <>
-      <section className="relative z-10 overflow-hidden  py-20 dark:bg-dark md:pt-32">
+      <section className="relative z-10 overflow-hidden py-6 md:py-20 dark:bg-dark md:pt-32">
         <div className="container">
-          <div className="-mx-4 flex flex-wrap lg:justify-between">
-            <div className="w-full px-4 lg:w-1/2 xl:w-6/12">
+          <div className="-mx-4 flex flex-wrap lg:justify-center items-center">
+            <div className="w-full items-center flex flex-col px-4 lg:w-1/2 xl:w-6/12 ">                                                                  
               <div className="mb-12 max-w-[570px] lg:mb-0">
                 <span className="mb-4 block text-base font-semibold text-primary">
                   Contact Us
@@ -107,12 +107,10 @@ const Contact = () => {
                       info@yourdomain.com
                     </p>
                   </div>
-                </div>
-              </div>
-              <div className="mt-6 md:mt-8 mxlg:mb-10">
+                </div><div className="mt-6 md:mt-8 ">
                         <h3 className="text-base font-semibold text-primary ">Redes Sociales</h3>
 
-                        <div className="flex mt-4 -mx-1.5 ">
+                        <div className="flex mt-4 -mx-1.5 items-center">
                             <a className="mx-1.5  transition-colors duration-300 transform hover:text-blue-500" href="#">
                                 <svg className="w-10 h-10 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18.6668 6.67334C18.0002 7.00001 17.3468 7.13268 16.6668 7.33334C15.9195 6.49001 14.8115 6.44334 13.7468 6.84201C12.6822 7.24068 11.9848 8.21534 12.0002 9.33334V10C9.83683 10.0553 7.91016 9.07001 6.66683 7.33334C6.66683 7.33334 3.87883 12.2887 9.3335 14.6667C8.0855 15.498 6.84083 16.0587 5.3335 16C7.53883 17.202 9.94216 17.6153 12.0228 17.0113C14.4095 16.318 16.3708 14.5293 17.1235 11.85C17.348 11.0351 17.4595 10.1932 17.4548 9.34801C17.4535 9.18201 18.4615 7.50001 18.6668 6.67268V6.67334Z" />
@@ -141,6 +139,8 @@ const Contact = () => {
                         </div>
                     </div>
             </div>
+              </div>
+              
             <div className="w-full px-4 lg:w-1/2 xl:w-5/12">
               <div className="relative rounded-lg bg-white p-8 shadow-lg dark:bg-dark-2 sm:p-12">
                 <form>

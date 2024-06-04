@@ -6,8 +6,13 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  scrollbar-color: white black ;
+  scrollbar-width: auto;
  }
-
+ body{
+  @apply bg-white bg-[radial-gradient(30%_40%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(252,205,238,.3)_100%)]  
+ }
+ /* bg-white bg-[radial-gradient(30%_40%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(252,205,238,.5)_100%)]   */
  .no-scroll {
   overflow: hidden;
 }

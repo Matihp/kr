@@ -9,7 +9,7 @@ export function Header() {
   const [isOpen,setIsOpen]=useState(false)
   return (
     <>
-    <header className="md:fixed animate-fade-in duration-700 inset-x-0 top-0 z-30 mx-auto w-full border border-gray-100 bg-white/80 py-3 shadow backdrop-blur-md lg:top-4 md:rounded-3xl md:w-[90vw]">
+    <header className="md:fixed animate-fade-in duration-700 inset-x-0 top-0 z-30 mx-auto w-full border border-gray-100 bg-white/80 py-3 shadow backdrop-blur-md lg:top-4 md:rounded-3xl md:w-[93vw] lg:w-[90vw]">
       <div className="px-4">
         <div className="flex items-center justify-between">
           <div className="flex shrink-0">
@@ -18,8 +18,8 @@ export function Header() {
               <p className="sr-only">Website Title</p>
             </Link>
           </div>
-          <div className="flex justify-between md:w-[600px]">
-            <div className="hidden md:flex md:items-center md:justify-center md:gap-5">
+          <div className="flex md:justify-end lg:justify-between md:w-[600px] md:gap-1">
+            <div className="hidden md:flex md:items-center md:justify-end md:gap-1 lg:gap-5">
             <Link
               aria-current="page"
               className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
