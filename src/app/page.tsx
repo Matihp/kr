@@ -22,15 +22,15 @@ function HomePage() {
             ¡Ahora es posible!
           </h2>
           <div className="flex justify-center animate-slide-in-bottom gap-4">
-            <button className="bg-slate-200 font-semibold hover:bg-slate-300 rounded-3xl px-8 py-2 mt-5">
-              Cotizarme
+            <button className="bg-slate-200 font-semibold hover:bg-slate-300 rounded-3xl px-4 py-2 mt-5">
+              Soy Reclutador
             </button>
-            <button className="bg-slate-200 font-semibold hover:bg-slate-300 rounded-3xl px-8 py-2 mt-5">
-              Freelancer
+            <button className="bg-slate-200 font-semibold hover:bg-slate-300 rounded-3xl px-4 py-2 mt-5">
+              Soy Freelancer
             </button>
           </div>
           <div className="flex justify-center animate-slide-in-bottom">
-            <button className="bg-violet-600 text-slate-100 font-semibold hover:bg-violet-700 rounded-3xl px-9 py-2 mt-8">
+            <button className="bg-violet-600 text-slate-100 font-semibold hover:bg-violet-700 rounded-3xl px-10 py-2 mt-8">
               Quiero mi certificacion gratuita
             </button>
           </div>

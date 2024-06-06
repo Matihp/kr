@@ -19,27 +19,27 @@ export function Header() {
               <p className="sr-only">Website Title</p>
             </Link>
           </div>
-          <div className="flex md:justify-end lg:justify-between md:w-[600px] md:gap-1">
-            <div className="hidden md:flex md:items-center md:justify-end md:gap-1 lg:gap-5">
+          <div className="flex md:justify-end lg:justify-between md:w-[650px] lg:w-[630px] md:gap-1">
+            <div className="hidden md:flex md:items-center md:justify-end  lg:gap-3">
             <NavigationMenus/>
             <Link
               className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-              href="#"
+              href="/list"
             >
-              Noticias
+              Freelancers
             </Link>
             <Link
               aria-current="page"
               className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
               href="#"
             >
-              Explorar
+              Certificate
             </Link>
             <Link
               className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
               href="#"
             >
-              Precios
+              Noticias
             </Link>
           </div>
           <div className="flex items-center justify-end gap-3">
