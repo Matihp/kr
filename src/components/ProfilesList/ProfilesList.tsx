@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Paginations } from "../Pagination/Pagination"
 
 interface Product {
   id: number;
@@ -156,7 +157,7 @@ export default function ProfilesList() {
           </div>
         </div>
       </header>
-      <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8">
         <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
           <h2 className="text-lg font-bold mb-4">Filtros</h2>
           <div className="mb-4">
@@ -234,7 +235,7 @@ export default function ProfilesList() {
           </div>
         </div>
         <div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.map((product) => (
               <div key={product.id} className="bg-white dark:bg-gray-950 rounded-md overflow-hidden shadow-sm">
                 <img
@@ -252,6 +253,7 @@ export default function ProfilesList() {
               </div>
             ))}
           </div>
+          <Paginations/>
         </div>
       </div>
     </div>
