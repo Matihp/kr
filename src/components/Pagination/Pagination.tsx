@@ -13,7 +13,7 @@ import {
       <Pagination className="mt-8">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="#" />
+            <PaginationPrevious className="mxsm:pl-1" href="#" />
           </PaginationItem>
           <PaginationItem>
             <PaginationLink href="#">1</PaginationLink>
@@ -30,7 +30,7 @@ import {
             <PaginationEllipsis />
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext href="#" />
+            <PaginationNext className="mxsm:pl-1" href="#" />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
