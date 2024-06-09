@@ -1,8 +1,8 @@
 import { Paginations } from "@/components/Pagination/Pagination";
 import Link from "next/link";
-import React from "react";
 
 function News() {
+
   return (
     <div className="bg-white py-6 sm:py-6 md:pt-24">
       <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
@@ -26,7 +26,7 @@ function News() {
               src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&q=75&fit=crop&w=600"
               loading="lazy"
               alt="Photo by Minh Pham"
-              className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
+              className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110 "
             />
 
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent md:via-transparent"></div>
