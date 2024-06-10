@@ -1,14 +1,12 @@
 "use client";
-import Image from "next/image";
 import "./globals.css";
-
 import CompanyLogos from "@/components/CompanyLogos/CompanyLogos";
 import Swipers from "@/components/Slider/Swipers";
 import CertificactionSteps from "@/components/CertificationSteps/CertificactionSteps";
 import Testimonials from "@/components/Testimonials/Testimonials";
+
 function HomePage() {
   return (
-    // inline-flex animate-text-gradient bg-gradient-to-r
     <>
       <div className="h-[80dvh] md:h-[100dvh] flex justify-center md:justify-end lg:justify-center items-end bg-[url('../ui/mobile.png')] md:bg-[url('../ui/tablet.png')] lg:bg-[url('../ui/bg.png')] bg-cover bg-no-repeat">
         <div className="md:w-[68%] lg:w-1/2 flex flex-col mb-1 md:mb-20 lg:mb-24">
