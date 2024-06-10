@@ -5,26 +5,44 @@ import Link from "next/link";
 import project from "@/ui/project.webp";
 import certs from "@/ui/certs.jpg";
 import Icon from "@mdi/react";
-import {mdiMapMarker,mdiAccountSchool, mdiCertificateOutline,mdiHeadCogOutline,mdiPencilCircle,mdiInformationOutline,mdiTextAccount,} from "@mdi/js";
+import {mdiMapMarker,mdiAccountSchool, mdiCertificateOutline,mdiHeadCogOutline,mdiInformationOutline,mdiTextAccount,} from "@mdi/js";
 import { useEffect, useState } from "react";
 import ModalProject from "@/components/Modal/ModalProject";
 import ModalInfo from "@/components/Modal/ModalInfo";
 import { DropdownProject } from "@/components/Dropdown/DropdownProject";
+import useMatchMedia from "@/components/ui/matchMedia";
+import useHeaderStore from "@/lib/store/headerStore";
 
 
 function Profile() { 
   const active =
-    "flex gap-1 items-center px-3 py-1 border-b-4 text-prBlue font-bold border-prBlue";
+    "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
   const noActive =
-    "flex gap-1 items-center px-3 py-1 border-b-4 border-slate-100";
+    "flex gap-1 h-12 items-center px-3 border-b-4 border-slate-100";
   const [showNav, setShowNav] = useState(false);
+  const [isScrolling,setIsScrolling] = useState(false)
   const [activeSection, setActiveSection] = useState("");
+  const isTablet = useMatchMedia('(max-width: 1023px)')
+  const isScrollingHeader = useHeaderStore((state) => state.setIsScrollingHeader);
+
+  useEffect(() =>{
+    if(isTablet) {
+      setShowNav(true)
+    } else {
+      setShowNav(false)
+    }
+  },[isTablet])
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       // Ajusta el valor (100 en este ejemplo) al punto en el que deseas que el encabezado aparezca
-      setShowNav(scrollPosition > 300);
+      if (isTablet && scrollPosition > 50) { // Ajusta el valor (300 en este ejemplo) al punto en el que deseas que el encabezado desaparezca
+        isScrollingHeader(false);
+      } else {
+        isScrollingHeader(true);
+      }
+      setIsScrolling(scrollPosition > 220);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -33,7 +51,7 @@ function Profile() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [isTablet]);
 
   useEffect(() => {
       const location = window.location.hash;
@@ -46,40 +64,42 @@ function Profile() {
   }, []);
 
   return (
-    <div className="relative container-sticky">
-      <div id="sticky-element" className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 lg:pl-2">
-        <div className="flex flex-col md:flex-row gap-4 md:gap-8 pt-4 md:mt-20">
+    <div className="relative container-sticky text-[12px]">
+      <div id="sticky-element" className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 lg:pl-2 lg:h-[249px]">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-8 pt-4 lg:pl-5 md:mt-14 md:pl-7 lg:mt-16">
           <div className="mx-auto md:mx-0">
             <Image
-              width={100}
-              height={50}
+              width={80}
+              height={30}
               alt=""
               src={avatar}
               className=" rounded-full  "
             />
           </div>
 
-          <div className="p-2  bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
+          <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
             <div className="flex justify-between">
-              <h2 className="text-2xl font-semibold">Juan Perez</h2>
+              <h2 className="text-xl font-semibold">Juan Perez</h2>
               <ModalInfo/>
             </div>
-
-            <div className="flex">
+            <div className="flex items-center gap-10 pt-1.5">
+              <div className="flex items-center">
               <Icon path={mdiMapMarker} size={1} />
               <p className="text-slate-400">Ubicacion</p>
             </div>
-            <div className="mt-2 flex">
+            <div className="flex items-center">
               <Icon path={mdiAccountSchool} size={1} />
               <p className="text-slate-400">Profesión</p>
             </div>
+            </div>
+            
           </div>
         </div>
 
         <div 
-          className={`flex h-16 lg:ml-20 md:mt-8 mt-3 justify-between sm:justify-start sm:gap-1  ${
-            showNav
-              ? "mxlg:fixed mxlg:top-0 mxlg:z-50 mxlg:mt-0 mxlg:w-screen mxlg:bg-slate-100 mxmd:transition-all"
+          className={`flex h-16 lg:ml-6 pt-4 justify-between sm:justify-start sm:gap-1  ${
+            showNav && isScrolling
+              ? "fixed top-0 z-50 mt-0 w-screen !pt-0 !h-12 bg-slate-100 transition-all"
               : ""
           }`}
         >
@@ -118,9 +138,9 @@ function Profile() {
         </div>
       </div>
 
-      <div className="fixed z-20 h-40 md:right-5 md:top-56 hidden md:block w-[30vw]">
+      <div className="fixed z-20 h-40 md:right-5 md:top-56 hidden md:block w-[30vw] pb-20">
         <div className=" w-full max-w-md px-8 py-4 mt-16 bg-white rounded-lg shadow-lg dark:bg-gray-800">
-          <h2 className="mt-2 text-xl font-semibold text-gray-800 dark:text-white md:mt-0">
+          <h2 className="mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white md:mt-0">
             Design Tools
           </h2>
 
@@ -141,10 +161,10 @@ function Profile() {
           Quiero mi certificado
         </button>
       </div>
-      <div className={`block animate-tilt md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${showNav ? "mxmd:mt-28 md:mt-40" : ""} `}>
+      <div className={`block animate-tilt md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${showNav && isScrolling ? "mt-28" : ""} `}>
         <div id="sobre-mi" className="flex justify-between">
           <h2   
-            className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+            className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
           >
             Sobre Mi
           </h2>
@@ -158,7 +178,7 @@ function Profile() {
       </div>
 
       <div id="proyectos">
-        <h2  className="ml-8 text-2xl font-semibold">
+        <h2  className="ml-8 text-xl font-bold tracking-tight text-gray-900">
           Proyectos
         </h2>
       </div>
@@ -172,7 +192,7 @@ function Profile() {
         />
         <div className="flex flex-col justify-between p-4 leading-normal w-full">
           <div className="flex justify-between">
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
               Noteworthy technology acquisitions 2021
             </h5>
             <DropdownProject />
@@ -196,7 +216,7 @@ function Profile() {
         />
         <div className="flex flex-col justify-between p-4 leading-normal w-full">
           <div className="flex justify-between">
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
               Noteworthy technology acquisitions 2021
             </h5>
             <DropdownProject />
@@ -217,7 +237,7 @@ function Profile() {
           <div className="flex justify-between">
             <h5
               
-              className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+              className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
             >
               Habilidades
             </h5>
@@ -233,7 +253,7 @@ function Profile() {
           className="block  p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
         >
           <div className="flex justify-between">
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
               Idiomas
             </h5>
             <ModalInfo />
@@ -253,7 +273,7 @@ function Profile() {
         <div className="flex justify-between">
           <h5
             
-            className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+            className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
           >
             Certificaciones
           </h5>
