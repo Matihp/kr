@@ -94,17 +94,14 @@ export default function ProfilesList() {
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       if (selectedFilters.category.length > 0 && !selectedFilters.category.includes(product.category)) {
-        return false
-      }
-      if (selectedFilters.price[0] > product.price || selectedFilters.price[1] < product.price) {
-        return false
+        return false;
       }
       if (selectedFilters.brand.length > 0 && !selectedFilters.brand.includes(product.brand)) {
-        return false
+        return false;
       }
-      return true
-    })
-  }, [selectedFilters])
+      return true;
+    });
+  }, [selectedFilters]);
 
   const handleCategoryChange = (category: string): void => {
     setSelectedFilters((prevFilters) => {
@@ -117,14 +114,7 @@ export default function ProfilesList() {
         category: updatedCategory,
       };
     });
-  }
-
-  const handlePriceChange = (price: [number, number]): void => {
-    setSelectedFilters((prevFilters) => ({
-      ...prevFilters,
-      price,
-    }));
-  }
+  };
 
   const handleBrandChange = (brand: string): void => {
     setSelectedFilters((prevFilters) => {
@@ -137,19 +127,26 @@ export default function ProfilesList() {
         brand: updatedBrand,
       };
     });
-  }
+  };
+
+  const handleReset = (filterType: 'category' | 'brand'): void => {
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterType]: [],
+    }));
+  };
 
   return (
-    <div className="container mx-auto py-8 pt-24">
+    <div className="container mx-auto py-8 md:pt-24">
       <header className="bg-gray-100 dark:bg-gray-800 p-4 mb-6">
-        <div className="flex items-center justify-start gap-11 mxsm:flex-col">
+        <div className="flex sm:items-center justify-start gap-11 mxsm:flex-col mxsm:gap-5">
           <h1 className="text-2xl font-bold">Perfiles Freelance</h1>
           <div className="md:w-[40vw]">
             <div className="relative">
               <Input
                 type="text"
                 placeholder="Buscar palabra clave..."
-                className="bg-white dark:bg-gray-950 pl-8 pr-4 py-2 rounded-md w-full"
+                className="bg-white dark:bg-gray-950 pl-8 py-2 md:pr-4 rounded-md w-full"
               />
               <SearchIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 w-5 h-5" />
             </div>
@@ -161,77 +158,202 @@ export default function ProfilesList() {
         <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
           <h2 className="text-lg font-bold mb-4">Filtros</h2>
           <div className="mb-4">
-            <h3 className="text-base font-semibold mb-2">Categoría</h3>
-            <div className="grid gap-2">
-              <Label className="flex items-center gap-2 font-normal">
-                <Checkbox
-                  checked={selectedFilters.category.includes("DesarrolladorWeb")}
-                  onCheckedChange={() => handleCategoryChange("DesarrolladorWeb")}
-                />
-                Desarrollador Web
-              </Label>
-              <Label className="flex items-center gap-2 font-normal">
-                <Checkbox
-                  checked={selectedFilters.category.includes("Ux/Ui")}
-                  onCheckedChange={() => handleCategoryChange("Ux/Ui")}
-                />
-                Ux/Ui
-              </Label>
-              <Label className="flex items-center gap-2 font-normal">
-                <Checkbox
-                  checked={selectedFilters.category.includes("DevOps")}
-                  onCheckedChange={() => handleCategoryChange("DevOps")}
-                />
-                DevOps
-              </Label>
-            </div>
+            <details
+              className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary
+                className="flex cursor-pointer items-center justify-between gap-2 bg-white p-4 text-gray-900 transition"
+              >
+                <span className="text-sm font-medium"> Categorías </span>
+
+                <span className="transition group-open:-rotate-180">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="h-4 w-4"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </span>
+              </summary>
+
+              <div className="border-t border-gray-200 bg-white">
+                <header className="flex items-center justify-between p-4">
+                  <span className="text-sm text-gray-700"> {selectedFilters.category.length} Seleccionados </span>
+
+                  <button type="button" className="text-sm text-gray-900 underline underline-offset-4" onClick={() => handleReset('category')}>
+                    Reset
+                  </button>
+                </header>
+
+                <ul className="space-y-1 border-t border-gray-200 p-4">
+                  <li>
+                    <label htmlFor="FilterDesarrolladorWeb" className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="FilterDesarrolladorWeb"
+                        className="size-5 rounded border-gray-300"
+                        checked={selectedFilters.category.includes("DesarrolladorWeb")}
+                        onChange={() => handleCategoryChange("DesarrolladorWeb")}
+                      />
+
+                      <span className="text-sm font-medium text-gray-700"> Desarrollador Web </span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label htmlFor="FilterUx/Ui" className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="FilterUx/Ui"
+                        className="size-5 rounded border-gray-300"
+                        checked={selectedFilters.category.includes("Ux/Ui")}
+                        onChange={() => handleCategoryChange("Ux/Ui")}
+                      />
+
+                      <span className="text-sm font-medium text-gray-700"> Ux/Ui </span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label htmlFor="FilterDevOps" className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="FilterDevOps"
+                        className="size-5 rounded border-gray-300"
+                        checked={selectedFilters.category.includes("DevOps")}
+                        onChange={() => handleCategoryChange("DevOps")}
+                      />
+
+                      <span className="text-sm font-medium text-gray-700"> DevOps </span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </details>
           </div>
           <div>
-            <h3 className="text-base font-semibold mb-2">Tecnologías</h3>
-            <div className="grid gap-2">
-              <Label className="flex items-center gap-2 font-normal">
-                <Checkbox
-                  checked={selectedFilters.brand.includes("Java")}
-                  onCheckedChange={() => handleBrandChange("Java")}
-                />
-                Java
-              </Label>
-              <Label className="flex items-center gap-2 font-normal">
-                <Checkbox
-                  checked={selectedFilters.brand.includes("Html")}
-                  onCheckedChange={() => handleBrandChange("Html")}
-                />
-                Html
-              </Label>
-              <Label className="flex items-center gap-2 font-normal">
-                <Checkbox
-                  checked={selectedFilters.brand.includes("Css")}
-                  onCheckedChange={() => handleBrandChange("Css")}
-                />
-                Css
-              </Label>
-              <Label className="flex items-center gap-2 font-normal">
-                <Checkbox
-                  checked={selectedFilters.brand.includes("React")}
-                  onCheckedChange={() => handleBrandChange("React")}
-                />
-                React
-              </Label>
-              <Label className="flex items-center gap-2 font-normal">
-                <Checkbox
-                  checked={selectedFilters.brand.includes("Python")}
-                  onCheckedChange={() => handleBrandChange("Python")}
-                />
-                Python
-              </Label>
-              <Label className="flex items-center gap-2 font-normal">
-                <Checkbox
-                  checked={selectedFilters.brand.includes("Go")}
-                  onCheckedChange={() => handleBrandChange("Go")}
-                />
-                Go
-              </Label>
-            </div>
+            <details
+              className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary
+                className="flex cursor-pointer items-center justify-between gap-2 bg-white p-4 text-gray-900 transition"
+              >
+                <span className="text-sm font-medium"> Tecnologías </span>
+
+                <span className="transition group-open:-rotate-180">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="h-4 w-4"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </span>
+              </summary>
+
+              <div className="border-t border-gray-200 bg-white">
+                <header className="flex items-center justify-between p-4">
+                  <span className="text-sm text-gray-700"> {selectedFilters.brand.length} Seleccionados </span>
+
+                  <button type="button" className="text-sm text-gray-900 underline underline-offset-4" onClick={() => handleReset('brand')}>
+                    Reset
+                  </button>
+                </header>
+
+                <ul className="space-y-1 border-t border-gray-200 p-4">
+                  <li>
+                    <label htmlFor="FilterJava" className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="FilterJava"
+                        className="size-5 rounded border-gray-300"
+                        checked={selectedFilters.brand.includes("Java")}
+                        onChange={() => handleBrandChange("Java")}
+                      />
+
+                      <span className="text-sm font-medium text-gray-700"> Java </span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label htmlFor="FilterHtml" className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="FilterHtml"
+                        className="size-5 rounded border-gray-300"
+                        checked={selectedFilters.brand.includes("Html")}
+                        onChange={() => handleBrandChange("Html")}
+                      />
+
+                      <span className="text-sm font-medium text-gray-700"> Html </span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label htmlFor="FilterCss" className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="FilterCss"
+                        className="size-5 rounded border-gray-300"
+                        checked={selectedFilters.brand.includes("Css")}
+                        onChange={() => handleBrandChange("Css")}
+                      />
+
+                      <span className="text-sm font-medium text-gray-700"> Css </span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label htmlFor="FilterReact" className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="FilterReact"
+                        className="size-5 rounded border-gray-300"
+                        checked={selectedFilters.brand.includes("React")}
+                        onChange={() => handleBrandChange("React")}
+                      />
+
+                      <span className="text-sm font-medium text-gray-700"> React </span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label htmlFor="FilterPython" className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="FilterPython"
+                        className="size-5 rounded border-gray-300"
+                        checked={selectedFilters.brand.includes("Python")}
+                        onChange={() => handleBrandChange("Python")}
+                      />
+
+                      <span className="text-sm font-medium text-gray-700"> Python </span>
+                    </label>
+                  </li>
+
+                  <li>
+                    <label htmlFor="FilterGo" className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="FilterGo"
+                        className="size-5 rounded border-gray-300"
+                        checked={selectedFilters.brand.includes("Go")}
+                        onChange={() => handleBrandChange("Go")}
+                      />
+
+                      <span className="text-sm font-medium text-gray-700"> Go </span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </details>
           </div>
         </div>
         <div>
@@ -257,7 +379,7 @@ export default function ProfilesList() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function SearchIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
