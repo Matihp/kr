@@ -12,6 +12,7 @@ import { DropdownProject } from "@/components/Dropdown/DropdownProject";
 import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";
 import Image from "next/image";
+import ProfileContactCard from "@/components/ProfileContactCard/ProfileContactCard";
 
 
 function PublicProfile() { 
@@ -79,7 +80,7 @@ function PublicProfile() {
 
           <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
             <div className="flex justify-between">
-              <h2 className="text-xl font-semibold">Juan Perez</h2>
+              <h2 className="text-xl font-bold">Juan Perez</h2>
             </div>
             <div className="flex items-center gap-10 pt-1.5">
               <div className="flex items-center">
@@ -137,10 +138,10 @@ function PublicProfile() {
         </div>
       </div>
 
-      <div className="fixed z-20 h-40 md:right-5 md:top-56 hidden md:block w-[30vw] pb-20">
+      {/* <div className="fixed z-20 h-40 md:right-5 md:top-56 hidden md:block w-[30vw] pb-20">
         <div className=" w-full max-w-md px-8 py-4 mt-16 bg-white rounded-lg shadow-lg dark:bg-gray-800">
           <h2 className="mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white md:mt-0">
-            Design Tools
+            Informacion de contacto
           </h2>
 
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-200 pb-2">
@@ -148,16 +149,17 @@ function PublicProfile() {
             dolores deserunt ea doloremque natus error.
           </p>
           <div className="flex justify-center items-center mx-auto">
-            <button className=" px-8 py-3 font-semibold rounded bg-violet-600 text-gray-50 hover:bg-violet-500">
-              Quiero mi certificado
+            <button className=" px-8 py-2 font-semibold text-base rounded bg-violet-600 text-gray-50 hover:bg-violet-500">
+              Ver certficación
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
+      <ProfileContactCard/>
 
       <div className="fixed bottom-0 bg-white w-screen flex justify-center items-center h-16  md:hidden ">
         <button className=" px-8 py-2 font-semibold rounded bg-violet-600 text-gray-50 hover:bg-violet-500">
-          Quiero mi certificado
+          Ver certficación
         </button>
       </div>
       <div className={`block animate-tilt md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${showNav && isScrolling ? "mt-28" : ""} `}>
