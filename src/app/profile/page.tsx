@@ -12,6 +12,7 @@ import ModalInfo from "@/components/Modal/ModalInfo";
 import { DropdownProject } from "@/components/Dropdown/DropdownProject";
 import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";
+import ModalLanguages from "@/components/Modal/ModalLanguages";
 
 
 function Profile() { 
@@ -138,7 +139,7 @@ function Profile() {
         </div>
       </div>
 
-      <div className="fixed z-20 h-40 md:right-5 md:top-56 hidden md:block w-[30vw] pb-20">
+      <div className="fixed z-20 pointer-events-none h-40 md:right-5 md:top-56 hidden md:block w-[30vw] pb-20">
         <div className=" w-full max-w-md px-8 py-4 mt-16 bg-white rounded-lg shadow-lg dark:bg-gray-800">
           <h2 className="mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white md:mt-0">
             Design Tools
@@ -256,7 +257,7 @@ function Profile() {
             <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
               Idiomas
             </h5>
-            <ModalInfo />
+            <ModalLanguages/>
           </div>
 
           <p className="font-normal text-gray-700 dark:text-gray-400">
