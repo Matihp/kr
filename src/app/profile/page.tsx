@@ -13,6 +13,7 @@ import { DropdownProject } from "@/components/Dropdown/DropdownProject";
 import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";
 import ModalLanguages from "@/components/Modal/ModalLanguages";
+import ModalSkills from "@/components/Modal/ModalSkills";
 
 
 function Profile() { 
@@ -198,7 +199,6 @@ function Profile() {
             </h5>
             <DropdownProject />
           </div>
-
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
             Here are the biggest enterprise technology acquisitions of 2021 so
             far, in reverse chronological order.
@@ -222,7 +222,6 @@ function Profile() {
             </h5>
             <DropdownProject />
           </div>
-
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
             Here are the biggest enterprise technology acquisitions of 2021 so
             far, in reverse chronological order.
@@ -242,7 +241,7 @@ function Profile() {
             >
               Habilidades
             </h5>
-            <ModalInfo />
+            <ModalSkills />
           </div>
           <p className="font-normal text-gray-700 dark:text-gray-400">
             Here are the biggest enterprise technology acquisitions of 2021 so
@@ -259,7 +258,6 @@ function Profile() {
             </h5>
             <ModalLanguages/>
           </div>
-
           <p className="font-normal text-gray-700 dark:text-gray-400">
             Here are the biggest enterprise technology acquisitions of 2021 so
             far, in reverse chronological order.
@@ -272,15 +270,13 @@ function Profile() {
         className="block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
       >
         <div className="flex justify-between">
-          <h5
-            
+          <h5            
             className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
           >
             Certificaciones
           </h5>
           <ModalInfo />
         </div>
-
         <p className="font-normal text-gray-700 dark:text-gray-400">
           Here are the biggest enterprise technology acquisitions of 2021 so
           far, in reverse chronological order.

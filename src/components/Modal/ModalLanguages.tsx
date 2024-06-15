@@ -1,12 +1,17 @@
 "use client"
-import { useState, ChangeEvent } from "react"
+import { useState } from "react"
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
 import Icon from '@mdi/react';
 import { mdiPencilCircle } from '@mdi/js';
+import { Input } from "../ui/input";
+
+import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
+
+type Option = {
+  value: string;
+  label: string;
+};
 
 type LanguageLevel = "beginner" | "intermediate" | "advanced"
 
@@ -19,10 +24,9 @@ const languagesData = ["English", "Spanish", "French", "German", "Italian", "Por
 
 export default function ModalLanguages() {
   const [languages, setLanguages] = useState<Language[]>([])
-  const [suggestions, setSuggestions] = useState<string[]>([])
 
   const addLanguage = () => {
-    if (languages.length < 4 && !languages.some(lang => lang.language === "")) {
+    if (languages.length < 4) {
       setLanguages([...languages, { language: "", level: "intermediate" }])
     }
   }
@@ -33,45 +37,23 @@ export default function ModalLanguages() {
     setLanguages(updatedLanguages)
   }
 
-  const updateLanguage = (index: number, field: keyof Language, value: LanguageLevel) => {
-    const updatedLanguages = [...languages]
-    updatedLanguages[index][field] = value
-    setLanguages(updatedLanguages)
-  
-    if (field === "language") {
-      const filteredSuggestions = languagesData.filter(language =>
-        language.toLowerCase().startsWith(value.toLowerCase())
-      )
-      setSuggestions(filteredSuggestions)
-    }
-  }
-  const getLanguageLevel = (value: string): LanguageLevel => {
-    switch (value) {
-      case "beginner":
-        return "beginner"
-      case "intermediate":
-        return "intermediate"
-      case "advanced":
-        return "advanced"
-      default:
-        return "intermediate"
-    }
-  }
+  const updateLanguage = (index: number, field: keyof Language, value: LanguageLevel | string) => {
+    const updatedLanguages = [...languages];
 
-  const handleSuggestionClick = (suggestion: string, index: number) => {
-    const updatedLanguages = [...languages]
-    updatedLanguages[index].language = suggestion
-    setLanguages(updatedLanguages)
-    setSuggestions([])
-  }
+    if (field === "language") {
+      updatedLanguages[index].language = value as string;
+    } else if (field === "level") {
+      updatedLanguages[index].level = value as LanguageLevel;
+    }
+
+    setLanguages(updatedLanguages);
+  };
+
+  const availableLanguages = languagesData.filter(lang => !languages.some(l => l.language === lang));
 
   const clearLanguages = () => {
-    setLanguages([])
-  }
-
-    function setLang(arg0: { language: string; level: LanguageLevel }) {
-        throw new Error("Function not implemented.")
-    }
+    setLanguages([]);
+  };
 
   return (
     <Dialog defaultOpen={false}>
@@ -88,62 +70,35 @@ export default function ModalLanguages() {
             <div key={index} className="grid gap-2">
               <div className="flex items-center gap-2">
                 <div className="relative">
-                <Input
-                    id={`language-${index}`}
-                    placeholder="Enter a language"
+                  <Select
                     value={lang.language}
-                    onChange={(e) => {
-                        const newValue = e.target.value as LanguageLevel
-                        const updatedLanguages = [...languages]
-                        updatedLanguages[index].language = newValue
-                        setLanguages(updatedLanguages)
-                    }}
-                    />
-                  {suggestions.length > 0 && (
-                    <ul className="absolute z-10 bg-white border border-gray-300 rounded-md">
-                      {suggestions.map((suggestion, i) => (
-                        <li
-                          key={i}
-                          className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSuggestionClick(suggestion, index)}
-                        >
-                          {suggestion}
-                        </li>
+                    onValueChange={(value: string) => updateLanguage(index, "language", value)}
+                  >
+                    <SelectTrigger className="w-[120px]">
+                      <Button variant="outline">{lang.language || "Select a language"}</Button>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableLanguages.map((language, i) => (
+                        <SelectItem key={i} value={language}>{language}</SelectItem>
                       ))}
-                    </ul>
-                  )}
+                    </SelectContent>
+                  </Select>
                 </div>
+                
+                <Select value={lang.level} onValueChange={(value: LanguageLevel) => updateLanguage(index, "level", value)}>
+                  <SelectTrigger className="w-[120px]">
+                    <Button variant="outline">{lang.level}</Button>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="beginner">Beginner</SelectItem>
+                    <SelectItem value="intermediate">Intermediate</SelectItem>
+                    <SelectItem value="advanced">Advanced</SelectItem>
+                  </SelectContent>
+                </Select>
                 <Button variant="ghost" size="icon" onClick={() => removeLanguage(index)}>
                   <XIcon className="h-4 w-4" />
                 </Button>
               </div>
-              <RadioGroup
-                defaultValue={lang.level}
-                onValueChange={(value: LanguageLevel) => updateLanguage(index, "level", value)}
-                className="grid grid-cols-3 gap-2"
-                >
-                <Label
-                  htmlFor={`level-beginner-${index}`}
-                  className="flex items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                >
-                  <RadioGroupItem id={`level-beginner-${index}`} value="beginner" className="peer sr-only" />
-                  <span className={`peer-checked:font-semibold ${lang.level === "beginner" ? "font-semibold" : ""}`}>Beginner</span>
-                </Label>
-                <Label
-                  htmlFor={`level-intermediate-${index}`}
-                  className="flex items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                >
-                  <RadioGroupItem id={`level-intermediate-${index}`} value="intermediate" className="peer sr-only" />
-                  <span className={`peer-checked:font-semibold ${lang.level === "intermediate" ? "font-semibold" : ""}`}>Intermediate</span>
-                </Label>
-                <Label
-                  htmlFor={`level-advanced-${index}`}
-                  className="flex items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-                >
-                  <RadioGroupItem id={`level-advanced-${index}`} value="advanced" className="peer sr-only" />
-                  <span className={`peer-checked:font-semibold ${lang.level === "advanced" ? "font-semibold" : ""}`}>Advanced</span>
-                </Label>
-              </RadioGroup>
             </div>
           ))}
           <Button variant="ghost" onClick={addLanguage} className="flex items-center gap-2">
@@ -159,7 +114,6 @@ export default function ModalLanguages() {
     </Dialog>
   )
 }
-
 function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg

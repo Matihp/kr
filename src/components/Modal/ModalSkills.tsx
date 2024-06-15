@@ -8,7 +8,7 @@ import { mdiPencilCircle } from '@mdi/js';
 
 const skillsData = ["Java", "JavaScript", "Python", "C++", "Ruby", "Swift", "Go", "Rust", "PHP", "TypeScript"];
 
-export default function ModalInfo() {
+export default function ModalSkills() {
   const [skills, setSkills] = useState<string[]>([])
   const [newSkill, setNewSkill] = useState<string>("")
   const [suggestions, setSuggestions] = useState<string[]>([]);
