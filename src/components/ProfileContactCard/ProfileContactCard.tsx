@@ -8,9 +8,9 @@ import { useEffect } from "react";
 
 export default function ProfileContactCard() {
 
-  // top-72 
+  // top-72 fixed bottom-10 md:right-5 lg:right-10 
   return (
-    <Card className="profileContactCard fixed bottom-10 w-[30vw] pointer-events-none z-20  md:right-5 lg:right-10 hidden md:block">
+    <Card className="w-[30vw] h-[50vh] sticky top-[250px] hidden md:block mt-6 xl:ml-4">
       <CardHeader className="bg-gray-200 dark:bg-gray-800 p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">

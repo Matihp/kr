@@ -159,6 +159,7 @@ export default function ProfilesList() {
           <h2 className="text-lg font-bold mb-4">Filtros</h2>
           <div className="mb-4">
             <details
+              open
               className="overflow-hidden rounded border border-gray-300 [&_summary::-webkit-details-marker]:hidden"
             >
               <summary
