@@ -3,8 +3,7 @@ import { useState, ChangeEvent, KeyboardEvent } from "react"
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import Icon from '@mdi/react';
-import { mdiPencilCircle } from '@mdi/js';
+import { PencilIcon } from "../ui/icons"
 
 const skillsData = ["Java", "JavaScript", "Python", "C++", "Ruby", "Swift", "Go", "Rust", "PHP", "TypeScript"];
 
@@ -50,7 +49,7 @@ export default function ModalSkills() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Icon className="cursor-pointer h-6" path={mdiPencilCircle} />
+        <PencilIcon/>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

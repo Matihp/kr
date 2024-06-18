@@ -2,11 +2,8 @@
 import { useState } from "react"
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import Icon from '@mdi/react';
-import { mdiPencilCircle } from '@mdi/js';
-import { Input } from "../ui/input";
-
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,SelectLabel } from "../ui/select";
+import { PencilIcon } from "../ui/icons";
 
 type LanguageLevel = "beginner" | "intermediate" | "advanced" | string
 
@@ -53,7 +50,7 @@ export default function ModalLanguages() {
   return (
     <Dialog defaultOpen={false}>
       <DialogTrigger asChild>
-        <Icon className="cursor-pointer h-6" path={mdiPencilCircle} />
+        <PencilIcon/>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

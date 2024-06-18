@@ -2,14 +2,13 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Label } from '../ui/label'
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
-import Icon from '@mdi/react';
-import { mdiPencilCircle } from '@mdi/js';
+import { PencilIcon } from '../ui/icons';
 
 function ModalDescription() {
   return (
     <Dialog>
     <DialogTrigger asChild>
-        <Icon className="cursor-pointer h-6" path={mdiPencilCircle} />
+      <PencilIcon/>
     </DialogTrigger>
     <DialogContent className="sm:max-w-[600px]">
       <DialogHeader>

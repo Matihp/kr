@@ -7,14 +7,13 @@ import {
     DialogTitle,
     DialogTrigger,
   } from "@/components/ui/dialog"
-  import Icon from '@mdi/react';
-  import { mdiPencilCircle } from '@mdi/js';
+import { PencilIcon } from "../ui/icons";
 
 function ModalInfo() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Icon className="cursor-pointer h-6" path={mdiPencilCircle} />
+        <PencilIcon/>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[625px]">
         <DialogHeader>
