@@ -14,13 +14,13 @@ import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";
 import ModalLanguages from "@/components/Modal/ModalLanguages";
 import ModalSkills from "@/components/Modal/ModalSkills";
+import ModalDescription from "@/components/Modal/ModalDescription";
+import ModalCertification from "@/components/Modal/ModalCertification";
 
 
 function Profile() { 
-  const active =
-    "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
-  const noActive =
-    "flex gap-1 h-12 items-center px-3 border-b-4 border-slate-100";
+  const active ="flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
+  const noActive ="flex gap-1 h-12 items-center px-3 border-b-4 border-slate-100";
   const [showNav, setShowNav] = useState(false);
   const [isScrolling,setIsScrolling] = useState(false)
   const [activeSection, setActiveSection] = useState("");
@@ -38,7 +38,6 @@ function Profile() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      // Ajusta el valor (100 en este ejemplo) al punto en el que deseas que el encabezado aparezca
       if (isTablet && scrollPosition > 50) { // Ajusta el valor (300 en este ejemplo) al punto en el que deseas que el encabezado desaparezca
         isScrollingHeader(false);
       } else {
@@ -170,7 +169,7 @@ function Profile() {
           >
             Sobre Mi
           </h2>
-          <ModalInfo />
+          <ModalDescription />
         </div>
 
         <p className="font-normal text-gray-700 dark:text-gray-400">
@@ -275,7 +274,7 @@ function Profile() {
           >
             Certificaciones
           </h5>
-          <ModalInfo />
+          <ModalCertification />
         </div>
         <p className="font-normal text-gray-700 dark:text-gray-400">
           Here are the biggest enterprise technology acquisitions of 2021 so
