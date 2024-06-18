@@ -6,14 +6,9 @@ import Icon from '@mdi/react';
 import { mdiPencilCircle } from '@mdi/js';
 import { Input } from "../ui/input";
 
-import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,SelectLabel } from "../ui/select";
 
-type Option = {
-  value: string;
-  label: string;
-};
-
-type LanguageLevel = "beginner" | "intermediate" | "advanced"
+type LanguageLevel = "beginner" | "intermediate" | "advanced" | string
 
 type Language = {
   language: string
@@ -27,7 +22,7 @@ export default function ModalLanguages() {
 
   const addLanguage = () => {
     if (languages.length < 4) {
-      setLanguages([...languages, { language: "", level: "intermediate" }])
+      setLanguages([...languages, { language: "", level: "" }])
     }
   }
 
@@ -62,37 +57,41 @@ export default function ModalLanguages() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Language</DialogTitle>
-          <DialogDescription>Enter a language and select your proficiency level.</DialogDescription>
+          <DialogTitle>Agregar Idioma</DialogTitle>
+          <DialogDescription>Selecciona tu idioma y elige tu nivel de competencia.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {languages.map((lang, index) => (
             <div key={index} className="grid gap-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between ">
                 <div className="relative">
                   <Select
                     value={lang.language}
                     onValueChange={(value: string) => updateLanguage(index, "language", value)}
                   >
-                    <SelectTrigger className="w-[120px]">
-                      <Button variant="outline">{lang.language || "Select a language"}</Button>
+                    <SelectTrigger className="w-[190px]">
+                      {lang.language || "Seleccionar idioma"}
                     </SelectTrigger>
-                    <SelectContent>
-                      {availableLanguages.map((language, i) => (
-                        <SelectItem key={i} value={language}>{language}</SelectItem>
-                      ))}
-                    </SelectContent>
+                      <SelectContent>
+                        <SelectGroup>
+                        {availableLanguages.map((language, i) => (
+                          <SelectItem key={i} value={language}>{language}</SelectItem>
+                        ))}
+                        </SelectGroup>
+                      </SelectContent>                
                   </Select>
                 </div>
                 
                 <Select value={lang.level} onValueChange={(value: LanguageLevel) => updateLanguage(index, "level", value)}>
-                  <SelectTrigger className="w-[120px]">
-                    <Button variant="outline">{lang.level}</Button>
+                  <SelectTrigger className="w-[140px]">
+                    {lang.level || "Elegir nivel"}
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="beginner">Beginner</SelectItem>
-                    <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="advanced">Advanced</SelectItem>
+                    <SelectGroup>
+                      <SelectItem value="beginner">Beginner</SelectItem>
+                      <SelectItem value="intermediate">Intermediate</SelectItem>
+                      <SelectItem value="advanced">Advanced</SelectItem>
+                    </SelectGroup>     
                   </SelectContent>
                 </Select>
                 <Button variant="ghost" size="icon" onClick={() => removeLanguage(index)}>
@@ -101,13 +100,13 @@ export default function ModalLanguages() {
               </div>
             </div>
           ))}
-          <Button variant="ghost" onClick={addLanguage} className="flex items-center gap-2">
+          <Button  onClick={addLanguage} className="flex items-center gap-2">
             <PlusIcon className="h-4 w-4" />
             Add Language
           </Button>
         </div>
         <DialogFooter className="flex justify-between">
-          <Button variant="destructive" onClick={clearLanguages}>Clear</Button>
+          <Button variant="outline" onClick={clearLanguages}>Clear</Button>
           <Button type="submit">Save</Button>
         </DialogFooter>
       </DialogContent>
