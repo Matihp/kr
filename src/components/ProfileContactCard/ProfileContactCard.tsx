@@ -1,16 +1,14 @@
-import { Card, CardHeader, CardContent } from "@/components/ui/card"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { mdiInstagram } from '@mdi/js';
-import { Separator } from "@/components/ui/separator"
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { mdiInstagram } from "@mdi/js";
+import { Separator } from "@/components/ui/separator";
 import Icon from "@mdi/react";
-import { useEffect } from "react";
 
 export default function ProfileContactCard() {
-
-  // top-72 fixed bottom-10 md:right-5 lg:right-10 
+  // top-72 fixed bottom-10 md:right-5 lg:right-10
   return (
-    <Card className="w-[30vw] h-[50vh] sticky top-[250px] hidden md:block mt-6 xl:ml-4">
+    <Card className="w-[30vw] h-[54vh] sticky top-[250px] hidden md:block mt-6 xl:ml-4">
       <CardHeader className="bg-gray-200 dark:bg-gray-800 p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -40,15 +38,17 @@ export default function ProfileContactCard() {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-6 grid gap-6">
+      <CardContent className="p-6 grid gap-4">
         <div className="grid gap-2">
           <div className="text-sm font-medium">Certificación</div>
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <span className="h-10 w-10 bg-slate-100" ></span>
+              <span className="h-10 w-10 bg-slate-100"></span>
               <div>
                 <div className="text-sm font-medium">Certified Developer</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">Krovit</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  Krovit
+                </div>
               </div>
             </div>
             <Button variant="link" size="sm" className="hidden lg:block">
@@ -57,6 +57,10 @@ export default function ProfileContactCard() {
           </div>
         </div>
         <Separator />
+        <div className="grid gap-2">
+          <div className="text-sm font-medium">Disponibilidad</div>
+          <div className="grid gap-2">Full time | 08:00 - 17:00</div>
+        </div>
         <div className="grid gap-2">
           <div className="text-sm font-medium">Contact</div>
           <div className="grid gap-2">
@@ -72,11 +76,10 @@ export default function ProfileContactCard() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
-
-function MailIcon(props:any) {
+function MailIcon(props: any) {
   return (
     <svg
       {...props}
@@ -93,11 +96,10 @@ function MailIcon(props:any) {
       <rect width="20" height="16" x="2" y="4" rx="2" />
       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
     </svg>
-  )
+  );
 }
 
-
-function PhoneIcon(props:any) {
+function PhoneIcon(props: any) {
   return (
     <svg
       {...props}
@@ -113,11 +115,10 @@ function PhoneIcon(props:any) {
     >
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
     </svg>
-  )
+  );
 }
 
-
-function TwitterIcon(props:any) {
+function TwitterIcon(props: any) {
   return (
     <svg
       {...props}
@@ -133,5 +134,5 @@ function TwitterIcon(props:any) {
     >
       <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
     </svg>
-  )
+  );
 }

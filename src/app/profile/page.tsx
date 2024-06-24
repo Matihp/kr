@@ -8,7 +8,6 @@ import Icon from "@mdi/react";
 import {mdiMapMarker,mdiAccountSchool, mdiCertificateOutline,mdiHeadCogOutline,mdiInformationOutline,mdiTextAccount,} from "@mdi/js";
 import { useEffect, useState } from "react";
 import ModalProject from "@/components/Modal/ModalProject";
-import ModalInfo from "@/components/Modal/ModalInfo";
 import { DropdownProject } from "@/components/Dropdown/DropdownProject";
 import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";
@@ -16,6 +15,7 @@ import ModalLanguages from "@/components/Modal/ModalLanguages";
 import ModalSkills from "@/components/Modal/ModalSkills";
 import ModalDescription from "@/components/Modal/ModalDescription";
 import ModalCertification from "@/components/Modal/ModalCertification";
+import ModalInfo from "@/components/Modal/ModalInfo";
 
 
 function Profile() { 
@@ -81,7 +81,7 @@ function Profile() {
           <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
             <div className="flex justify-between">
               <h2 className="text-xl font-semibold">Juan Perez</h2>
-              <ModalInfo/>
+              <ModalDescription/>
             </div>
             <div className="flex items-center gap-10 pt-1.5">
               <div className="flex items-center">
@@ -162,7 +162,7 @@ function Profile() {
           Quiero mi certificado
         </button>
       </div>
-      <div className={`block animate-tilt md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${showNav && isScrolling ? "mt-28" : ""} `}>
+      <div className={`block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${showNav && isScrolling ? "mt-28" : ""} `}>
         <div id="sobre-mi" className="flex justify-between">
           <h2   
             className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
@@ -178,64 +178,65 @@ function Profile() {
         </p>
       </div>
 
-      <div id="proyectos">
-        <h2  className="ml-8 text-xl font-bold tracking-tight text-gray-900">
+      <div id="proyectos" className="md:w-[60vw] flex justify-between items-center mxmd:m-8 ml-8 p-2 border rounded-lg bg-gray-100" >
+        <h2  className="ml-0 text-xl font-bold tracking-tight text-gray-900">
           Proyectos
         </h2>
+        <ModalInfo/>
       </div>
-
-      <div  className="flex flex-col items-center m-8 bg-white border border-gray-200 rounded-lg shadow md:w-[60vw] md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-        <Image
-          unoptimized
-          className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg "
-          src={project}
-          alt=""
-        />
-        <div className="flex flex-col justify-between p-4 leading-normal w-full">
-          <div className="flex justify-between">
-            <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-              Noteworthy technology acquisitions 2021
-            </h5>
-            <DropdownProject />
+      <div className="bg-slate-100 flex flex-col md:w-[60vw] mxmd:m-8 ml-8 my-2 py-2 md:pl-4 rounded-md">
+          <div className="flex flex-col items-center ml-0 my-2 bg-white border border-gray-200 rounded-lg shadow md:w-[58vw] md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+             <Image
+              unoptimized
+              className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg "
+              src={project}
+              alt=""
+              />           
+            <div className="flex flex-col justify-between p-4 leading-normal w-full">
+              <div className="flex justify-between">
+                <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+                  Noteworthy technology acquisitions 2021
+                </h5>
+                <DropdownProject />
+              </div>
+              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                Here are the biggest enterprise technology acquisitions of 2021 so
+                far, in reverse chronological order.
+              </p>
+              <div>
+                <ModalProject />
+              </div>
+            </div>
           </div>
-          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
-          </p>
-          <div>
-            <ModalProject />
+          <div className="flex flex-col items-center ml-0 my-4 bg-white border border-gray-200 rounded-lg shadow md:w-[58vw] md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <Image
+              unoptimized
+              className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg "
+              src={certs}
+              alt=""
+            />
+            <div className="flex flex-col justify-between p-4 leading-normal w-full">
+              <div className="flex justify-between">
+                <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+                  Noteworthy technology acquisitions 2021
+                </h5>
+                <DropdownProject />
+              </div>
+              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                Here are the biggest enterprise technology acquisitions of 2021 so
+                far, in reverse chronological order.
+              </p>
+              <div>
+                <ModalProject />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div  className="flex flex-col items-center m-8 bg-white border border-gray-200 rounded-lg shadow md:w-[60vw] md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-        <Image
-          unoptimized
-          className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg "
-          src={certs}
-          alt=""
-        />
-        <div className="flex flex-col justify-between p-4 leading-normal w-full">
-          <div className="flex justify-between">
-            <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-              Noteworthy technology acquisitions 2021
-            </h5>
-            <DropdownProject />
-          </div>
-          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
-          </p>
-          <div>
-            <ModalProject />
-          </div>
-        </div>
-      </div>
+      </div>   
       
       <div className="flex flex-col md:flex-row md:w-[60vw] gap-y-4 md:gap-x-4 m-8">
         <div id="habilidades" className="block   p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
           <div className="flex justify-between">
-            <h5
-              
+            <h5    
               className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
             >
               Habilidades
@@ -247,6 +248,7 @@ function Profile() {
             far, in reverse chronological order.
           </p>
         </div>
+        
         <div
           id="idiomas"
           className="block  p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
