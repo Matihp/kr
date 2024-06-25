@@ -5,7 +5,7 @@ import { mdiInstagram } from "@mdi/js";
 import { Separator } from "@/components/ui/separator";
 import Icon from "@mdi/react";
 
-export default function ProfileContactCard() {
+export default function PublicProfileContactCard() {
   // top-72 fixed bottom-10 md:right-5 lg:right-10
   return (
     <Card className="w-[30vw] h-[54vh] sticky top-[250px] hidden md:block mt-6 xl:ml-4">
