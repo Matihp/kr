@@ -16,9 +16,22 @@ import {
 import Icon from '@mdi/react';
 import { mdiPencilCircle } from '@mdi/js';
 import { useState } from "react";
+import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+
+import Dropzone from "../ui/file-input";
+import { Button } from "../ui/button";
 
 export function DropdownProject() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const handleEditProduct = () => {
+      setIsEditModalOpen(true)
+    }
+    const handleSaveProduct = () => {
+      setIsEditModalOpen(false)
+    }
   return (
     <>
         <DropdownMenu>
@@ -29,10 +42,7 @@ export function DropdownProject() {
             <DropdownMenuLabel >My Project</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => setIsModalOpen(true)}>
-                Editar
-                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleEditProduct}>Edit</DropdownMenuItem>
             <DropdownMenuItem>
                 Eliminar
                 <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
@@ -45,73 +55,99 @@ export function DropdownProject() {
             <DropdownMenuSeparator />
         </DropdownMenuContent>
         </DropdownMenu>
-        {isModalOpen && (
-             <div className="fixed inset-0 z-50 flex items-center justify-center">
-             <div
-               className="fixed inset-0 w-full h-full bg-black opacity-80"
-               onClick={() => setIsModalOpen(false)}
-             ></div>
-             <div className="bg-white rounded-md shadow-lg px-4 py-6 w-full max-w-lg mx-auto relative">
-               <button
-                 className="absolute top-0 right-0 m-4 text-gray-600 hover:text-gray-800 focus:outline-none"
-                 onClick={() => setIsModalOpen(false)}
-               >
-                 <svg
-                   xmlns="http://www.w3.org/2000/svg"
-                   className="w-6 h-6"
-                   viewBox="0 0 20 20"
-                   fill="currentColor"
-                 >
-                   <path
-                     fillRule="evenodd"
-                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                     clipRule="evenodd"
-                   />
-                 </svg>
-               </button>
-               <div className="flex items-center justify-center w-12 h-12 mx-auto bg-green-100 rounded-full">
-                 <svg
-                   xmlns="http://www.w3.org/2000/svg"
-                   className="w-5 h-5 text-green-600"
-                   viewBox="0 0 20 20"
-                   fill="currentColor"
-                 >
-                   <path
-                     fillRule="evenodd"
-                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                     clipRule="evenodd"
-                   />
-                 </svg>
-               </div>
-               <h3 className="text-lg font-medium text-gray-800 text-center mt-3">
-                 {" "}
-                 Successfully accepted!
-               </h3>
-               <p className="mt-1 text-sm leading-relaxed text-center text-gray-500">
-                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Nunc
-                 eget lorem dolor sed viverra ipsum nunc. Consequat id porta nibh
-                 venenatis.
-               </p>
-               <div className="items-center gap-2 mt-3 text-sm sm:flex">
-                 <button
-                   className="w-full mt-2 p-2.5 flex-1 text-white bg-indigo-600 rounded-md outline-none ring-offset-2 ring-indigo-600 focus:ring-2"
-                   onClick={() => setIsModalOpen(false)}
-                 >
-                   Dashboard
-                 </button>
-                 <button
-                   className="w-full mt-2 p-2.5 flex-1 text-gray-800 rounded-md outline-none border ring-offset-2 ring-indigo-600 focus:ring-2"
-                   aria-label="Close"
-                   onClick={() => setIsModalOpen(false)}
-                 >
-                   Undo
-                 </button>
-               </div>
-             </div>
-           </div>
-        )
-        }
+        <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+            <DialogContent className="w-full max-w-none max-h-[95vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Add a new portfolio project</DialogTitle>
+              <DialogDescription>
+                All fields are required unless otherwise indicated.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label
+                    htmlFor="project-title"
+                    className="block text-sm font-medium"
+                  >
+                    Project title
+                  </label>
+                  <Input
+                    id="project-title"
+                    placeholder="Enter a brief but descriptive title"
+                  />
+                  <p className="text-xs text-gray-500">70 characters left</p>
+                </div>
+                <div>
+                  <div className="space-y-2">
+                    <label htmlFor="role" className="block text-sm font-medium">
+                      Your role (optional)
+                    </label>
+                    <Input
+                      id="role"
+                      placeholder="e.g., Front-end engineer or Marketing analyst"
+                    />
+                    <p className="text-xs text-gray-500">100 characters left</p>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label
+                    htmlFor="description"
+                    className="block text-sm font-medium"
+                  >
+                    Project description
+                  </label>
+                  <Textarea
+                    id="description"
+                    placeholder="Briefly describe the project's goals, your solution and the impact you made here"
+                  />
+                  <p className="text-xs text-gray-500">600 characters left</p>
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="skills" className="block text-sm font-medium">
+                    Skills and deliverables
+                  </label>
+                  <Input
+                    id="skills"
+                    className="h-20"
+                    placeholder="Type to add skills relevant to this project"
+                  />
+                  <p className="text-xs text-gray-500">5 skills left</p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium">Add content</label>
+                <Dropzone />
+              </div>
+              <div className="grid grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label htmlFor="website" className="block text-sm font-medium">
+                    Website
+                  </label>
+                  <Input
+                    id="website"
+                    placeholder="Enter the project's website URL"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="repository" className="block text-sm font-medium">
+                    Repository
+                  </label>
+                  <Input
+                    id="repository"
+                    placeholder="Enter the project's repository URL"
+                  />
+                </div>
+              </div>
+            </div>
+            <DialogFooter className="flex justify-between">
+              <Button variant="ghost">Save as draft</Button>
+              <Button variant="default">Next: Preview</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
     </>
   )
 }

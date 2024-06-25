@@ -11,21 +11,19 @@ import { PencilIcon } from "../ui/icons";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { useState } from "react";
+import Dropzone from "../ui/file-input";
 
 function ModalInfo() {
-  const [files, setFiles] = useState<File[]>([]);
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedFiles = Array.from(event.target.files ?? []);
-    setFiles([...files, ...uploadedFiles]);
-  };
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <PencilIcon />
+        <Button
+              className="inline-flex items-center justify-center rounded-xl bg-violet-700 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+            +
+        </Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-none">
+      <DialogContent className="w-full max-w-none max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add a new portfolio project</DialogTitle>
           <DialogDescription>
@@ -61,7 +59,7 @@ function ModalInfo() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-5">
-            <div className="space-y-2 ">
+            <div className="space-y-2">
               <label
                 htmlFor="description"
                 className="block text-sm font-medium"
@@ -74,7 +72,7 @@ function ModalInfo() {
               />
               <p className="text-xs text-gray-500">600 characters left</p>
             </div>
-            <div className="space-y-2 ">
+            <div className="space-y-2">
               <label htmlFor="skills" className="block text-sm font-medium">
                 Skills and deliverables
               </label>
@@ -88,41 +86,9 @@ function ModalInfo() {
           </div>
           <div className="space-y-2">
             <label className="block text-sm font-medium">Add content</label>
-            <div className="border border-dashed border-green-500 p-4 rounded-md flex flex-col items-center">
-              <input
-                type="file"
-                multiple
-                className="hidden"
-                id="file-upload"
-                onChange={handleFileUpload}
-              />
-              <label
-                htmlFor="file-upload"
-                className="flex items-center space-x-2 cursor-pointer"
-              >
-                <ImageIcon className="text-green-500 w-6 h-6" />
-                <VideoIcon className="text-green-500 w-6 h-6" />
-                <TextIcon className="text-green-500 w-6 h-6" />
-                <LinkIcon className="text-green-500 w-6 h-6" />
-                <Music2Icon className="text-green-500 w-6 h-6" />
-                <span className="text-green-500">Add content</span>
-              </label>
-              <div className="mt-4 space-y-2 w-full">
-                {files.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-2 border rounded-md"
-                  >
-                    <span className="text-sm">{file.name}</span>
-                    <Button variant="ghost" size="sm">
-                      Remove
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Dropzone />
           </div>
-          <div className="grid grid-cols-2 gap-5 ">
+          <div className="grid grid-cols-2 gap-5">
             <div className="space-y-2">
               <label htmlFor="website" className="block text-sm font-medium">
                 Website
@@ -149,108 +115,6 @@ function ModalInfo() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function ImageIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-      <circle cx="9" cy="9" r="2" />
-      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-    </svg>
-  );
-}
-
-function LinkIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-    </svg>
-  );
-}
-
-function Music2Icon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="8" cy="18" r="4" />
-      <path d="M12 18V2l7 4" />
-    </svg>
-  );
-}
-
-function TextIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M17 6.1H3" />
-      <path d="M21 12.1H3" />
-      <path d="M15.1 18H3" />
-    </svg>
-  );
-}
-
-function VideoIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" />
-      <rect x="2" y="6" width="14" height="12" rx="2" />
-    </svg>
   );
 }
 
