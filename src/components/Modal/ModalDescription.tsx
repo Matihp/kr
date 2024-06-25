@@ -3,10 +3,31 @@ import { Label } from '../ui/label'
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { PencilIcon } from '../ui/icons';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 
-function ModalDescription() {
+type ModalDescriptionProps = {
+  setDescription: Dispatch<SetStateAction<string>>;
+};
+
+function ModalDescription({setDescription}: ModalDescriptionProps) {
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const handleEditProduct = () => {
+      setIsEditModalOpen(false)
+    }
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const newDescription = formData.get('description') as string;
+    if (newDescription) {
+      setDescription(newDescription);
+    }
+    handleEditProduct()
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
     <DialogTrigger asChild>
       <PencilIcon/>
     </DialogTrigger>
@@ -14,15 +35,19 @@ function ModalDescription() {
       <DialogHeader>
         <DialogTitle>Edit Profile Description</DialogTitle>
       </DialogHeader>
-      <div className="grid gap-4 py-4">
+      <form onSubmit={handleSubmit}>
+        <div className="grid gap-4 py-4">
         <div className="space-y-2">
           <Label htmlFor="description">Description</Label>
           <Textarea
             id="description"
             placeholder="Enter your profile description (max 600 characters)"
             maxLength={600}
+            minLength={10}
+            required
             className="min-h-[200px]"
             onChange={(e:any) => {
+              setDescription(e.target.value)
               const characterCount = e.target.value.length
               const charactersRemaining = 600 - characterCount
               const characterCountElement = document.getElementById("character-count");
@@ -38,10 +63,11 @@ function ModalDescription() {
       </div>
       <DialogFooter>
         <div>
-          <Button variant="outline">Close</Button>
+          <Button variant="outline"onClick={()=>{handleEditProduct()}}>Close</Button>
         </div>
         <Button type="submit">Save Description</Button>
       </DialogFooter>
+      </form>     
     </DialogContent>
   </Dialog>
   )
