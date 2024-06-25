@@ -1,12 +1,18 @@
 "use client";
 import Image from "next/image";
 import avatar from "@/ui/avatar.jpg";
-import Link from "next/link";
 import project from "@/ui/project.webp";
 import certs from "@/ui/certs.jpg";
 import Icon from "@mdi/react";
-import {mdiMapMarker,mdiAccountSchool, mdiCertificateOutline,mdiHeadCogOutline,mdiInformationOutline,mdiTextAccount,} from "@mdi/js";
-import { useEffect, useState } from "react";
+import {
+  mdiMapMarker,
+  mdiAccountSchool,
+  mdiCertificateOutline,
+  mdiHeadCogOutline,
+  mdiInformationOutline,
+  mdiTextAccount,
+} from "@mdi/js";
+import { useEffect, useRef, useState } from "react";
 import ModalProject from "@/components/Modal/ModalProject";
 import { DropdownProject } from "@/components/Dropdown/DropdownProject";
 import useMatchMedia from "@/components/ui/matchMedia";
@@ -16,57 +22,139 @@ import ModalSkills from "@/components/Modal/ModalSkills";
 import ModalDescription from "@/components/Modal/ModalDescription";
 import ModalCertification from "@/components/Modal/ModalCertification";
 import ModalInfo from "@/components/Modal/ModalInfo";
+import PrivateProfileContactCard from "@/components/ProfileContactCard/PrivateProfileContactCard";
 
-
-function Profile() { 
-  const active ="flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
-  const noActive ="flex gap-1 h-12 items-center px-3 border-b-4 border-slate-100";
+function Profile() {
+  const active =
+    "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
+  const noActive =
+    "flex gap-1 h-12 items-center px-3 border-b-4 border-slate-100";
   const [showNav, setShowNav] = useState(false);
-  const [isScrolling,setIsScrolling] = useState(false)
-  const [activeSection, setActiveSection] = useState("");
-  const isTablet = useMatchMedia('(max-width: 1023px)')
-  const isScrollingHeader = useHeaderStore((state) => state.setIsScrollingHeader);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [activeSection, setActiveSection] = useState("sobre-mi");
+  const [description, setDescription] = useState<string>(
+    "With over 14 years of experience in the field of SEO, I have gained extensive knowledge and expertise that enables me to provide effective SEO services to businesses. I previously worked for one of the UK's leading digital marketing agencies and have since then transitioned to directly helping businesses achieve their goals. My passion for helping businesses succeed is reflected in the positive feedback I receive from satisfied clients. Thank you for considering my services - I look forward to the opportunity to work with you and help your business thrive online."
+  );
+  const isTablet = useMatchMedia("(max-width: 1023px)");
+  const isDesktop = useMatchMedia("(min-width: 1024px)");
+  const isScrollingHeader = useHeaderStore(
+    (state) => state.setIsScrollingHeader
+  );
+  const sobreMiRef = useRef<HTMLDivElement>(null);
+  const proyectosRef = useRef<HTMLDivElement>(null);
+  const habilidadesRef = useRef<HTMLDivElement>(null);
+  const certificacionesRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() =>{
-    if(isTablet) {
-      setShowNav(true)
+  useEffect(() => {
+    if (isTablet) {
+      setShowNav(true);
     } else {
-      setShowNav(false)
+      setShowNav(false);
     }
-  },[isTablet])
+  }, [isTablet]);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      if (isTablet && scrollPosition > 50) { // Ajusta el valor (300 en este ejemplo) al punto en el que deseas que el encabezado desaparezca
+      const sections = [
+        { name: "sobre-mi", ref: sobreMiRef },
+        { name: "proyectos", ref: proyectosRef },
+        { name: "habilidades", ref: habilidadesRef },
+        { name: "certificaciones", ref: certificacionesRef },
+      ];
+
+      if (isTablet && scrollPosition > 50) {
         isScrollingHeader(false);
       } else {
         isScrollingHeader(true);
       }
+
       setIsScrolling(scrollPosition > 220);
-    };
 
-    window.addEventListener('scroll', handleScroll);
-
-    // Limpiar el evento de escucha al desmontar el componente
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [isTablet]);
-
-  useEffect(() => {
-      const location = window.location.hash;
-      if (location !== '') {
-        const sectionName = location.substring(1);
-        setActiveSection(sectionName);        
-      } else{
-        setActiveSection('sobre-mi');
+      // Determinar qué sección está actualmente en vista
+      for (const section of sections) {
+        if (section.ref.current) {
+          const rect = section.ref.current.getBoundingClientRect();
+          const offset = isDesktop ? 300 : 100;
+          if (rect.top <= offset && rect.bottom >= offset) {
+            setActiveSection(section.name);
+            break;
+          }
+        }
       }
-  }, []);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isTablet, isDesktop, isScrollingHeader]);
+
+  const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
+    if (sectionRef.current) {
+      const yOffset = isDesktop ? -300 : -100;
+      const y =
+        sectionRef.current.getBoundingClientRect().top +
+        window.pageYOffset +
+        yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
+
+  const navItems = [
+    {
+      name: "sobre-mi",
+      label: "Sobre mi",
+      icon: mdiTextAccount,
+      ref: sobreMiRef,
+    },
+    {
+      name: "proyectos",
+      label: "Proyectos",
+      icon: mdiInformationOutline,
+      ref: proyectosRef,
+    },
+    {
+      name: "habilidades",
+      label: "Habilidades",
+      icon: mdiHeadCogOutline,
+      ref: habilidadesRef,
+    },
+    {
+      name: "certificaciones",
+      label: "Certificaciones",
+      icon: mdiCertificateOutline,
+      ref: certificacionesRef,
+    },
+  ];
+
+  const projects = [
+    {
+      id: 1,
+      imageSrc: project,
+      title: "Noteworthy technology acquisitions 2021",
+      description:
+        "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
+    },
+    {
+      id: 2,
+      imageSrc: certs,
+      title: "Another noteworthy technology acquisition",
+      description: "Another description for the technology acquisition.",
+    },
+    {
+      id: 3,
+      imageSrc: project,
+      title: "Noteworthy technology acquisitions 2021",
+      description:
+        "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
+    },
+  ];
 
   return (
     <div className="relative container-sticky text-[12px]">
-      <div id="sticky-element" className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 lg:pl-2 lg:h-[249px]">
+      <div
+        id="sticky-element"
+        className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 lg:pl-2 lg:h-[249px]"
+      >
         <div className="flex flex-col md:flex-row gap-4 md:gap-8 pt-4 lg:pl-5 md:mt-14 md:pl-7 lg:mt-16">
           <div className="mx-auto md:mx-0">
             <Image
@@ -81,79 +169,38 @@ function Profile() {
           <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
             <div className="flex justify-between">
               <h2 className="text-xl font-semibold">Juan Perez</h2>
-              <ModalDescription/>
+              <ModalDescription setDescription={setDescription} />
             </div>
             <div className="flex items-center gap-10 pt-1.5">
               <div className="flex items-center">
-              <Icon path={mdiMapMarker} size={1} />
-              <p className="text-slate-400">Ubicacion</p>
+                <Icon path={mdiMapMarker} size={1} />
+                <p className="text-slate-400">Ubicación</p>
+              </div>
+              <div className="flex items-center">
+                <Icon path={mdiAccountSchool} size={1} />
+                <p className="text-slate-400">Profesión</p>
+              </div>
             </div>
-            <div className="flex items-center">
-              <Icon path={mdiAccountSchool} size={1} />
-              <p className="text-slate-400">Profesión</p>
-            </div>
-            </div>
-            
           </div>
         </div>
 
-        <div 
-          className={`flex h-16 lg:ml-6 pt-4 justify-between sm:justify-start sm:gap-1  ${
+        <div
+          className={`flex h-16 lg:ml-6 pt-4 justify-between sm:justify-start sm:gap-1 ${
             showNav && isScrolling
               ? "fixed top-0 z-50 mt-0 w-screen !pt-0 !h-12 bg-slate-100 transition-all"
               : ""
           }`}
         >
-          <Link
-              href={`/profile?q=#sobre-mi`}
-              onClick={() =>{setActiveSection("sobre-mi");}}
-              className={activeSection === "sobre-mi" ? active : noActive}
-          >
-            <Icon path={mdiTextAccount} size={1} />
-            <span className="hidden sm:block">Sobre Mi</span>
-          </Link>
-          <Link
-             href={`/profile?q=#proyectos`}
-             onClick={() => {setActiveSection("proyectos")}}
-             className={activeSection === "proyectos" ? active : noActive}
-          >
-            <Icon path={mdiInformationOutline} size={1} />
-            <span className="hidden sm:block">Proyectos</span>
-          </Link>
-          <Link
-            href={`/profile?q=#habilidades`}
-            onClick={() =>{setActiveSection("habilidades")}}
-            className={activeSection === "habilidades" ? active : noActive}
-          >
-            <Icon className="w-6 h-6" path={mdiHeadCogOutline} />
-            <span className="hidden sm:block">Habilidades</span>
-          </Link>
-          <Link
-            href={`/profile?q=#certificaciones`}
-            onClick={() => {setActiveSection("certificaciones")}}
-            className={activeSection === "certificaciones" ? active : noActive}
-          >
-            <Icon className="pt-1 h-7" path={mdiCertificateOutline} />
-            <span className="hidden sm:block">Certificaciones</span>
-          </Link>
-        </div>
-      </div>
-
-      <div className="fixed z-20 pointer-events-none h-40 md:right-5 md:top-56 hidden md:block w-[30vw] pb-20">
-        <div className=" w-full max-w-md px-8 py-4 mt-16 bg-white rounded-lg shadow-lg dark:bg-gray-800">
-          <h2 className="mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white md:mt-0">
-            Design Tools
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-200 pb-2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae
-            dolores deserunt ea doloremque natus error.
-          </p>
-          <div className="flex justify-center items-center mx-auto">
-            <button className=" px-8 py-3 font-semibold rounded bg-violet-600 text-gray-50 hover:bg-violet-500">
-              Quiero mi certificado
+          {navItems.map((item) => (
+            <button
+              key={item.name}
+              onClick={() => scrollToSection(item.ref)}
+              className={activeSection === item.name ? active : noActive}
+            >
+              <Icon path={item.icon} size={1} />
+              <span className="hidden sm:block">{item.label}</span>
             </button>
-          </div>
+          ))}
         </div>
       </div>
 
@@ -162,128 +209,124 @@ function Profile() {
           Quiero mi certificado
         </button>
       </div>
-      <div className={`block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${showNav && isScrolling ? "mt-28" : ""} `}>
-        <div id="sobre-mi" className="flex justify-between">
-          <h2   
-            className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+      <div className="flex">
+        <div>
+          <div
+            id="sobre-mi"
+            ref={sobreMiRef}
+            className={`block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${
+              showNav && isScrolling ? "mt-28" : ""
+            } `}
           >
-            Sobre Mi
-          </h2>
-          <ModalDescription />
-        </div>
-
-        <p className="font-normal text-gray-700 dark:text-gray-400">
-          Here are the biggest enterprise technology acquisitions of 2021 so
-          far, in reverse chronological order.
-        </p>
-      </div>
-
-      <div id="proyectos" className="md:w-[60vw] flex justify-between items-center mxmd:m-8 ml-8 p-2 border rounded-lg bg-gray-100" >
-        <h2  className="ml-0 text-xl font-bold tracking-tight text-gray-900">
-          Proyectos
-        </h2>
-        <ModalInfo/>
-      </div>
-      <div className="bg-slate-100 flex flex-col md:w-[60vw] mxmd:m-8 ml-8 my-2 py-2 md:pl-4 rounded-md">
-          <div className="flex flex-col items-center ml-0 my-2 bg-white border border-gray-200 rounded-lg shadow md:w-[58vw] md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-             <Image
-              unoptimized
-              className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg "
-              src={project}
-              alt=""
-              />           
-            <div className="flex flex-col justify-between p-4 leading-normal w-full">
-              <div className="flex justify-between">
-                <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-                  Noteworthy technology acquisitions 2021
-                </h5>
-                <DropdownProject />
-              </div>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021 so
-                far, in reverse chronological order.
-              </p>
-              <div>
-                <ModalProject />
-              </div>
+            <div className="flex justify-between">
+              <h2 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Sobre Mi
+              </h2>
+              <ModalDescription setDescription={setDescription} />
             </div>
+            <p className="font-normal text-gray-700 dark:text-gray-400">
+              {description}
+            </p>
           </div>
-          <div className="flex flex-col items-center ml-0 my-4 bg-white border border-gray-200 rounded-lg shadow md:w-[58vw] md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-            <Image
-              unoptimized
-              className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg "
-              src={certs}
-              alt=""
-            />
-            <div className="flex flex-col justify-between p-4 leading-normal w-full">
-              <div className="flex justify-between">
-                <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-                  Noteworthy technology acquisitions 2021
-                </h5>
-                <DropdownProject />
-              </div>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021 so
-                far, in reverse chronological order.
-              </p>
-              <div>
-                <ModalProject />
-              </div>
-            </div>
+
+          <div
+            id="proyectos"
+            ref={proyectosRef}
+            className="md:w-[60vw] flex justify-between items-center mxmd:m-8 ml-8 p-2 border rounded-lg bg-gray-100"
+          >
+            <h2 className="ml-0 text-xl font-bold tracking-tight text-gray-900">
+              Proyectos
+            </h2>
+            <ModalInfo />
           </div>
-      </div>   
-      
-      <div className="flex flex-col md:flex-row md:w-[60vw] gap-y-4 md:gap-x-4 m-8">
-        <div id="habilidades" className="block   p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-          <div className="flex justify-between">
-            <h5    
-              className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+          <div className="bg-slate-100 flex flex-col md:w-[60vw] mxmd:m-8 ml-8 my-2 py-2 md:pl-4 rounded-md">
+            {projects.map((project) => (
+              <div
+                key={project.id}
+                className="flex flex-col items-center ml-0 my-2 bg-white border border-gray-200 rounded-lg shadow md:w-[58vw]  md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+              >
+                <Image
+                  unoptimized
+                  className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg "
+                  src={project.imageSrc}
+                  alt=""
+                  width={192} // Ajusta según sea necesario
+                  height={192} // Ajusta según sea necesario
+                />
+                <div className="flex flex-col justify-between p-4 leading-normal w-full">
+                  <div className="flex justify-between">
+                    <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+                      {project.title}
+                    </h5>
+                    <DropdownProject />
+                  </div>
+                  <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                    {project.description}
+                  </p>
+                  <div>
+                    <ModalProject />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col md:flex-row md:w-[60vw] gap-y-4 md:gap-x-4 m-8">
+            <div
+              id="habilidades"
+              ref={habilidadesRef}
+              className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
             >
-              Habilidades
-            </h5>
-            <ModalSkills />
-          </div>
-          <p className="font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
-          </p>
-        </div>
-        
-        <div
-          id="idiomas"
-          className="block  p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-        >
-          <div className="flex justify-between">
-            <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Idiomas
-            </h5>
-            <ModalLanguages/>
-          </div>
-          <p className="font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
-          </p>
-        </div>
-      </div>
+              <div className="flex justify-between">
+                <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  Habilidades
+                </h5>
+                <ModalSkills />
+              </div>
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                Here are the biggest enterprise technology acquisitions of 2021
+                so far, in reverse chronological order.
+              </p>
+            </div>
 
-      <div 
-      id="certificaciones"
-        className="block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-      >
-        <div className="flex justify-between">
-          <h5            
-            className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+            <div
+              id="idiomas"
+              className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+            >
+              <div className="flex justify-between">
+                <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  Idiomas
+                </h5>
+                <ModalLanguages />
+              </div>
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                Here are the biggest enterprise technology acquisitions of 2021
+                so far, in reverse chronological order.
+              </p>
+            </div>
+          </div>
+
+          <div
+            id="certificaciones"
+            ref={certificacionesRef}
+            className="block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
           >
-            Certificaciones
-          </h5>
-          <ModalCertification />
+            <div className="flex justify-between">
+              <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Certificaciones
+              </h5>
+              <ModalCertification />
+            </div>
+            <p className="font-normal text-gray-700 dark:text-gray-400">
+              Here are the biggest enterprise technology acquisitions of 2021 so
+              far, in reverse chronological order.
+            </p>
+          </div>
         </div>
-        <p className="font-normal text-gray-700 dark:text-gray-400">
-          Here are the biggest enterprise technology acquisitions of 2021 so
-          far, in reverse chronological order.
-        </p>
+        <PrivateProfileContactCard/>
       </div>
     </div>
   );
 }
+
 export default Profile;

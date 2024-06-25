@@ -17,7 +17,7 @@ import ModalProject from "@/components/Modal/ModalProject";
 import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";
 import Image from "next/image";
-import ProfileContactCard from "@/components/ProfileContactCard/ProfileContactCard";
+import PublicProfileContactCard from "@/components/ProfileContactCard/PublicProfileContactCard";
 
 function PublicProfile() {
   const active =
@@ -277,7 +277,7 @@ function PublicProfile() {
             </p>
           </div>
         </div>
-        <ProfileContactCard />
+        <PublicProfileContactCard/>
       </div>
     </div>
   );
