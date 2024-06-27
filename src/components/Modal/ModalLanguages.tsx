@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,SelectLabel } from "../ui/select";
@@ -14,23 +14,31 @@ type Language = {
 
 const languagesData = ["English", "Spanish", "French", "German", "Italian", "Portuguese", "Japanese", "Chinese", "Russian", "Arabic"]
 
-export default function ModalLanguages() {
-  const [languages, setLanguages] = useState<Language[]>([])
+type ModalLanguagesProps = {
+  languages: Language[];
+  setLanguages: (languages: Language[]) => void;
+};
+export default function ModalLanguages({ languages, setLanguages }: ModalLanguagesProps) {
+  const [localLanguages, setLocalLanguages] = useState<Language[]>([]);
+
+  useEffect(() => {
+    setLocalLanguages(languages);
+  }, [languages]);
 
   const addLanguage = () => {
-    if (languages.length < 4) {
-      setLanguages([...languages, { language: "", level: "" }])
+    if (localLanguages.length < 4) {
+      setLocalLanguages([...localLanguages, { language: "", level: "" }]);
     }
-  }
+  };
 
   const removeLanguage = (index: number) => {
-    const updatedLanguages = [...languages]
-    updatedLanguages.splice(index, 1)
-    setLanguages(updatedLanguages)
-  }
+    const updatedLanguages = [...localLanguages];
+    updatedLanguages.splice(index, 1);
+    setLocalLanguages(updatedLanguages);
+  };
 
   const updateLanguage = (index: number, field: keyof Language, value: LanguageLevel | string) => {
-    const updatedLanguages = [...languages];
+    const updatedLanguages = [...localLanguages];
 
     if (field === "language") {
       updatedLanguages[index].language = value as string;
@@ -38,19 +46,23 @@ export default function ModalLanguages() {
       updatedLanguages[index].level = value as LanguageLevel;
     }
 
-    setLanguages(updatedLanguages);
+    setLocalLanguages(updatedLanguages);
   };
 
-  const availableLanguages = languagesData.filter(lang => !languages.some(l => l.language === lang));
+  const availableLanguages = languagesData.filter(lang => !localLanguages.some(l => l.language === lang));
 
   const clearLanguages = () => {
-    setLanguages([]);
+    setLocalLanguages([]);
+  };
+
+  const saveLanguages = () => {
+    setLanguages(localLanguages);
   };
 
   return (
     <Dialog defaultOpen={false}>
       <DialogTrigger asChild>
-        <PencilIcon/>
+        <PencilIcon />
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -58,7 +70,7 @@ export default function ModalLanguages() {
           <DialogDescription>Selecciona tu idioma y elige tu nivel de competencia.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {languages.map((lang, index) => (
+          {localLanguages.map((lang, index) => (
             <div key={index} className="grid gap-2">
               <div className="flex items-center justify-between ">
                 <div className="relative">
@@ -69,16 +81,16 @@ export default function ModalLanguages() {
                     <SelectTrigger className="w-[190px]">
                       {lang.language || "Seleccionar idioma"}
                     </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
+                    <SelectContent>
+                      <SelectGroup>
                         {availableLanguages.map((language, i) => (
                           <SelectItem key={i} value={language}>{language}</SelectItem>
                         ))}
-                        </SelectGroup>
-                      </SelectContent>                
+                      </SelectGroup>
+                    </SelectContent>
                   </Select>
                 </div>
-                
+
                 <Select value={lang.level} onValueChange={(value: LanguageLevel) => updateLanguage(index, "level", value)}>
                   <SelectTrigger className="w-[140px]">
                     {lang.level || "Elegir nivel"}
@@ -88,7 +100,7 @@ export default function ModalLanguages() {
                       <SelectItem value="beginner">Beginner</SelectItem>
                       <SelectItem value="intermediate">Intermediate</SelectItem>
                       <SelectItem value="advanced">Advanced</SelectItem>
-                    </SelectGroup>     
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
                 <Button variant="ghost" size="icon" onClick={() => removeLanguage(index)}>
@@ -97,18 +109,18 @@ export default function ModalLanguages() {
               </div>
             </div>
           ))}
-          <Button  onClick={addLanguage} className="flex items-center gap-2">
+          <Button onClick={addLanguage} className="flex items-center gap-2">
             <PlusIcon className="h-4 w-4" />
             Add Language
           </Button>
         </div>
         <DialogFooter className="flex justify-between">
           <Button variant="outline" onClick={clearLanguages}>Clear</Button>
-          <Button type="submit">Save</Button>
+          <Button onClick={saveLanguages}>Save</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
   return (

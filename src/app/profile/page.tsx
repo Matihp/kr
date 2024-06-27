@@ -24,6 +24,13 @@ import ModalCertification from "@/components/Modal/ModalCertification";
 import ModalInfo from "@/components/Modal/ModalInfo";
 import PrivateProfileContactCard from "@/components/ProfileContactCard/PrivateProfileContactCard";
 
+type LanguageLevel = "beginner" | "intermediate" | "advanced" | string
+
+type Language = {
+  language: string
+  level: LanguageLevel
+}
+
 function Profile() {
   const active =
     "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
@@ -35,6 +42,7 @@ function Profile() {
   const [description, setDescription] = useState<string>(
     "With over 14 years of experience in the field of SEO, I have gained extensive knowledge and expertise that enables me to provide effective SEO services to businesses. I previously worked for one of the UK's leading digital marketing agencies and have since then transitioned to directly helping businesses achieve their goals. My passion for helping businesses succeed is reflected in the positive feedback I receive from satisfied clients. Thank you for considering my services - I look forward to the opportunity to work with you and help your business thrive online."
   );
+  const [languages, setLanguages] = useState<Language[]>([])
   const isTablet = useMatchMedia("(max-width: 1023px)");
   const isDesktop = useMatchMedia("(min-width: 1024px)");
   const isScrollingHeader = useHeaderStore(
@@ -290,19 +298,20 @@ function Profile() {
             </div>
 
             <div
-              id="idiomas"
-              className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+            id="idiomas"
+            className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
             >
               <div className="flex justify-between">
                 <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                   Idiomas
                 </h5>
-                <ModalLanguages />
+                <ModalLanguages languages={languages} setLanguages={setLanguages} />
               </div>
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
+              <ul className="font-normal text-gray-700 dark:text-gray-400">
+                {languages.map((lang, index) => (
+                  <li key={index}>{`${lang.language} - ${lang.level}`}</li>
+                ))}
+              </ul>
             </div>
           </div>
 
