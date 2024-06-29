@@ -4,6 +4,7 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,SelectLabel } from "../ui/select";
 import { PencilIcon } from "../ui/icons";
+import { Alert, AlertDescription } from "../ui/alert";
 
 type LanguageLevel = "beginner" | "intermediate" | "advanced" | string
 
@@ -20,6 +21,8 @@ type ModalLanguagesProps = {
 };
 export default function ModalLanguages({ languages, setLanguages }: ModalLanguagesProps) {
   const [localLanguages, setLocalLanguages] = useState<Language[]>([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setLocalLanguages(languages);
@@ -47,22 +50,49 @@ export default function ModalLanguages({ languages, setLanguages }: ModalLanguag
     }
 
     setLocalLanguages(updatedLanguages);
+    setError(null); // Clear any previous error when user makes a change
   };
 
   const availableLanguages = languagesData.filter(lang => !localLanguages.some(l => l.language === lang));
 
   const clearLanguages = () => {
     setLocalLanguages([]);
+    setError(null);
+  };
+
+  const validateLanguages = (): boolean => {
+    if (localLanguages.length === 0) {
+      setError("Por favor, agregue al menos un idioma.");
+      return false;
+    }
+
+    for (const lang of localLanguages) {
+      if (!lang.language || !lang.level) {
+        setError("Por favor, complete todos los campos de idioma y nivel.");
+        return false;
+      }
+    }
+
+    return true;
   };
 
   const saveLanguages = () => {
-    setLanguages(localLanguages);
+    if (validateLanguages()) {
+      setLanguages(localLanguages);
+      setIsEditModalOpen(false);
+      setError(null);
+    }
+  }
+  
+  const openModal = () => {
+    setIsEditModalOpen(true);
+    setError(null);
   };
 
   return (
-    <Dialog defaultOpen={false}>
+    <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
       <DialogTrigger asChild>
-        <PencilIcon />
+        <PencilIcon onClick={openModal}/>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -114,6 +144,11 @@ export default function ModalLanguages({ languages, setLanguages }: ModalLanguag
             Add Language
           </Button>
         </div>
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
         <DialogFooter className="flex justify-between">
           <Button variant="outline" onClick={clearLanguages}>Clear</Button>
           <Button onClick={saveLanguages}>Save</Button>
