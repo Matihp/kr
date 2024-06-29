@@ -1,57 +1,60 @@
 "use client";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { PencilIcon } from "../ui/icons";
+import { TrashIcon } from "lucide-react";
 
 type Certification = {
   id: string;
   name: string;
   date: string;
   url: string;
-  description: string;
+  description: string
 };
 
-function ModalCertification() {
+type ModalCertificationsProps = {
+  certifications: Certification[];
+  setCertifications: React.Dispatch<React.SetStateAction<Certification[]>>;
+};
+
+const ModalCertification: FC<ModalCertificationsProps> = ({ certifications, setCertifications }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddCertificationModalOpen, setIsAddCertificationModalOpen] = useState(false);
   const [isEditCertificationModalOpen, setIsEditCertificationModalOpen] = useState(false);
-  const [certifications, setCertifications] = useState<Certification[]>([
-    {
-      id: "1",
-      name: "Certificación 1",
-      date: "2023-01-01",
-      url: "https://example.com/cert1",
-      description: "Descripción de la Certificación 1",
-    },
-    {
-      id: "2",
-      name: "Certificación 2",
-      date: "2023-02-02",
-      url: "https://example.com/cert2",
-      description: "Descripción de la Certificación 2",
-    },
-  ]);
-  const [editingCertification, setEditingCertification] = useState<Certification | undefined>();
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [isFormDirty, setIsFormDirty] = useState(false);
+  
+  const [editingCertification, setEditingCertification] = useState<Certification | null>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!isFormDirty) {
+      console.log("Form is not dirty, not submitting");
+      return;
+    }
+    setIsFormSubmitted(true);
+  
     const formData = new FormData(e.currentTarget);
-
+  
     const name = formData.get('name') as string;
     const date = formData.get('date') as string;
     const url = formData.get('url') as string;
     const description = formData.get('description') as string;
-
+  
+    console.log("Before updating certifications:", { name, date, url, description });
+    console.log("Editing certification state:", editingCertification);
     if (editingCertification) {
+      console.log("Updating certification with ID:", editingCertification.id);
       const updatedCertifications = certifications.map((cert) =>
         cert.id === editingCertification.id ? { ...cert, name, date, url, description } : cert
       );
       setCertifications(updatedCertifications);
     } else {
+      console.log("Adding new certification");
       const newCertification: Certification = {
         id: crypto.randomUUID(),
         name,
@@ -59,37 +62,51 @@ function ModalCertification() {
         url,
         description,
       };
-      setCertifications((prevCertifications) => [...prevCertifications, newCertification]);
+      setCertifications((prevCertifications: Certification[]) => [...prevCertifications, newCertification]);
     }
-
-    setIsAddCertificationModalOpen(false);
-    setIsEditCertificationModalOpen(false);
-    setEditingCertification(undefined);
+  
+    handleCloseModal();
   };
-
-  const handleCancel = () => {
+  
+  const handleCloseModal = () => {
+    if (!isFormSubmitted) {
+      console.log("Closing modal without submitting form");
+    }
     setIsAddCertificationModalOpen(false);
     setIsEditCertificationModalOpen(false);
-    setEditingCertification(undefined);
+    setEditingCertification(null);
+    setIsFormSubmitted(false);
+    setIsFormDirty(false);
+  };
+  
+  const handleInputChange = () => {
+    setIsFormDirty(true);
   };
 
   const handleEdit = (certification: Certification) => {
+    console.log("Editing certification:", certification);
     setEditingCertification(certification);
     setIsEditCertificationModalOpen(true);
   };
 
+  const handleDelete = (id: string) => {
+    setCertifications((prevCertifications) =>
+      prevCertifications.filter((cert) => cert.id !== id)
+    );
+  };
+
   const openAddCertificationModal = () => {
-    setEditingCertification(undefined);
+    setEditingCertification(null);
     setIsAddCertificationModalOpen(true);
   };
 
   return (
     <>
-      <PencilIcon onClick={() => setIsOpen(true)}/>
+      <PencilIcon onClick={() => setIsOpen(true)} />
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Mis Certificaciones</DialogTitle>
+            <DialogTitle>Certificaciones</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             {certifications.map((certification) => (
@@ -102,9 +119,14 @@ function ModalCertification() {
                     Descripción: {certification.description}
                   </div>
                 </div>
-                <Button variant="outline" size="sm" onClick={() => handleEdit(certification)}>
-                  Editar
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={() => handleEdit(certification)}>
+                    Editar
+                  </Button>
+                  <Button variant="destructive" size="sm" onClick={() => handleDelete(certification.id)}>
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             ))}
             <Button onClick={openAddCertificationModal}>Agregar Certificación</Button>
@@ -126,6 +148,7 @@ function ModalCertification() {
                   name="name"
                   defaultValue=""
                   required
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="space-y-1.5">
@@ -136,6 +159,7 @@ function ModalCertification() {
                   type="date"
                   defaultValue=""
                   required
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="space-y-1.5">
@@ -146,6 +170,7 @@ function ModalCertification() {
                   type="url"
                   defaultValue=""
                   required
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="space-y-1.5">
@@ -155,12 +180,16 @@ function ModalCertification() {
                   name="description"
                   defaultValue=""
                   required
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
             <DialogFooter>
               <Button type="submit">Guardar</Button>
-              <Button variant="outline" onClick={handleCancel}>Cancelar</Button>
+              <Button variant="outline" onClick={() => {
+                console.log("Cancel button clicked");
+                handleCloseModal();
+              }}>Cancelar</Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -180,6 +209,7 @@ function ModalCertification() {
                   name="name"
                   defaultValue={editingCertification?.name || ""}
                   required
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="space-y-1.5">
@@ -190,6 +220,7 @@ function ModalCertification() {
                   type="date"
                   defaultValue={editingCertification?.date || ""}
                   required
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="space-y-1.5">
@@ -200,6 +231,7 @@ function ModalCertification() {
                   type="url"
                   defaultValue={editingCertification?.url || ""}
                   required
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="space-y-1.5">
@@ -209,12 +241,16 @@ function ModalCertification() {
                   name="description"
                   defaultValue={editingCertification?.description || ""}
                   required
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
             <DialogFooter>
               <Button type="submit">Guardar</Button>
-              <Button variant="outline" onClick={handleCancel}>Cancelar</Button>
+              <Button variant="outline" onClick={() => {
+                console.log("Cancel button clicked");
+                handleCloseModal();
+              }}>Cancelar</Button>
             </DialogFooter>
           </form>
         </DialogContent>

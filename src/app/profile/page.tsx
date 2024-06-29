@@ -31,6 +31,14 @@ type Language = {
   level: LanguageLevel
 }
 
+type Certification = {
+  id: string;
+  name: string;
+  date: string;
+  url: string;
+  description: string;
+};
+
 function Profile() {
   const active =
     "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
@@ -43,6 +51,22 @@ function Profile() {
     "With over 14 years of experience in the field of SEO, I have gained extensive knowledge and expertise that enables me to provide effective SEO services to businesses. I previously worked for one of the UK's leading digital marketing agencies and have since then transitioned to directly helping businesses achieve their goals. My passion for helping businesses succeed is reflected in the positive feedback I receive from satisfied clients. Thank you for considering my services - I look forward to the opportunity to work with you and help your business thrive online."
   );
   const [languages, setLanguages] = useState<Language[]>([])
+  const [certifications, setCertifications] = useState<Certification[]>([
+    {
+      id: "1",
+      name: "Certificación 1",
+      date: "2023-01-01",
+      url: "https://example.com/cert1",
+      description: "Descripción de la Certificación 1",
+    },
+    {
+      id: "2",
+      name: "Certificación 2",
+      date: "2023-02-02",
+      url: "https://example.com/cert2",
+      description: "Descripción de la Certificación 2",
+    },
+  ]);
   const isTablet = useMatchMedia("(max-width: 1023px)");
   const isDesktop = useMatchMedia("(min-width: 1024px)");
   const isScrollingHeader = useHeaderStore(
@@ -299,7 +323,7 @@ function Profile() {
 
             <div
             id="idiomas"
-            className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+            className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 md:min-w-56 xl:min-w-96"
             >
               <div className="flex justify-between">
                 <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -307,9 +331,9 @@ function Profile() {
                 </h5>
                 <ModalLanguages languages={languages} setLanguages={setLanguages} />
               </div>
-              <ul className="font-normal text-gray-700 dark:text-gray-400">
+              <ul className="font-normal ">
                 {languages.map((lang, index) => (
-                  <li key={index}>{`${lang.language} - ${lang.level}`}</li>
+                  <li className="font-semibold mb-1" key={index}>{`${lang.language}: `}<span className="text-gray-500">{lang.level}</span></li>
                 ))}
               </ul>
             </div>
@@ -317,19 +341,24 @@ function Profile() {
 
           <div
             id="certificaciones"
-            ref={certificacionesRef}
             className="block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
           >
             <div className="flex justify-between">
               <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 Certificaciones
               </h5>
-              <ModalCertification />
+              <ModalCertification certifications={certifications} setCertifications={setCertifications} />
             </div>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              Here are the biggest enterprise technology acquisitions of 2021 so
-              far, in reverse chronological order.
-            </p>
+            <div className="font-normal text-gray-700 dark:text-gray-400 grid grid-cols-2 ml-1">
+              {certifications.map((cert) => (
+                <div key={cert.id} className="mb-4">
+                  <h6 className="text-lg font-semibold text-gray-900 dark:text-white">{cert.name}</h6>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Fecha: {cert.date}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">URL: <a href={cert.url}>{cert.url}</a></p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{cert.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <PrivateProfileContactCard/>
