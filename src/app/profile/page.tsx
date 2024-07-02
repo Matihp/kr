@@ -1,8 +1,6 @@
 "use client";
 import Image from "next/image";
 import avatar from "@/ui/avatar.jpg";
-import project from "@/ui/project.webp";
-import certs from "@/ui/certs.jpg";
 import Icon from "@mdi/react";
 import {
   mdiMapMarker,
@@ -39,6 +37,29 @@ type Certification = {
   description: string;
 };
 
+interface Project {
+  id: string;
+  title: string;
+  role: string;
+  description: string;
+  skills: string[];
+  imageSrc: string;
+  website: string;
+  repository: string;
+}
+
+// Esta interfaz representa los datos que recibiremos del formulario
+interface ProjectFormData {
+  title: string;
+  role: string;
+  description: string;
+  skills: string[];
+  image?: File | null;
+  website: string;
+  repository: string;
+}
+
+
 function Profile() {
   const active =
     "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
@@ -50,6 +71,8 @@ function Profile() {
   const [description, setDescription] = useState<string>(
     "With over 14 years of experience in the field of SEO, I have gained extensive knowledge and expertise that enables me to provide effective SEO services to businesses. I previously worked for one of the UK's leading digital marketing agencies and have since then transitioned to directly helping businesses achieve their goals. My passion for helping businesses succeed is reflected in the positive feedback I receive from satisfied clients. Thank you for considering my services - I look forward to the opportunity to work with you and help your business thrive online."
   );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [languages, setLanguages] = useState<Language[]>([])
   const [certifications, setCertifications] = useState<Certification[]>([
     {
@@ -131,6 +154,20 @@ function Profile() {
     }
   };
 
+  const handleAddProject = (projectData: ProjectFormData) => {
+    const newProject: Project = {
+      id: Date.now().toString(),
+      title: projectData.title,
+      role: projectData.role,
+      description: projectData.description,
+      skills: projectData.skills,
+      imageSrc: projectData.image ? URL.createObjectURL(projectData.image) : '/placeholder-image.jpg',
+      website: projectData.website,
+      repository: projectData.repository,
+    };
+    setProjects(prevProjects => [...prevProjects, newProject]);
+  };
+
   const navItems = [
     {
       name: "sobre-mi",
@@ -155,29 +192,6 @@ function Profile() {
       label: "Certificaciones",
       icon: mdiCertificateOutline,
       ref: certificacionesRef,
-    },
-  ];
-
-  const projects = [
-    {
-      id: 1,
-      imageSrc: project,
-      title: "Noteworthy technology acquisitions 2021",
-      description:
-        "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
-    },
-    {
-      id: 2,
-      imageSrc: certs,
-      title: "Another noteworthy technology acquisition",
-      description: "Another description for the technology acquisition.",
-    },
-    {
-      id: 3,
-      imageSrc: project,
-      title: "Noteworthy technology acquisitions 2021",
-      description:
-        "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
     },
   ];
 
@@ -260,7 +274,7 @@ function Profile() {
               {description}
             </p>
           </div>
-
+          
           <div
             id="proyectos"
             ref={proyectosRef}
@@ -269,21 +283,21 @@ function Profile() {
             <h2 className="ml-0 text-xl font-bold tracking-tight text-gray-900">
               Proyectos
             </h2>
-            <ModalInfo />
+            <ModalInfo onAddProject={handleAddProject} />
           </div>
           <div className="bg-slate-100 flex flex-col md:w-[60vw] mxmd:m-8 ml-8 my-2 py-2 md:pl-4 rounded-md">
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="flex flex-col items-center ml-0 my-2 bg-white border border-gray-200 rounded-lg shadow md:w-[58vw]  md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                className="flex flex-col items-center ml-0 my-2 bg-white border border-gray-200 rounded-lg shadow md:w-[58vw] md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
               >
                 <Image
                   unoptimized
-                  className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg "
+                  className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
                   src={project.imageSrc}
                   alt=""
-                  width={192} // Ajusta según sea necesario
-                  height={192} // Ajusta según sea necesario
+                  width={192}
+                  height={192}
                 />
                 <div className="flex flex-col justify-between p-4 leading-normal w-full">
                   <div className="flex justify-between">
@@ -341,6 +355,7 @@ function Profile() {
 
           <div
             id="certificaciones"
+            ref={certificacionesRef}
             className="block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
           >
             <div className="flex justify-between">

@@ -1,5 +1,4 @@
-// components/TechTagsInput.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { WithContext as ReactTags, Tag } from 'react-tag-input';
 import './TechTagsInput.css';
@@ -11,11 +10,20 @@ const suggestions: Tag[] = [
   { id: 'Next.js', text: 'Next.js' },
   { id: 'Node.js', text: 'Node.js' },
   // Agrega más sugerencias según sea necesario
-].map(suggestion => ({ ...suggestion, className: '' })); // Añadir className para cumplir con el tipo esperado por ReactTags
+].map(suggestion => ({ ...suggestion, className: '' }));
 
-const TechTagsInput: React.FC = () => {
-  const [tags, setTags] = useState<Tag[]>([]);
+interface TechTagsInputProps {
+  value: string[];
+  onChange: (tags: string[]) => void;
+}
+
+const TechTagsInput: React.FC<TechTagsInputProps> = ({ value, onChange }) => {
+  const [tags, setTags] = useState<Tag[]>(value.map(v => ({ id: v, text: v, className: '' })));
   const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    onChange(tags.map(tag => tag.text));
+  }, [tags, onChange]);
 
   const handleDelete = (i: number) => {
     const newTags = tags.filter((_, index) => index !== i);
@@ -66,7 +74,7 @@ const TechTagsInput: React.FC = () => {
         inputFieldPosition="none"
         allowDragDrop={false}
         autocomplete
-        readOnly={tags.length >= 5} 
+        readOnly={tags.length >= 5}
       />
     </div>
   );
