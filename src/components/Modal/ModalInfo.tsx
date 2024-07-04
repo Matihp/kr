@@ -13,6 +13,7 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import Dropzone from "../ui/file-input";
 import TechTagsInput from "../TechTagsInput/TechTagsInput";
+import { Alert, AlertDescription } from '../ui/alert';
 
 interface ProjectFormData {
   title: string;
@@ -41,6 +42,8 @@ function ModalInfo({ onAddProject }: ModalInfoProps) {
     website: '',
     repository: '',
   });
+  const [tagError, setTagError] = useState<string | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -61,7 +64,21 @@ function ModalInfo({ onAddProject }: ModalInfoProps) {
     e.preventDefault();
     const { image, ...otherData } = formData;
     let imageSrc: string;
-  
+
+    if (!formData.image && !otherData.skills.length) {
+      setFileError("Por favor, agregue al menos una imagen.");
+      setTagError("Por favor, agregue al menos una habilidad.");
+      return;
+    }
+    if (!formData.image) {
+      setFileError("Por favor, agregue al menos una imagen.")
+      return;
+    }
+    if (!otherData.skills.length) {
+      setTagError("Por favor, agregue al menos una habilidad.")
+      return;
+    }
+
     if (image) {
       if (image instanceof Blob) {
         imageSrc = URL.createObjectURL(image);
@@ -88,6 +105,8 @@ function ModalInfo({ onAddProject }: ModalInfoProps) {
       website: '',
       repository: '',
     });
+    setFileError(null)
+    setTagError(null)
   }, [formData, onAddProject]);
 
   return (
@@ -102,13 +121,23 @@ function ModalInfo({ onAddProject }: ModalInfoProps) {
             <DialogDescription>All fields are required unless otherwise indicated.</DialogDescription>
           </DialogHeader>
           <div className="space-y-6">
-            <Input name="title" value={formData.title} onChange={handleInputChange} placeholder="Project title" />
-            <Input name="role" value={formData.role} onChange={handleInputChange} placeholder="Your role (optional)" />
-            <Textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="Project description" />
+            <Input name="title"required minLength={5} maxLength={100} value={formData.title} onChange={handleInputChange} placeholder="Project title" />
+            <Input name="role"required minLength={5} maxLength={40} value={formData.role} onChange={handleInputChange} placeholder="Your role (optional)" />
+            <Textarea name="description"required minLength={10} value={formData.description} onChange={handleInputChange} placeholder="Project description" />
             <TechTagsInput value={formData.skills} onChange={handleSkillsChange} />
+            {tagError && (
+              <Alert variant="destructive">
+                <AlertDescription>{tagError}</AlertDescription>
+              </Alert>
+            )}
             <Dropzone onDrop={handleImageUpload} />
-            <Input name="website" value={formData.website} onChange={handleInputChange} placeholder="Project website" />
-            <Input name="repository" value={formData.repository} onChange={handleInputChange} placeholder="Project repository" />
+            {fileError && (
+              <Alert variant="destructive">
+                <AlertDescription>{fileError}</AlertDescription>
+              </Alert>
+            )}
+            <Input name="website"required value={formData.website} onChange={handleInputChange} placeholder="Project website" />
+            <Input name="repository"required value={formData.repository} onChange={handleInputChange} placeholder="Project repository" />
           </div>
           <DialogFooter className="flex justify-between">
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
