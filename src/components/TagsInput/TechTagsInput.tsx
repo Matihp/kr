@@ -8,8 +8,11 @@ const suggestions: Tag[] = [
   { id: 'TypeScript', text: 'TypeScript' },
   { id: 'React', text: 'React' },
   { id: 'Next.js', text: 'Next.js' },
-  { id: 'Node.js', text: 'Node.js' },
-  // Agrega más sugerencias según sea necesario
+  { id: 'C++', text: 'C++' },
+  { id: 'C#', text: 'C#' },
+  { id: 'Java', text: 'Java' },
+  { id: 'Php', text: 'Php' },
+  { id: 'Python', text: 'Python' },
 ].map(suggestion => ({ ...suggestion, className: '' }));
 
 interface TechTagsInputProps {
