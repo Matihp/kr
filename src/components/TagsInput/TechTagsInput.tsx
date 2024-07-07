@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { WithContext as ReactTags, Tag } from 'react-tag-input';
-import './TechTagsInput.css';
+import './TagsInput.css';
 
 const suggestions: Tag[] = [
   { id: 'JavaScript', text: 'JavaScript' },

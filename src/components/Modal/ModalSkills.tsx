@@ -1,106 +1,63 @@
 "use client"
-import { useState, ChangeEvent, KeyboardEvent } from "react"
+import { useState, ChangeEvent, KeyboardEvent, useEffect } from "react"
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { PencilIcon } from "../ui/icons"
+import SkillsTagsInput from "../TagsInput/SkillsTagsInput"
 
 const skillsData = ["Java", "JavaScript", "Python", "C++", "Ruby", "Swift", "Go", "Rust", "PHP", "TypeScript"];
 
-export default function ModalSkills() {
-  const [skills, setSkills] = useState<string[]>([])
-  const [newSkill, setNewSkill] = useState<string>("")
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+interface ModalSkillsProps {
+  skills: string[]
+  onSkillsUpdate: (updatedSkills: string[]) => void
+}
 
-  const addSkill = () => {
-    if (newSkill.trim() !== "") {
-      setSkills([...skills, newSkill.trim()])
-      setNewSkill("")
-      setSuggestions([]);
-    }
+export default function ModalSkills({ skills, onSkillsUpdate }: ModalSkillsProps) {
+  const [currentSkills, setCurrentSkills] = useState<string[]>(skills)
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleSkillsChange = (newSkills: string[]) => {
+    setCurrentSkills(newSkills)
   }
 
-  const removeSkill = (index: number) => {
-    const updatedSkills = [...skills]
-    updatedSkills.splice(index, 1)
-    setSkills(updatedSkills)
+  const handleSave = () => {
+    onSkillsUpdate(currentSkills)
+    setIsOpen(false)
   }
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const userInput = e.target.value;
-    setNewSkill(userInput);
-    const filteredSuggestions = skillsData.filter(skill =>
-      skill.toLowerCase().startsWith(userInput.toLowerCase())
-    );
-    setSuggestions(filteredSuggestions);
-  };
+  const handleCancel = () => {
+    setCurrentSkills(skills)
+    setIsOpen(false)
+  }
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      addSkill()
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      handleCancel()
     }
-  };
-
-  const handleSuggestionClick = (suggestion: string) => {
-    setNewSkill(suggestion);
-    setSuggestions([]);
-  };
+    setIsOpen(open)
+  }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <PencilIcon/>
+        <PencilIcon onClick={() => setIsOpen(true)} />
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
-          <DialogTitle>Add Skills</DialogTitle>
-          <DialogDescription>Enter your skills and they will be added to the list.</DialogDescription>
+          <DialogTitle>Editar Habilidades</DialogTitle>
+          <DialogDescription>Modifica tus habilidades y guarda los cambios.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid items-center grid-cols-[1fr_auto] gap-4">
-            <div>
-              <Input
-                value={newSkill}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                placeholder="Enter a new skill"
-              />
-              {suggestions.length > 0 && (
-                <ul className="absolute z-10 bg-white border border-gray-300 rounded-md">
-                  {suggestions.map((suggestion, index) => (
-                    <li
-                      key={index}
-                      className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                      onClick={() => handleSuggestionClick(suggestion)}
-                    >
-                      {suggestion}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <Button onClick={addSkill}>Add</Button>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {skills.map((skill, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between rounded-md bg-gray-100 px-4 py-2 dark:bg-gray-800"
-              >
-                <span>{skill}</span>
-                <Button size="icon" variant="ghost" onClick={() => removeSkill(index)}>
-                  <XIcon className="h-4 w-4" />
-                  <span className="sr-only">Remove skill</span>
-                </Button>
-              </div>
-            ))}
-          </div>
+          <SkillsTagsInput
+            value={currentSkills}
+            onChange={handleSkillsChange}
+          />
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setSkills([])}>
-            Clear
+          <Button variant="outline" onClick={handleCancel}>
+            Cancelar
           </Button>
-          <Button type="submit">Save</Button>
+          <Button type="submit" onClick={handleSave}>Guardar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

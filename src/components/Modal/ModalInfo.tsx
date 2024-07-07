@@ -12,7 +12,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import Dropzone from "../ui/file-input";
-import TechTagsInput from "../TechTagsInput/TechTagsInput";
+import TechTagsInput from "../TagsInput/TechTagsInput";
 import { Alert, AlertDescription } from '../ui/alert';
 
 interface ProjectFormData {

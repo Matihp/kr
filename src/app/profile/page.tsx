@@ -59,7 +59,6 @@ interface ProjectFormData {
   repository: string;
 }
 
-
 function Profile() {
   const active =
     "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
@@ -71,9 +70,9 @@ function Profile() {
   const [description, setDescription] = useState<string>(
     "With over 14 years of experience in the field of SEO, I have gained extensive knowledge and expertise that enables me to provide effective SEO services to businesses. I previously worked for one of the UK's leading digital marketing agencies and have since then transitioned to directly helping businesses achieve their goals. My passion for helping businesses succeed is reflected in the positive feedback I receive from satisfied clients. Thank you for considering my services - I look forward to the opportunity to work with you and help your business thrive online."
   );
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [languages, setLanguages] = useState<Language[]>([])
+  const [skills, setSkills] = useState<string[]>(['JavaScript', 'React', 'TypeScript'])
   const [certifications, setCertifications] = useState<Certification[]>([
     {
       id: "1",
@@ -167,6 +166,10 @@ function Profile() {
     };
     setProjects(prevProjects => [...prevProjects, newProject]);
   };
+
+  const handleSkillsUpdate = (updatedSkills: string[]) => {
+    setSkills(updatedSkills)
+  }
 
   const navItems = [
     {
@@ -321,23 +324,26 @@ function Profile() {
             <div
               id="habilidades"
               ref={habilidadesRef}
-              className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+              className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 lg:min-w-[29.4vw]"
             >
               <div className="flex justify-between">
                 <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                   Habilidades
                 </h5>
-                <ModalSkills />
+                <ModalSkills skills={skills} onSkillsUpdate={handleSkillsUpdate} />
               </div>
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
+              <div className="flex flex-wrap gap-2 mt-4">
+                {skills.map((skill, index) => (
+                  <span key={index} className="px-2 py-1 bg-violet-100 text-sm font-medium rounded-full">
+                    {skill}
+                  </span>
+                ))}
+              </div>
             </div>
 
             <div
             id="idiomas"
-            className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 md:min-w-56 xl:min-w-96"
+            className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 lg:min-w-[29.4vw]"
             >
               <div className="flex justify-between">
                 <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
