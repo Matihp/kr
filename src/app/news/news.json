@@ -1,0 +1,59 @@
+[
+    {
+      "id": 1,
+      "title": "New trends in Tech",
+      "date": "July 19, 2021",
+      "image": "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&q=75&fit=crop&w=600",
+      "link": "/news/post"
+    },
+    {
+      "id": 2,
+      "title": "Working with legacy stacks",
+      "date": "April 07, 2021",
+      "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&q=75&fit=crop&w=600",
+      "link": "/news/post"
+    },
+    {
+      "id": 3,
+      "title": "10 best smartphones for devs",
+      "date": "March 15, 2021",
+      "image": "https://images.unsplash.com/photo-1542759564-7ccbb6ac450a?auto=format&q=75&fit=crop&w=600",
+      "link": "/news/post"
+    },
+    {
+      "id": 4,
+      "title": "8 High performance Notebooks",
+      "date": "January 27, 2021",
+      "image": "https://images.unsplash.com/photo-1610465299996-30f240ac2b1c?auto=format&q=75&fit=crop&w=600",
+      "link": "/news/post"
+    },
+    {
+        "id": 5,
+        "title": "New trends in Tech",
+        "date": "July 19, 2021",
+        "image": "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&q=75&fit=crop&w=600",
+        "link": "/news/post"
+      },
+      {
+        "id": 6,
+        "title": "Working with legacy stacks",
+        "date": "April 07, 2021",
+        "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&q=75&fit=crop&w=600",
+        "link": "/news/post"
+      },
+      {
+        "id": 7,
+        "title": "10 best smartphones for devs",
+        "date": "March 15, 2021",
+        "image": "https://images.unsplash.com/photo-1542759564-7ccbb6ac450a?auto=format&q=75&fit=crop&w=600",
+        "link": "/news/post"
+      },
+      {
+        "id": 8,
+        "title": "8 High performance Notebooks",
+        "date": "January 27, 2021",
+        "image": "https://images.unsplash.com/photo-1610465299996-30f240ac2b1c?auto=format&q=75&fit=crop&w=600",
+        "link": "/news/post"
+      }
+  ]
+  
