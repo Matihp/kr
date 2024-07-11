@@ -4,6 +4,7 @@ import CompanyLogos from "@/components/CompanyLogos/CompanyLogos";
 import Swipers from "@/components/Slider/Swipers";
 import CertificactionSteps from "@/components/CertificationSteps/CertificactionSteps";
 import Testimonials from "@/components/Testimonials/Testimonials";
+import Link from "next/link";
 
 function HomePage() {
   return (
@@ -20,12 +21,12 @@ function HomePage() {
             ¡Ahora es posible!
           </h2>
           <div className="flex justify-center animate-slide-in-bottom gap-4">
-            <button className="bg-slate-200 font-semibold hover:bg-slate-300 rounded-3xl px-4 py-2 mt-5">
+            <Link className="bg-slate-200 font-semibold hover:bg-slate-300 rounded-3xl px-4 py-2 mt-5" href={"/profile/public"}>
               Soy Reclutador
-            </button>
-            <button className="bg-slate-200 font-semibold hover:bg-slate-300 rounded-3xl px-4 py-2 mt-5">
+            </Link>
+            <Link className="bg-slate-200 font-semibold hover:bg-slate-300 rounded-3xl px-4 py-2 mt-5" href={"/profile"}>
               Soy Freelancer
-            </button>
+            </Link>
           </div>
           <div className="flex justify-center animate-slide-in-bottom">
             <button className="bg-violet-600 text-slate-100 font-semibold hover:bg-violet-700 rounded-3xl px-10 py-2 mt-8">
