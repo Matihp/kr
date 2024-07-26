@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -16,6 +16,7 @@ import TechTagsInput from "../TagsInput/TechTagsInput";
 import { Alert, AlertDescription } from '../ui/alert';
 
 interface ProjectFormData {
+  id?: string; // Añadimos 'id' como opcional
   title: string;
   role: string;
   description: string;
@@ -26,24 +27,39 @@ interface ProjectFormData {
   imageSrc?: string; // Añadimos "imageSrc" como opcional
 }
 
-
 interface ModalInfoProps {
   onAddProject: (project: ProjectFormData) => void;
+  projectToEdit?: ProjectFormData;
 }
 
-function ModalInfo({ onAddProject }: ModalInfoProps) {
+function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<ProjectFormData>({
-    title: '',
-    role: '',
-    description: '',
-    skills: [],
-    image: null,
-    website: '',
-    repository: '',
+    title: projectToEdit?.title || '',
+    role: projectToEdit?.role || '',
+    description: projectToEdit?.description || '',
+    skills: projectToEdit?.skills || [],
+    image: projectToEdit?.image || null,
+    website: projectToEdit?.website || '',
+    repository: projectToEdit?.repository || '',
   });
   const [tagError, setTagError] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (projectToEdit) {
+      setFormData({
+        id: projectToEdit.id,
+        title: projectToEdit.title,
+        role: projectToEdit.role,
+        description: projectToEdit.description,
+        skills: projectToEdit.skills,
+        image: projectToEdit.image || null,
+        website: projectToEdit.website,
+        repository: projectToEdit.repository,
+      });
+    }
+  }, [projectToEdit]);
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -89,7 +105,7 @@ function ModalInfo({ onAddProject }: ModalInfoProps) {
     } else {
       imageSrc = '/placeholder-image.jpg';
     }
-  
+
     onAddProject({
       ...otherData,
       image, // Añadimos "image" solo si no es null
@@ -117,13 +133,13 @@ function ModalInfo({ onAddProject }: ModalInfoProps) {
       <DialogContent className="w-full max-w-none max-h-[95vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add a new portfolio project</DialogTitle>
+            <DialogTitle>{projectToEdit ? 'Edit Project' : 'Add a new portfolio project'}</DialogTitle>
             <DialogDescription>All fields are required unless otherwise indicated.</DialogDescription>
           </DialogHeader>
           <div className="space-y-6">
-            <Input name="title"required minLength={5} maxLength={100} value={formData.title} onChange={handleInputChange} placeholder="Project title" />
-            <Input name="role"required minLength={5} maxLength={40} value={formData.role} onChange={handleInputChange} placeholder="Your role (optional)" />
-            <Textarea name="description"required minLength={10} value={formData.description} onChange={handleInputChange} placeholder="Project description" />
+            <Input name="title" required minLength={5} maxLength={100} value={formData.title} onChange={handleInputChange} placeholder="Project title" />
+            <Input name="role" required minLength={5} maxLength={40} value={formData.role} onChange={handleInputChange} placeholder="Your role (optional)" />
+            <Textarea name="description" required minLength={10} value={formData.description} onChange={handleInputChange} placeholder="Project description" />
             <TechTagsInput value={formData.skills} onChange={handleSkillsChange} />
             {tagError && (
               <Alert variant="destructive">
@@ -136,12 +152,12 @@ function ModalInfo({ onAddProject }: ModalInfoProps) {
                 <AlertDescription>{fileError}</AlertDescription>
               </Alert>
             )}
-            <Input name="website"required value={formData.website} onChange={handleInputChange} placeholder="Project website" />
-            <Input name="repository"required value={formData.repository} onChange={handleInputChange} placeholder="Project repository" />
+            <Input name="website" required value={formData.website} onChange={handleInputChange} placeholder="Project website" />
+            <Input name="repository" required value={formData.repository} onChange={handleInputChange} placeholder="Project repository" />
           </div>
           <DialogFooter className="flex justify-between">
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button type="submit" variant="default">Add Project</Button>
+            <Button type="submit" variant="default">{projectToEdit ? 'Save Changes' : 'Add Project'}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -150,3 +166,5 @@ function ModalInfo({ onAddProject }: ModalInfoProps) {
 }
 
 export default ModalInfo;
+
+

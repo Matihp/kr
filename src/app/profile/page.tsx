@@ -50,13 +50,15 @@ interface Project {
 
 // Esta interfaz representa los datos que recibiremos del formulario
 interface ProjectFormData {
+  id?: string; // Añadimos 'id' como opcional
   title: string;
   role: string;
   description: string;
   skills: string[];
-  image?: File | null;
+  image?: File | null; // Ahora "image" es opcional
   website: string;
   repository: string;
+  imageSrc?: string; // Añadimos "imageSrc" como opcional
 }
 
 function Profile() {
@@ -166,6 +168,20 @@ function Profile() {
     };
     setProjects(prevProjects => [...prevProjects, newProject]);
   };
+
+  const handleEditProject = (projectData: ProjectFormData) => {
+    setProjects(prevProjects =>
+      prevProjects.map(project =>
+        project.id === projectData.id ? { ...project, ...projectData, imageSrc: projectData.image ? URL.createObjectURL(projectData.image) : project.imageSrc } : project
+      )
+    );
+  };
+
+  const handleDeleteProject = (projectId: string) => {
+    setProjects(prevProjects => prevProjects.filter(project => project.id !== projectId));
+  };
+
+
 
   const handleSkillsUpdate = (updatedSkills: string[]) => {
     setSkills(updatedSkills)
@@ -279,46 +295,50 @@ function Profile() {
           </div>
           
           <div
-            id="proyectos"
-            ref={proyectosRef}
-            className="md:w-[60vw] flex justify-between items-center mxmd:m-8 ml-8 p-2 border rounded-lg bg-gray-100"
+        id="proyectos"
+        ref={proyectosRef}
+        className="md:w-[60vw] flex justify-between items-center mxmd:m-8 ml-8 p-2 border rounded-lg bg-gray-100"
+      >
+        <h2 className="ml-0 text-xl font-bold tracking-tight text-gray-900">
+          Proyectos
+        </h2>
+        <ModalInfo onAddProject={handleAddProject} />
+      </div>
+      <div className="bg-slate-100 flex flex-col md:w-[60vw] mxmd:m-8 ml-8 my-2 py-2 md:pl-4 rounded-md">
+        {projects.map((project) => (
+          <div
+            key={project.id}
+            className="flex flex-col items-center ml-0 my-2 bg-white border border-gray-200 rounded-lg shadow md:w-[58vw] md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
           >
-            <h2 className="ml-0 text-xl font-bold tracking-tight text-gray-900">
-              Proyectos
-            </h2>
-            <ModalInfo onAddProject={handleAddProject} />
-          </div>
-          <div className="bg-slate-100 flex flex-col md:w-[60vw] mxmd:m-8 ml-8 my-2 py-2 md:pl-4 rounded-md">
-            {projects.map((project) => (
-              <div
-                key={project.id}
-                className="flex flex-col items-center ml-0 my-2 bg-white border border-gray-200 rounded-lg shadow md:w-[58vw] md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-              >
-                <Image
-                  unoptimized
-                  className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
-                  src={project.imageSrc}
-                  alt=""
-                  width={192}
-                  height={192}
+            <Image
+              unoptimized
+              className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+              src={project.imageSrc}
+              alt=""
+              width={192}
+              height={192}
+            />
+            <div className="flex flex-col justify-between p-4 leading-normal w-full">
+              <div className="flex justify-between">
+                <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+                  {project.title}
+                </h5> 
+                <DropdownProject
+                  project={project}
+                  onEdit={handleEditProject}
+                  onDelete={handleDeleteProject}
                 />
-                <div className="flex flex-col justify-between p-4 leading-normal w-full">
-                  <div className="flex justify-between">
-                    <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-                      {project.title}
-                    </h5>
-                    <DropdownProject />
-                  </div>
-                  <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    {project.description}
-                  </p>
-                  <div>
-                    <ModalProject />
-                  </div>
-                </div>
               </div>
-            ))}
+              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                {project.description}
+              </p>
+              <div>
+                <ModalInfo onAddProject={handleEditProject} />
+              </div>
+            </div>
           </div>
+        ))}
+      </div>
 
           <div className="flex flex-col md:flex-row md:w-[60vw] gap-y-4 md:gap-x-4 m-8">
             <div
