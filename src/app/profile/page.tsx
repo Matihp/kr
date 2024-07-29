@@ -43,24 +43,21 @@ interface Project {
   role: string;
   description: string;
   skills: string[];
-  imageSrc: string;
+  images: string[];
   website: string;
   repository: string;
 }
 
-// Esta interfaz representa los datos que recibiremos del formulario
 interface ProjectFormData {
-  id?: string; // Añadimos 'id' como opcional
+  id?: string;
   title: string;
   role: string;
   description: string;
   skills: string[];
-  image?: File | null; // Ahora "image" es opcional
+  images: (File | string)[];
   website: string;
   repository: string;
-  imageSrc?: string; // Añadimos "imageSrc" como opcional
 }
-
 function Profile() {
   const active =
     "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
@@ -162,7 +159,9 @@ function Profile() {
       role: projectData.role,
       description: projectData.description,
       skills: projectData.skills,
-      imageSrc: projectData.image ? URL.createObjectURL(projectData.image) : '/placeholder-image.jpg',
+      images: projectData.images.map(image => 
+        typeof image === 'string' ? image : URL.createObjectURL(image)
+      ),
       website: projectData.website,
       repository: projectData.repository,
     };
@@ -172,7 +171,15 @@ function Profile() {
   const handleEditProject = (projectData: ProjectFormData) => {
     setProjects(prevProjects =>
       prevProjects.map(project =>
-        project.id === projectData.id ? { ...project, ...projectData, imageSrc: projectData.image ? URL.createObjectURL(projectData.image) : project.imageSrc } : project
+        project.id === projectData.id 
+          ? { 
+              ...project, 
+              ...projectData, 
+              images: projectData.images.map(image => 
+                typeof image === 'string' ? image : URL.createObjectURL(image)
+              )
+            } 
+          : project
       )
     );
   };
@@ -313,7 +320,7 @@ function Profile() {
             <Image
               unoptimized
               className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
-              src={project.imageSrc}
+              src={project.images[0]}
               alt=""
               width={192}
               height={192}
@@ -322,7 +329,7 @@ function Profile() {
               <div className="flex justify-between">
                 <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
                   {project.title}
-                </h5> 
+                </h5>
                 <DropdownProject
                   project={project}
                   onEdit={handleEditProject}
@@ -332,9 +339,6 @@ function Profile() {
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
                 {project.description}
               </p>
-              <div>
-                <ModalInfo onAddProject={handleEditProject} />
-              </div>
             </div>
           </div>
         ))}

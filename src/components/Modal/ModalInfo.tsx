@@ -16,15 +16,14 @@ import TechTagsInput from "../TagsInput/TechTagsInput";
 import { Alert, AlertDescription } from '../ui/alert';
 
 interface ProjectFormData {
-  id?: string; // Añadimos 'id' como opcional
+  id?: string;
   title: string;
   role: string;
   description: string;
   skills: string[];
-  image?: File | null; // Ahora "image" es opcional
+  images: (File | string)[];
   website: string;
   repository: string;
-  imageSrc?: string; // Añadimos "imageSrc" como opcional
 }
 
 interface ModalInfoProps {
@@ -35,13 +34,13 @@ interface ModalInfoProps {
 function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<ProjectFormData>({
-    title: projectToEdit?.title || '',
-    role: projectToEdit?.role || '',
-    description: projectToEdit?.description || '',
-    skills: projectToEdit?.skills || [],
-    image: projectToEdit?.image || null,
-    website: projectToEdit?.website || '',
-    repository: projectToEdit?.repository || '',
+    title: '',
+    role: '',
+    description: '',
+    skills: [],
+    images: [],
+    website: '',
+    repository: '',
   });
   const [tagError, setTagError] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -49,14 +48,8 @@ function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
   useEffect(() => {
     if (projectToEdit) {
       setFormData({
-        id: projectToEdit.id,
-        title: projectToEdit.title,
-        role: projectToEdit.role,
-        description: projectToEdit.description,
-        skills: projectToEdit.skills,
-        image: projectToEdit.image || null,
-        website: projectToEdit.website,
-        repository: projectToEdit.repository,
+        ...projectToEdit,
+        images: projectToEdit.images || [],
       });
     }
   }, [projectToEdit]);
@@ -71,58 +64,44 @@ function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
   }, []);
 
   const handleImageUpload = useCallback((files: File[]) => {
-    if (files.length > 0) {
-      setFormData(prev => ({ ...prev, image: files[0] }));
-    }
+    setFormData(prev => {
+      const newImages = [...prev.images, ...files];
+      return { ...prev, images: newImages.slice(0, 10) };
+    });
+  }, []);
+
+  const handleRemoveImage = useCallback((index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }));
   }, []);
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    const { image, ...otherData } = formData;
-    let imageSrc: string;
 
-    if (!formData.image && !otherData.skills.length) {
+    if (!formData.images.length) {
       setFileError("Por favor, agregue al menos una imagen.");
+      return;
+    }
+    if (!formData.skills.length) {
       setTagError("Por favor, agregue al menos una habilidad.");
       return;
     }
-    if (!formData.image) {
-      setFileError("Por favor, agregue al menos una imagen.")
-      return;
-    }
-    if (!otherData.skills.length) {
-      setTagError("Por favor, agregue al menos una habilidad.")
-      return;
-    }
 
-    if (image) {
-      if (image instanceof Blob) {
-        imageSrc = URL.createObjectURL(image);
-      } else {
-        console.error("Invalid file type:", image);
-        return;
-      }
-    } else {
-      imageSrc = '/placeholder-image.jpg';
-    }
-
-    onAddProject({
-      ...otherData,
-      image, // Añadimos "image" solo si no es null
-      imageSrc
-    });
+    onAddProject(formData);
     setOpen(false);
     setFormData({
       title: '',
       role: '',
       description: '',
       skills: [],
-      image: null,
+      images: [],
       website: '',
       repository: '',
     });
-    setFileError(null)
-    setTagError(null)
+    setFileError(null);
+    setTagError(null);
   }, [formData, onAddProject]);
 
   return (
@@ -147,6 +126,26 @@ function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
               </Alert>
             )}
             <Dropzone onDrop={handleImageUpload} />
+            {formData.images.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {formData.images.map((image, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={typeof image === 'string' ? image : URL.createObjectURL(image)}
+                      alt={`Project image ${index + 1}`}
+                      className="w-20 h-20 object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+                    >
+                      x
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
             {fileError && (
               <Alert variant="destructive">
                 <AlertDescription>{fileError}</AlertDescription>
@@ -162,9 +161,10 @@ function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
         </form>
       </DialogContent>
     </Dialog>
-  );
+  );  
 }
 
 export default ModalInfo;
+
 
 

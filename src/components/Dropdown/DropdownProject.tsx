@@ -5,12 +5,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Icon from '@mdi/react';
@@ -26,22 +22,20 @@ interface Project {
   role: string;
   description: string;
   skills: string[];
-  imageSrc: string;
+  images: string[];
   website: string;
   repository: string;
 }
 
-// Esta interfaz representa los datos que recibiremos del formulario
 interface ProjectFormData {
-  id?: string; // Añadimos 'id' como opcional
+  id?: string;
   title: string;
   role: string;
   description: string;
   skills: string[];
-  image?: File | null; // Ahora "image" es opcional
+  images: (File | string)[];
   website: string;
   repository: string;
-  imageSrc?: string; // Añadimos "imageSrc" como opcional
 }
 
 interface DropdownProjectProps {
@@ -59,6 +53,17 @@ export function DropdownProject({ project, onEdit, onDelete }: DropdownProjectPr
 
   const handleDeleteProject = () => {
     onDelete(project.id);
+  };
+
+  const handleEditSubmit = (editedProject: ProjectFormData) => {
+    onEdit({
+      ...editedProject,
+      id: project.id,
+      images: editedProject.images.map(image => 
+        typeof image === 'string' ? image : URL.createObjectURL(image)
+      ),
+    });
+    setIsEditModalOpen(false);
   };
 
   return (
@@ -92,11 +97,7 @@ export function DropdownProject({ project, onEdit, onDelete }: DropdownProjectPr
               All fields are required unless otherwise indicated.
             </DialogDescription>
           </DialogHeader>
-          <ModalInfo onAddProject={onEdit} projectToEdit={project} />
-          <DialogFooter className="flex justify-between">
-            <Button variant="ghost">Save as draft</Button>
-            <Button variant="default">Next: Preview</Button>
-          </DialogFooter>
+          <ModalInfo onAddProject={handleEditSubmit} projectToEdit={project} />
         </DialogContent>
       </Dialog>
     </>
