@@ -227,7 +227,7 @@ function Profile() {
         id="sticky-element"
         className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 lg:pl-2 lg:h-[249px]"
       >
-        <div className="flex flex-col md:flex-row gap-4 md:gap-8 pt-4 lg:pl-5 md:mt-14 md:pl-7 lg:mt-16">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-8 pt-4 lg:pl-5 md:mt-16 md:pl-7">
           <div className="mx-auto md:mx-0">
             <Image
               width={80}
@@ -282,11 +282,11 @@ function Profile() {
         </button>
       </div>
       <div className="flex">
-        <div>
+        <div className="">
           <div
             id="sobre-mi"
             ref={sobreMiRef}
-            className={`block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${
+            className={`block md:w-[60vw] m-8 p-6 md:ml-4 lg:ml-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${
               showNav && isScrolling ? "mt-28" : ""
             } `}
           >
@@ -301,17 +301,17 @@ function Profile() {
             </p>
           </div>
           
-          <div
+        <div
         id="proyectos"
         ref={proyectosRef}
-        className="md:w-[60vw] flex justify-between items-center mxmd:m-8 ml-8 p-2 border rounded-lg bg-gray-100"
-      >
+        className="md:w-[60vw] flex justify-between items-center mxmd:m-8 ml-8 md:ml-4 lg:ml-8 p-2 border rounded-lg bg-gray-100"
+        >
         <h2 className="ml-0 text-xl font-bold tracking-tight text-gray-900">
           Proyectos
         </h2>
         <ModalInfo onAddProject={handleAddProject} />
-      </div>
-      <div className="bg-slate-100 flex flex-col md:w-[60vw] mxmd:m-8 ml-8 my-2 py-2 md:pl-4 rounded-md">
+        </div>
+      <div className="bg-slate-100 flex flex-col md:w-[60vw] mxmd:m-8 ml-8 my-2 py-2 md:pl-4 md:ml-4 lg:ml-8 rounded-md">
         {projects.map((project) => (
           <div
             key={project.id}
@@ -344,7 +344,7 @@ function Profile() {
         ))}
       </div>
 
-          <div className="flex flex-col md:flex-row md:w-[60vw] gap-y-4 md:gap-x-4 m-8">
+          <div className="flex flex-col md:flex-row md:w-[60vw] gap-y-4 md:gap-x-4 m-8 md:ml-4 lg:ml-8">
             <div
               id="habilidades"
               ref={habilidadesRef}
@@ -386,7 +386,7 @@ function Profile() {
           <div
             id="certificaciones"
             ref={certificacionesRef}
-            className="block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+            className="block md:w-[60vw] m-8 p-6 md:ml-4 lg:ml-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
           >
             <div className="flex justify-between">
               <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -394,7 +394,7 @@ function Profile() {
               </h5>
               <ModalCertification certifications={certifications} setCertifications={setCertifications} />
             </div>
-            <div className="font-normal text-gray-700 dark:text-gray-400 grid grid-cols-2 ml-1">
+            <div className="font-normal text-gray-700 dark:text-gray-400 grid grid-cols-1 lg:grid-cols-2 ml-1">
               {certifications.map((cert) => (
                 <div key={cert.id} className="mb-4">
                   <h6 className="text-lg font-semibold text-gray-900 dark:text-white">{cert.name}</h6>
