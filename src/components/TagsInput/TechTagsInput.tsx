@@ -59,6 +59,7 @@ const TechTagsInput: React.FC<TechTagsInputProps> = ({ value, onChange }) => {
   return (
     <div>
       <Select
+        className=' text-sm'
         value={null}
         onChange={handleSelect}
         onInputChange={handleInputChange}
@@ -67,7 +68,7 @@ const TechTagsInput: React.FC<TechTagsInputProps> = ({ value, onChange }) => {
           label: suggestion.text,
         }))}
         isClearable
-        placeholder="Escribe para buscar tecnologías..."
+        placeholder="Por ej. javascript, react, nodejs..."
       />
       <ReactTags
         tags={tags}

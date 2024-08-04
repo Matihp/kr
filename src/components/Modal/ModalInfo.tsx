@@ -110,22 +110,64 @@ function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
         <Button className="inline-flex items-center justify-center rounded-xl bg-violet-700 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">+</Button>
       </DialogTrigger>
       <DialogContent className="w-full max-w-none max-h-[95vh] overflow-y-auto">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='px-4'>
           <DialogHeader>
-            <DialogTitle>{projectToEdit ? 'Edit Project' : 'Add a new portfolio project'}</DialogTitle>
+            <DialogTitle>{projectToEdit ? 'Edit Project' : 'Agregar un nuevo proyecto'}</DialogTitle>
             <DialogDescription>All fields are required unless otherwise indicated.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-6">
-            <Input name="title" required minLength={5} maxLength={100} value={formData.title} onChange={handleInputChange} placeholder="Project title" />
-            <Input name="role" required minLength={5} maxLength={40} value={formData.role} onChange={handleInputChange} placeholder="Your role (optional)" />
-            <Textarea name="description" required minLength={10} value={formData.description} onChange={handleInputChange} placeholder="Project description" />
-            <TechTagsInput value={formData.skills} onChange={handleSkillsChange} />
-            {tagError && (
-              <Alert variant="destructive">
-                <AlertDescription>{tagError}</AlertDescription>
-              </Alert>
-            )}
-            <Dropzone onDrop={handleImageUpload} />
+          <div className="space-y-5 mt-4">
+            <div className='md:grid md:grid-cols-2 md:gap-5'>
+              <div className="space-y-2">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
+                  Titulo del proyecto
+                </label>
+                <Input name="title" required minLength={5} maxLength={100} value={formData.title} onChange={handleInputChange} placeholder="Introduce un título breve pero descriptivo." />
+              </div>
+              <div className="space-y-2 pt-5 md:pt-0">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
+                  Rol que desempeñaste en el proyecto
+                </label>
+                <Input name="role" required minLength={5} maxLength={40} value={formData.role} onChange={handleInputChange} placeholder="Por ej. desarrollador front-end o analista de marketing" />
+              </div>
+            </div>
+            <div className="space-y-2">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
+                  Descripción del proyecto
+                </label>
+                <Textarea name="description" required minLength={10} value={formData.description} onChange={handleInputChange} placeholder="Describe brevemente los objetivos del proyecto, tu solución y el impacto que tuviste aquí." />
+            </div>
+            <div className="space-y-2">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
+                  Tecnologías del proyecto
+                </label>
+                <TechTagsInput value={formData.skills} onChange={handleSkillsChange} />
+                {tagError && (
+                <Alert variant="destructive">
+                  <AlertDescription>{tagError}</AlertDescription>
+                </Alert>
+                )}
+            </div>
+            <div className="space-y-2">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
+                  Archivos del proyecto
+                </label>
+                <Dropzone onDrop={handleImageUpload} />
+            </div>            
             {formData.images.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {formData.images.map((image, index) => (
@@ -151,12 +193,30 @@ function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
                 <AlertDescription>{fileError}</AlertDescription>
               </Alert>
             )}
-            <Input name="website" required value={formData.website} onChange={handleInputChange} placeholder="Project website" />
-            <Input name="repository" required value={formData.repository} onChange={handleInputChange} placeholder="Project repository" />
+            <div className='md:grid md:grid-cols-2 md:gap-5'>
+              <div className="space-y-2">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
+                  Sitio Web del proyecto
+                </label>
+                <Input name="website" required value={formData.website} onChange={handleInputChange} placeholder="https://www.example.com" />
+              </div>
+              <div className="space-y-2 pt-5 md:pt-0">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
+                  Repositorio del proyecto
+                </label>
+                <Input name="repository" required value={formData.repository} onChange={handleInputChange} placeholder="Enlace de github,gitlab,bitbucket,etc. " />  
+              </div>
+            </div>
           </div>
-          <DialogFooter className="flex justify-between">
-            <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button type="submit" variant="default">{projectToEdit ? 'Save Changes' : 'Add Project'}</Button>
+          <DialogFooter className="mxmd:grid mxmd:grid-cols-2 mxmd:gap-4 mt-8">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+            <Button type="submit" variant="default">{projectToEdit ? 'Guardar cambios' : 'Agregar Proyecto'}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

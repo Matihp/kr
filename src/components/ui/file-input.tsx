@@ -73,7 +73,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDrop }) => {
       ) : (
         <p>Arrastra y suelta algunos archivos aquí, o haz clic para seleccionar archivos</p>
       )}
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', marginTop: '20px' }}>
+      {/* <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', marginTop: '20px' }}>
         {files.map(file => (
           <div key={file.path || ''} style={{ display: 'inline-block', position: 'relative', margin: '5px' }}>
             {file.preview ? (
@@ -89,7 +89,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDrop }) => {
             </button>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 function PrivateProfileContactCard() {
   return (
-    <div className="w-[30vw] h-[50vh] sticky top-[250px] hidden md:block mt-6 xl:ml-4">
+    <div className="w-[32vw] lg:w-[30vw] h-[50vh] sticky top-[250px] hidden md:block mt-6 xl:ml-4">
       <div className=" w-full max-w-md px-8 py-4 mt-16 bg-white rounded-lg shadow-lg dark:bg-gray-800">
         <h2 className="mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white md:mt-0">
           Design Tools
