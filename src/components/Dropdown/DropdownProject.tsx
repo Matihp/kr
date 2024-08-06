@@ -1,4 +1,3 @@
-"use client"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,9 +11,7 @@ import {
 import Icon from '@mdi/react';
 import { mdiPencilCircle } from '@mdi/js';
 import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import ModalInfo from "../Modal/ModalInfo";
-import { Button } from "../ui/button";
 
 interface Project {
   id: string;
@@ -59,7 +56,7 @@ export function DropdownProject({ project, onEdit, onDelete }: DropdownProjectPr
     onEdit({
       ...editedProject,
       id: project.id,
-      images: editedProject.images.map(image => 
+      images: editedProject.images.map(image =>
         typeof image === 'string' ? image : URL.createObjectURL(image)
       ),
     });
@@ -89,17 +86,12 @@ export function DropdownProject({ project, onEdit, onDelete }: DropdownProjectPr
           <DropdownMenuSeparator />
         </DropdownMenuContent>
       </DropdownMenu>
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="w-full max-w-none max-h-[95vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Project</DialogTitle>
-            <DialogDescription>
-              All fields are required unless otherwise indicated.
-            </DialogDescription>
-          </DialogHeader>
-          <ModalInfo onAddProject={handleEditSubmit} projectToEdit={project} />
-        </DialogContent>
-      </Dialog>
+      <ModalInfo
+        isOpen={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        onAddProject={handleEditSubmit}
+        projectToEdit={project}
+      />
     </>
   );
 }

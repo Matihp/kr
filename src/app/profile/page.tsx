@@ -10,7 +10,7 @@ import {
   mdiInformationOutline,
   mdiTextAccount,
 } from "@mdi/js";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ModalProject from "@/components/Modal/ModalProject";
 import { DropdownProject } from "@/components/Dropdown/DropdownProject";
 import useMatchMedia from "@/components/ui/matchMedia";
@@ -21,6 +21,7 @@ import ModalDescription from "@/components/Modal/ModalDescription";
 import ModalCertification from "@/components/Modal/ModalCertification";
 import ModalInfo from "@/components/Modal/ModalInfo";
 import PrivateProfileContactCard from "@/components/ProfileContactCard/PrivateProfileContactCard";
+import { Button } from "@/components/ui/button";
 
 type LanguageLevel = "beginner" | "intermediate" | "advanced" | string
 
@@ -152,7 +153,9 @@ function Profile() {
     }
   };
 
-  const handleAddProject = (projectData: ProjectFormData) => {
+  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
+
+  const handleAddProject = useCallback((projectData: ProjectFormData) => {
     const newProject: Project = {
       id: Date.now().toString(),
       title: projectData.title,
@@ -166,7 +169,8 @@ function Profile() {
       repository: projectData.repository,
     };
     setProjects(prevProjects => [...prevProjects, newProject]);
-  };
+    setIsAddProjectModalOpen(false);  // Cerrar el modal después de añadir el proyecto
+  }, []);
 
   const handleEditProject = (projectData: ProjectFormData) => {
     setProjects(prevProjects =>
@@ -309,7 +313,12 @@ function Profile() {
         <h2 className="ml-0 text-xl font-bold tracking-tight text-gray-900">
           Proyectos
         </h2>
-        <ModalInfo onAddProject={handleAddProject} />
+        <Button onClick={() => setIsAddProjectModalOpen(true)}>Agregar Proyecto</Button>
+        <ModalInfo 
+          isOpen={isAddProjectModalOpen}
+          onOpenChange={setIsAddProjectModalOpen}
+          onAddProject={handleAddProject}
+        />
         </div>
       <div className="bg-slate-100 flex flex-col md:w-[60vw] mxmd:m-8 ml-8 my-2 py-2 md:pl-4 md:ml-4 lg:ml-8 rounded-md">
         {projects.map((project) => (

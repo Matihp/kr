@@ -6,7 +6,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -27,12 +26,13 @@ interface ProjectFormData {
 }
 
 interface ModalInfoProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
   onAddProject: (project: ProjectFormData) => void;
   projectToEdit?: ProjectFormData;
 }
 
-function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
-  const [open, setOpen] = useState(false);
+function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalInfoProps) {
   const [formData, setFormData] = useState<ProjectFormData>({
     title: '',
     role: '',
@@ -90,7 +90,7 @@ function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
     }
 
     onAddProject(formData);
-    setOpen(false);
+    onOpenChange(false);
     setFormData({
       title: '',
       role: '',
@@ -104,11 +104,9 @@ function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
     setTagError(null);
   }, [formData, onAddProject]);
 
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="inline-flex items-center justify-center rounded-xl bg-violet-700 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">+</Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-none max-h-[95vh] overflow-y-auto">
         <form onSubmit={handleSubmit} className='px-4'>
           <DialogHeader>
@@ -215,7 +213,7 @@ function ModalInfo({ onAddProject, projectToEdit }: ModalInfoProps) {
             </div>
           </div>
           <DialogFooter className="mxmd:grid mxmd:grid-cols-2 mxmd:gap-4 mt-8">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
             <Button type="submit" variant="default">{projectToEdit ? 'Guardar cambios' : 'Agregar Proyecto'}</Button>
           </DialogFooter>
         </form>
