@@ -1,243 +1,209 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { CloudIcon, CodeIcon, ComputerIcon, DatabaseIcon, SmartphoneIcon, XIcon } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import cert from '@/ui/2.jpg'
+import skills from '@/ui/8.jpeg'
+
 function page() {
   return (
     <>
-      <div
-        data-v-52723e91=""
-        className="grid grid-cols-1 gap-4 mt-28 justify-items-center text-[#333333] max-w-lg m-auto lg:max-w-6xl lg:grid-cols-2 lg:gap-8"
-      >
-        <div
-          data-v-52723e91=""
-          className="grid grid-cols-4 gap-4 col-span-1 px-3 py-4 shadow-[0_16px_64px_rgba(170,169,185,0.48)] rounded-[20px] h-fit lg:grid-cols-6 lg:gap-0 lg:h-auto lg:px-4 lg:py-6 lg:min-h-[12.5rem]"
-        >
-          <img
-            data-v-52723e91=""
-            src="/s3/img/passion.49f3caf.svg"
-            alt=""
-            className="col-span-1 w-30 m-auto lg:col-span-2"
-          />{" "}
-          <div
-            data-v-52723e91=""
-            className="col-span-3 self-center lg:col-span-4"
-          >
-            <h2
-              data-v-52723e91=""
-              className="text-[#19114C] text-base font-medium md:leading-6 md:mb-2 md:text-xl lg:text-[2rem] lg:leading-10"
-            >
-              Passion
-            </h2>{" "}
-            <p
-              data-v-52723e91=""
-              className="text-[#19114C] text-[14px] opacity-70 md:text-base md:px-0"
-            >
-              You have a keen interest in learning and/or teaching English.
-            </p>
+      <section className="w-full px-10 lg:px-15 py-12 md:py-24 lg:py-32 ">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-2 lg:gap-2">
+              <div className="flex flex-col justify-center space-y-4">
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                    Certificaciones gratuitas para freelancers
+                  </h1>
+                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
+                    Obtén certificaciones gratuitas en diferentes áreas tecnológicas y destaca tus habilidades en el
+                    mercado freelance.
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Link
+                    href="#"
+                    className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                    prefetch={false}
+                  >
+                    Obtén tu Certificación
+                  </Link>
+                  <Link
+                    href="#"
+                    className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                    prefetch={false}
+                  >
+                    Conoce los Beneficios
+                  </Link>
+                </div>
+              </div>
+              <Image
+                src={cert}
+                width="550"
+                height="550"
+                alt="Certificaciones"
+                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full"
+              />
+            </div>
           </div>
-        </div>{" "}
-        <div
-          data-v-52723e91=""
-          className="grid grid-cols-4 gap-4 col-span-1 px-3 py-4 shadow-[0_16px_64px_rgba(170,169,185,0.48)] rounded-[20px] h-fit lg:grid-cols-6 lg:gap-0 lg:h-auto  lg:px-4 lg:py-6 lg:min-h-[12.5rem]"
-        >
-          <img
-            data-v-52723e91=""
-            src="/s3/img/reach.32550b1.svg"
-            alt=""
-            className="col-span-1 w-30 m-auto lg:col-span-2"
-          />{" "}
-          <div
-            data-v-52723e91=""
-            className="col-span-3 self-center lg:col-span-4"
-          >
-            <h2
-              data-v-52723e91=""
-              className="text-[#19114C] text-base font-medium md:leading-6 md:mb-2 md:text-xl lg:text-[2rem] lg:leading-10"
-            >
-              Reach
-            </h2>{" "}
-            <p
-              data-v-52723e91=""
-              className="text-[#19114C] text-[14px] opacity-70 md:text-base md:px-0"
-            >
-              You are a content creator with an audience of at least 2000 real*
-              followers and ideally a 5% to 7% engagement rate according to
-              Social Blade.
-            </p>
+        </section>
+        <section className="w-full py-12 md:py-15 bg-muted">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Certificaciones Gratuitas</div>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                  Demuestra tus habilidades y consigue trabajos
+                </h2>
+                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Obtén certificaciones acreditadas en diversos campos tecnológicos y úsalas para destacar tus
+                  habilidades y encontrar trabajos a través de nuestra plataforma de proyectos.
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
+              <Image
+                src={skills}
+                width="550"
+                height="310"
+                alt="Image"
+                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
+              />
+              <div className="flex flex-col justify-center space-y-4">
+                <ul className="grid gap-6">
+                  <li>
+                    <div className="grid gap-1">
+                      <h3 className="text-xl font-bold">Desarrollo Web</h3>
+                      <p className="text-muted-foreground">
+                        Demuestra tus habilidades en HTML, CSS, JavaScript y frameworks como React, Angular y Vue.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="grid gap-1">
+                      <h3 className="text-xl font-bold">Diseño UX/UI</h3>
+                      <p className="text-muted-foreground">
+                        Acredita tus conocimientos en diseño de interfaces, experiencia de usuario y herramientas como
+                        Figma y Adobe XD.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="grid gap-1">
+                      <h3 className="text-xl font-bold">Desarrollo Móvil</h3>
+                      <p className="text-muted-foreground">
+                        Obtén certificaciones en desarrollo de aplicaciones móviles para iOS y Android, incluyendo
+                        frameworks como Flutter y React Native.
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>{" "}
-        <div
-          data-v-52723e91=""
-          className="grid grid-cols-4 gap-4 col-span-1 px-3 py-4 shadow-[0_16px_64px_rgba(170,169,185,0.48)] rounded-[20px] h-fit lg:grid-cols-6 lg:gap-0 lg:h-auto  lg:px-4 lg:py-6 lg:min-h-[12.5rem]"
-        >
-          <img
-            data-v-52723e91=""
-            src="/s3/img/audience.931ccc4.svg"
-            alt=""
-            className="col-span-1 w-30 m-auto lg:col-span-2"
-          />{" "}
-          <div
-            data-v-52723e91=""
-            className="col-span-3 self-center lg:col-span-4"
-          >
-            <h2
-              data-v-52723e91=""
-              className="text-[#19114C] text-base font-medium md:leading-6 md:mb-2 md:text-xl lg:text-[2rem] lg:leading-10"
-            >
-              Audience
-            </h2>{" "}
-            <p
-              data-v-52723e91=""
-              className="text-[#19114C] text-[14px] opacity-70 md:text-base md:px-0"
-            >
-              The majority of your audience consists of non-native English
-              speakers.
-            </p>
+        </section>
+        <section id="areas" className="w-full py-12 md:py-15">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Áreas Cubiertas</div>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                  Certificaciones para Diferentes Áreas
+                </h2>
+                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Tenemos certificaciones gratuitas disponibles para freelancers de diferentes áreas tecnológicas.
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-8">
+              <div className="grid gap-1 p-6 bg-background rounded-lg shadow-sm">
+                <CodeIcon className="h-8 w-8 text-primary" />
+                <h3 className="text-xl font-bold">Desarrollo Web</h3>
+                <p className="text-muted-foreground">Certificaciones en HTML, CSS, JavaScript, React, Angular y más.</p>
+              </div>
+              <div className="grid gap-1 p-6 bg-background rounded-lg shadow-sm">
+                <DatabaseIcon className="h-8 w-8 text-primary" />
+                <h3 className="text-xl font-bold">Bases de Datos</h3>
+                <p className="text-muted-foreground">Certificaciones en SQL, MySQL, PostgreSQL, MongoDB y más.</p>
+              </div>
+              <div className="grid gap-1 p-6 bg-background rounded-lg shadow-sm">
+                <CloudIcon className="h-8 w-8 text-primary" />
+                <h3 className="text-xl font-bold">Cloud Computing</h3>
+                <p className="text-muted-foreground">Certificaciones en AWS, Azure, GCP y más.</p>
+              </div>
+              <div className="grid gap-1 p-6 bg-background rounded-lg shadow-sm">
+                <SmartphoneIcon className="h-8 w-8 text-primary" />
+                <h3 className="text-xl font-bold">Desarrollo Móvil</h3>
+                <p className="text-muted-foreground">Certificaciones en iOS, Android, Flutter y más.</p>
+              </div>
+              <div className="grid gap-1 p-6 bg-background rounded-lg shadow-sm">
+                <XIcon className="h-8 w-8 text-primary" />
+                <h3 className="text-xl font-bold">Inteligencia Artificial</h3>
+                <p className="text-muted-foreground">Certificaciones en Machine Learning, Deep Learning y más.</p>
+              </div>
+              <div className="grid gap-1 p-6 bg-background rounded-lg shadow-sm">
+                <ComputerIcon className="h-8 w-8 text-primary" />
+                <h3 className="text-xl font-bold">Ciberseguridad</h3>
+                <p className="text-muted-foreground">Certificaciones en Ethical Hacking, Pentesting y más.</p>
+              </div>
+            </div>
           </div>
-        </div>{" "}
-        <div
-          data-v-52723e91=""
-          className="grid grid-cols-4 gap-4 col-span-1 px-3 py-4 shadow-[0_16px_64px_rgba(170,169,185,0.48)] rounded-[20px] h-fit lg:grid-cols-6 lg:gap-0 lg:h-auto  lg:px-4 lg:py-6 lg:min-h-[12.5rem]"
-        >
-          <img
-            data-v-52723e91=""
-            src="/s3/img/active.2d466cc.svg"
-            alt=""
-            className="col-span-1 w-30 m-auto lg:col-span-2"
-          />{" "}
-          <div
-            data-v-52723e91=""
-            className="col-span-3 self-center lg:col-span-4"
-          >
-            <h2
-              data-v-52723e91=""
-              className="text-[#19114C] text-base font-medium md:leading-6 md:mb-2 md:text-xl lg:text-[2rem] lg:leading-10"
-            >
-              Active
-            </h2>{" "}
-            <p
-              data-v-52723e91=""
-              className="text-[#19114C] text-[14px] opacity-70 md:text-base md:px-0"
-            >
-              You regularly (at least 4 times a month) post on one or more of
-              the following platforms: TikTok, YouTube, Instagram, Snapchat,
-              Twitter, Facebook, Twitch, Podcasting platform.
-            </p>
+        </section>
+        <section className="w-full py-12 md:py-20 md:px-20 bg-muted">
+          <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                Beneficios de las Certificaciones
+              </h2>
+              <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                Obtén más proyectos y destaca tus habilidades con las certificaciones gratuitas.
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 lg:flex-row">
+              <Link
+                href="#"
+                className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                prefetch={false}
+              >
+                Obtén tu Certificación
+              </Link>
+              <Link
+                href="#"
+                className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                prefetch={false}
+              >
+                Conoce los Proyectos
+              </Link>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className=" container flex items-center mt-20">
-<div
-        data-v-73127002=""
-        className="grid grid-cols-1 gap-4 justify-items-center text-[#333333] lg:grid-cols-5 lg:gap-8"
-      >
-        <div
-          data-v-73127002=""
-          className="grid grid-cols-7 gap-3 p-4 lg:gap-8 col-span-1 row-span-2 shadow-[0_20px_64px_rgba(170,169,185,0.48)] rounded-[20px] h-fit lg:p-10 lg:grid-cols-1 lg:col-span-2 "
-        >
-          <div
-            data-v-73127002=""
-            className="w-[140%] col-span-5 self-center lg:col-span-1 lg:w-auto"
-          >
-            <p
-              data-v-73127002=""
-              className="text-sm text-[#419DF2] font-medium mb-3 lg:mb-0 lg:text-2xl lg:text-center"
-            >
-              01.
-            </p>{" "}
-            <h2
-              data-v-73127002=""
-              className="text-[#19114C] text-xl font-medium lg:text-[2rem] lg:leading-10 lg:mb-3 lg:text-center"
-            >
-              Commission
-            </h2>{" "}
-            <p
-              data-v-73127002=""
-              className="text-[#19114C] text-sm opacity-70 lg:text-lg lg:text-center"
-            >
-              You will be able to earn 10% commission on each purchase made by
-              your audience through your personal ELSA creator program page
-              (with exclusive discounts for your audience to enjoy!).
-            </p>
-          </div>{" "}
-          <img
-            data-v-73127002=""
-            src="/s3/img/commission.3b1fc11.svg"
-            alt=""
-            className="w-[4.25rem] relative -top-3 left-3 col-span-2 justify-self-center lg:col-span-1 lg:w-auto lg:top-0 lg:left-0"
-          />
-        </div>{" "}
-        <div
-          data-v-73127002=""
-          className="grid grid-cols-7 gap-3 p-4 lg:grid-cols-5 lg:gap-2 col-span-1 lg:col-span-3 shadow-[0_20px_64px_rgba(170,169,185,0.48)] rounded-[20px] h-fit lg:p-8"
-        >
-          <div
-            data-v-73127002=""
-            className="w-[140%] col-span-5 self-center lg:col-span-3 lg:w-auto"
-          >
-            <p
-              data-v-73127002=""
-              className="text-sm text-[#FF845E] font-medium mb-3 lg:mb-0 lg:text-2xl"
-            >
-              02.
-            </p>{" "}
-            <h2
-              data-v-73127002=""
-              className="text-[#19114C] text-xl font-medium lg:text-[2rem] lg:leading-10 lg:mb-3"
-            >
-              Free ELSA Pro Membership
-            </h2>{" "}
-            <p
-              data-v-73127002=""
-              className="text-[#19114C] text-sm opacity-70 lg:text-lg"
-            >
-              As a creator you will receive one year of ELSA pro membership
-              completely for free.
-            </p>
-          </div>{" "}
-          <img
-            data-v-73127002=""
-            src="/s3/img/free-elsa-pro.0e28f26.svg"
-            alt=""
-            className="w-[4.25rem] relative -top-3 left-3 ml-0 mt-0 col-span-2 lg:ml-9 lg:mt-4 lg:w-auto lg:top-0 lg:left-0"
-          />
-        </div>{" "}
-        <div
-          data-v-73127002=""
-          className="grid grid-cols-7 gap-3 p-4 lg:grid-cols-5 lg:gap-2 col-span-1 lg:col-span-3 shadow-[0_20px_64px_rgba(170,169,185,0.48)] rounded-[20px] h-fit lg:p-8"
-        >
-          <div
-            data-v-73127002=""
-            className="w-[140%] col-span-5 self-center lg:col-span-3 lg:w-auto"
-          >
-            <p
-              data-v-73127002=""
-              className="text-sm text-[#48B867] font-medium mb-3 lg:mb-0 lg:text-2xl"
-            >
-              03.
-            </p>{" "}
-            <h2
-              data-v-73127002=""
-              className="text-[#19114C] text-xl font-medium lg:text-[2rem] lg:leading-10 lg:mb-3"
-            >
-              Network
-            </h2>{" "}
-            <p
-              data-v-73127002=""
-              className="text-[#19114C] text-sm opacity-70 lg:text-lg"
-            >
-              If accepted into the program you will join our growing network of
-              ELSA creators where you will contribute to promoting a refreshing
-              new wave of English learning.
-            </p>
-          </div>{" "}
-          <img
-            data-v-73127002=""
-            src="/s3/img/network.31552be.svg"
-            alt=""
-            className="w-[4.25rem] relative -top-3 left-3 ml-0 mt-0 col-span-2 lg:ml-5 lg:mt-4 lg:w-auto lg:top-0 lg:left-0"
-          />
-        </div>
-      </div>
-      </div>
-      
+        </section>
+        <section className="w-full py-12 md:py-15 border-t">
+          <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
+            <div className="space-y-3">
+              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                Certificaciones para todos los niveles
+              </h2>
+              <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                Desde principiantes hasta expertos, tenemos certificaciones gratuitas para todos los niveles de
+                habilidad.
+              </p>
+            </div>
+            <div className="mx-auto w-full max-w-sm space-y-2">
+              <form className="flex gap-2">
+                <Input type="email" placeholder="Ingresa tu email" className="max-w-lg flex-1" />
+                <Button type="submit">Suscríbete</Button>
+              </form>
+              <p className="text-xs text-muted-foreground">
+                Suscríbete para recibir información sobre nuevas certificaciones.{" "}
+                <Link href="#" className="underline underline-offset-2" prefetch={false}>
+                  Términos y Condiciones
+                </Link>
+              </p>
+            </div>
+          </div>
+        </section>
     </>
   );
 }
