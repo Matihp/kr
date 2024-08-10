@@ -300,7 +300,7 @@ function Profile() {
               </h2>
               <ModalDescription setDescription={setDescription} />
             </div>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
+            <p className="font-normal break-all text-gray-700 dark:text-gray-400">
               {description}
             </p>
           </div>
@@ -308,7 +308,7 @@ function Profile() {
         <div
         id="proyectos"
         ref={proyectosRef}
-        className="md:w-[60vw] flex justify-between items-center mxmd:m-8 ml-8 md:ml-4 lg:ml-8 p-2 border rounded-lg bg-gray-100"
+        className="md:w-[60vw] flex justify-between items-center mxmd:mx-8 ml-8 md:ml-4 lg:ml-8 p-2 border rounded-lg bg-gray-100"
         >
         <h2 className="ml-0 text-xl font-bold tracking-tight text-gray-900">
           Proyectos
@@ -320,11 +320,11 @@ function Profile() {
           onAddProject={handleAddProject}
         />
         </div>
-      <div className="bg-slate-100 flex flex-col md:w-[60vw] mxmd:m-8 ml-8 my-2 py-2 md:pl-4 md:ml-4 lg:ml-8 rounded-md">
+      <div className="bg-slate-100 space-y-3 md:space-y-2 flex flex-col items-center md:w-[60vw] mxmd:mx-8 ml-8 my-2 py-3 md:pl-4 md:ml-4 md:pr-4 lg:ml-8 rounded-md">
         {projects.map((project) => (
           <div
             key={project.id}
-            className="flex flex-col items-center ml-0 my-2 bg-white border border-gray-200 rounded-lg shadow md:w-[58vw] md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+            className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow w-[95%] md:w-[58.5vw] md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
           >
             <Image
               unoptimized
