@@ -6,6 +6,8 @@ import { useState } from "react";
 import HamburgerMenu from "../HamburgerMenu/HamburgerMenu";
 import { NavigationMenus } from "../NavigationMenu/NavigationMenu";
 import useHeaderStore from "@/lib/store/headerStore";
+import { AvatarDropdown } from "../Dropdown/AvatarDropdown";
+import { NotificationDropdown } from "../Dropdown/NotificationDropdown";
 
 export function Header() {
   const [isOpen,setIsOpen]=useState(false)
@@ -59,6 +61,8 @@ export function Header() {
             >
               Ingresar
             </Link>
+            {/* <NotificationDropdown/>
+            <AvatarDropdown/>           */}
             <button onClick={()=>setIsOpen(!isOpen)} type="button" className="inline-flex md:hidden items-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
               <span className="sr-only">Open sidebar</span>
               <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
