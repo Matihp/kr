@@ -39,7 +39,7 @@ function Settings() {
           </Link>
           <Link
             href="#"
-            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-foreground font-bold bg-muted"
+            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-foreground bg-muted"
             prefetch={false}
           >
             <SunIcon className="w-4 h-4" />

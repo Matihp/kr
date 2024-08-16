@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,SelectLabel } from "../ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectLabel } from "../ui/select";
 import { PencilIcon } from "../ui/icons";
 import { Alert, AlertDescription } from "../ui/alert";
 
@@ -19,10 +19,12 @@ type ModalLanguagesProps = {
   languages: Language[];
   setLanguages: (languages: Language[]) => void;
 };
+
 export default function ModalLanguages({ languages, setLanguages }: ModalLanguagesProps) {
   const [localLanguages, setLocalLanguages] = useState<Language[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   useEffect(() => {
     setLocalLanguages(languages);
@@ -83,7 +85,7 @@ export default function ModalLanguages({ languages, setLanguages }: ModalLanguag
       setError(null);
     }
   }
-  
+
   const openModal = () => {
     setIsEditModalOpen(true);
     setError(null);
@@ -107,8 +109,9 @@ export default function ModalLanguages({ languages, setLanguages }: ModalLanguag
                   <Select
                     value={lang.language}
                     onValueChange={(value: string) => updateLanguage(index, "language", value)}
+                    onOpenChange={setIsSelectOpen}
                   >
-                    <SelectTrigger className="w-[190px]">
+                    <SelectTrigger className="w-[165px] sm:w-[190px]">
                       {lang.language || "Seleccionar idioma"}
                     </SelectTrigger>
                     <SelectContent>
@@ -121,7 +124,7 @@ export default function ModalLanguages({ languages, setLanguages }: ModalLanguag
                   </Select>
                 </div>
 
-                <Select value={lang.level} onValueChange={(value: LanguageLevel) => updateLanguage(index, "level", value)}>
+                <Select value={lang.level} onValueChange={(value: LanguageLevel) => updateLanguage(index, "level", value)} onOpenChange={setIsSelectOpen}>
                   <SelectTrigger className="w-[140px]">
                     {lang.level || "Elegir nivel"}
                   </SelectTrigger>
@@ -139,7 +142,7 @@ export default function ModalLanguages({ languages, setLanguages }: ModalLanguag
               </div>
             </div>
           ))}
-          <Button onClick={addLanguage} className="flex items-center gap-2">
+          <Button onClick={addLanguage} className="flex items-center gap-2" style={{ pointerEvents: isSelectOpen ? 'none' : 'auto' }}>
             <PlusIcon className="h-4 w-4" />
             Add Language
           </Button>
@@ -150,13 +153,14 @@ export default function ModalLanguages({ languages, setLanguages }: ModalLanguag
           </Alert>
         )}
         <DialogFooter className="flex justify-between">
-          <Button variant="outline" onClick={clearLanguages}>Clear</Button>
-          <Button onClick={saveLanguages}>Save</Button>
+          <Button variant="outline" onClick={clearLanguages} style={{ pointerEvents: isSelectOpen ? 'none' : 'auto' }}>Clear</Button>
+          <Button onClick={saveLanguages} style={{ pointerEvents: isSelectOpen ? 'none' : 'auto' }}>Save</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+
 function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
