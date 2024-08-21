@@ -9,8 +9,8 @@ import skills from '@/ui/8.jpeg'
 function page() {
   return (
     <>
-      <section className="w-full px-10 lg:px-15 py-12 md:py-24 lg:py-32 ">
-          <div className="container px-4 md:px-6">
+      <section className="w-full px-10 lg:px-15 py-12 md:pt-28 lg:pt-40 ">
+          {/* <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-2">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
@@ -47,7 +47,33 @@ function page() {
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full"
               />
             </div>
-          </div>
+          </div> */}
+              <div className="space-y-4 flex flex-col justify-center items-center">
+                  <h1 className="text-3xl text-center font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                    Certificaciones gratuitas para freelancers
+                  </h1>
+                  <p className="max-w-[600px] text-center text-muted-foreground md:text-xl">
+                    Obtén certificaciones gratuitas en diferentes áreas tecnológicas y destaca tus habilidades en el
+                    mercado freelance.
+                  </p>
+                    <div className="flex gap-2">
+                    <Link
+                      href="#"
+                      className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                      prefetch={false}
+                    >
+                      Obtén tu Certificación
+                    </Link>
+                    <Link
+                      href="#"
+                      className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                      prefetch={false}
+                    >
+                      Conoce los Beneficios
+                    </Link>
+                  </div>
+                </div>
+                
         </section>
         <section className="w-full py-12 md:py-15 bg-muted">
           <div className="container px-4 md:px-6">
@@ -154,14 +180,14 @@ function page() {
         <section className="w-full py-12 md:py-20 md:px-20 bg-muted">
           <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+              <h2 className="text-3xl font-bold tracking-tighter mxlg:text-center md:text-4xl/tight">
                 Beneficios de las Certificaciones
               </h2>
-              <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              <p className="max-w-[600px] text-muted-foreground mxlg:text-center md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Obtén más proyectos y destaca tus habilidades con las certificaciones gratuitas.
               </p>
             </div>
-            <div className="flex flex-col gap-2 lg:flex-row">
+            <div className="flex gap-2 justify-center">
               <Link
                 href="#"
                 className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
