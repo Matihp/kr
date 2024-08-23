@@ -11,7 +11,6 @@ import {
   mdiTextAccount,
 } from "@mdi/js";
 import { useCallback, useEffect, useRef, useState } from "react";
-import ModalProject from "@/components/Modal/ModalProject";
 import { DropdownProject } from "@/components/Dropdown/DropdownProject";
 import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";

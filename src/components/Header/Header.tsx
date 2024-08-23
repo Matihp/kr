@@ -16,7 +16,7 @@ export function Header() {
   return (
     < >
     {isScrollingHeader &&
-    <header className="md:fixed sticky inset-x-0 top-0 animate-fade-in duration-700 z-50 mx-auto w-full border border-gray-100 bg-white/80 py-3 shadow backdrop-blur-md md:top-4 md:rounded-3xl md:w-[93vw] lg:w-[90vw]">
+    <header className="md:fixed sticky inset-x-0 top-0 animate-fade-in duration-700 z-50 mx-auto w-full border border-gray-100 bg-white/80 py-3 shadow backdrop-blur-md md:top-4 md:rounded-3xl md:w-[94vw]">
       <div className="px-4">
         <div className="flex items-center justify-between">
           <div className="flex shrink-0">
@@ -26,23 +26,23 @@ export function Header() {
             </Link>
           </div>
           <div className="flex md:justify-end lg:justify-between md:w-[650px] lg:w-[630px] md:gap-1">
-            <div className="hidden md:flex md:items-center md:justify-end  lg:gap-3">
+            <div className="hidden md:flex md:items-center md:justify-end  lg:gap-2">
             <NavigationMenus/>
             <Link
-              className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+              className="inline-block rounded-lg px-2 py-1 text-sm font-semibold text-[#39466e] transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
               href="/list"
             >
               Freelancers
             </Link>
             <Link
               aria-current="page"
-              className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+              className="inline-block rounded-lg px-2 py-1 text-sm font-semibold text-[#39466e] transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
               href="#"
             >
               Certificate
             </Link>
             <Link
-              className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+              className="inline-block rounded-lg px-2 py-1 text-sm font-semibold text-[#39466e] transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
               href="/news"
             >
               Noticias

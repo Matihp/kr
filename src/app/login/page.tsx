@@ -7,29 +7,33 @@ import {
   IconBrandGoogle,
   IconBrandOnlyfans,
 } from "@tabler/icons-react";
+import { useEffect } from "react";
 
 export default function SignupFormDemo() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted");
   };
+  useEffect(() => {
+    const body = document.body;
+    body.classList.add("signup-background"); 
+    return () => {
+      body.classList.remove("signup-background");
+    };
+  }, []);
   return (
-    <div className="max-w-md md:mt-28 w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 mb-10 shadow-input bg-white dark:bg-black">
+    <div className="max-w-md w-full mx-auto rounded-none sm:rounded-2xl mxmd:my-[20%] md:my-[5%] p-4 md:p-8 md:mt-28 shadow-input bg-white dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-        Welcome to Krovit
+      Accede a tu Cuenta
       </h2>
-      <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-        Login to krovit if you can because we don&apos;t have a login flow
-        yet
-      </p>
 
-      <form className="mt-8" onSubmit={handleSubmit}>
+      <form className="mt-5" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">
-          <LabelR htmlFor="email">Email Address</LabelR>
-          <InputR id="email" placeholder="projectmayhem@fc.com" type="email" />
+          <LabelR htmlFor="email">Correo Electronico</LabelR>
+          <InputR id="email" placeholder="ejemplo@ejem.com" type="email" />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <LabelR htmlFor="password">Password</LabelR>
+          <LabelR htmlFor="password">Contraseña</LabelR>
           <InputR id="password" placeholder="••••••••" type="password" />
         </LabelInputContainer>
 
