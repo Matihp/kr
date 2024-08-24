@@ -21,6 +21,7 @@ import ModalCertification from "@/components/Modal/ModalCertification";
 import ModalInfo from "@/components/Modal/ModalInfo";
 import PrivateProfileContactCard from "@/components/ProfileContactCard/PrivateProfileContactCard";
 import { Button } from "@/components/ui/button";
+import ModalProfileImage, { EditedImage } from "@/components/Modal/ModalProfileImage";
 
 type LanguageLevel = "beginner" | "intermediate" | "advanced" | string
 
@@ -66,6 +67,7 @@ function Profile() {
   const [showNav, setShowNav] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [activeSection, setActiveSection] = useState("sobre-mi");
+  const [avatarSrc, setAvatarSrc] = useState(avatar.src);
   const [description, setDescription] = useState<string>(
     "With over 14 years of experience in the field of SEO, I have gained extensive knowledge and expertise that enables me to provide effective SEO services to businesses. I previously worked for one of the UK's leading digital marketing agencies and have since then transitioned to directly helping businesses achieve their goals. My passion for helping businesses succeed is reflected in the positive feedback I receive from satisfied clients. Thank you for considering my services - I look forward to the opportunity to work with you and help your business thrive online."
   );
@@ -152,6 +154,10 @@ function Profile() {
     }
   };
 
+  const handleSaveImage = (editedImage: { imageUrl: string }) => {
+    setAvatarSrc(editedImage.imageUrl);
+  };
+
   const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
 
   const handleAddProject = useCallback((projectData: ProjectFormData) => {
@@ -230,15 +236,21 @@ function Profile() {
         id="sticky-element"
         className="lg:sticky md:top-0 z-10 bg-slate-100 md:pt-6 lg:pl-2 lg:h-[249px]"
       >
-        <div className="flex flex-col md:flex-row gap-4 md:gap-8 pt-4 lg:pl-5 md:mt-16 md:pl-7">
-          <div className="mx-auto md:mx-0">
+        <div className="flex flex-col md:flex-row gap-4 pt-4 md:gap-8 md:mt-16 md:pl-2 lg:pl-5">
+          <div className="mx-auto md:mx-0 lg:pl-3">
             <Image
               width={80}
               height={30}
               alt=""
-              src={avatar}
-              className=" rounded-full  "
+              src={avatarSrc}
+              className=" rounded-full "
             />
+            <div className="absolute z-50 top-[70px] left-52 md:top-40 md:left-16 lg:left-24">
+              <ModalProfileImage 
+              onSave={handleSaveImage} 
+              currentImageUrl={avatarSrc} 
+               />
+            </div>     
           </div>
 
           <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
