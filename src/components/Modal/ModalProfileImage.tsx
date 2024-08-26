@@ -98,7 +98,7 @@ const ModalProfileImage: React.FC<ModalProfileImageProps> = ({ onSave, currentIm
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <PencilIcon onClick={openModal} />
+        <PencilIcon className="text-gray-100 bg-black rounded-full" onClick={openModal} />
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
