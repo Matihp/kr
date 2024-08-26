@@ -29,9 +29,9 @@ function HomePage() {
             </Link>
           </div>
           <div className="flex justify-center animate-slide-in-bottom">
-            <button className="bg-violet-600 text-slate-100 font-semibold hover:bg-violet-700 rounded-3xl px-10 py-2 mt-8">
+            <Link className="bg-violet-600 text-slate-100 font-semibold hover:bg-violet-700 rounded-3xl px-10 py-2 mt-8" href={"/certificate"}>
               Quiero mi certificacion gratuita
-            </button>
+            </Link>
           </div>
         </div>
       </div>
