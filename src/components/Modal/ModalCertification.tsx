@@ -6,7 +6,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { PencilIcon } from "../ui/icons";
-import { TrashIcon } from "lucide-react";
+import { PlusIcon, TrashIcon } from "lucide-react";
 
 type Certification = {
   id: string;
@@ -104,13 +104,13 @@ const ModalCertification: FC<ModalCertificationsProps> = ({ certifications, setC
     <>
       <PencilIcon onClick={() => setIsOpen(true)} />
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] flex flex-col items-center">
           <DialogHeader>
             <DialogTitle>Certificaciones</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-3 mt-2">
             {certifications.map((certification) => (
-              <div key={certification.id} className="flex items-center w-96 justify-between">
+              <div key={certification.id} className="flex items-center justify-between">
                 <div>
                   <div className="font-medium">{certification.name}</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">Fecha: {certification.date}</div>
@@ -129,7 +129,7 @@ const ModalCertification: FC<ModalCertificationsProps> = ({ certifications, setC
                 </div>
               </div>
             ))}
-            <Button onClick={openAddCertificationModal}>Agregar Certificación</Button>
+            <Button className="gap-2 mt-2" onClick={openAddCertificationModal}><PlusIcon className="h-4 w-4" /> Agregar Certificación</Button>
           </div>
         </DialogContent>
       </Dialog>

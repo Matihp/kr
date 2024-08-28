@@ -40,15 +40,15 @@ function ModalDescription({ setDescription }: ModalDescriptionProps) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Edit Profile Description</DialogTitle>
+          <DialogTitle>Agregar descripción</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">Descripción</Label>
               <Textarea
                 id="description"
-                placeholder="Enter your profile description (max 600 characters)"
+                placeholder="Ingrese la descripción de su perfil (máximo 600 caracteres)"
                 maxLength={600}
                 minLength={10}
                 required
@@ -65,15 +65,13 @@ function ModalDescription({ setDescription }: ModalDescriptionProps) {
                 }}
               />
               <div className="text-right text-sm text-gray-500 dark:text-gray-400">
-                <span id="character-count">600</span> characters remaining
+                <span id="character-count">600</span> caracteres restantes
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <div>
-              <Button variant="outline" onClick={handleEditProduct}>Close</Button>
-            </div>
-            <Button type="submit">Save Description</Button>
+          <DialogFooter className='mxsm:grid mxsm:grid-cols-2 mxsm:gap-4'>
+              <Button variant="outline" onClick={handleEditProduct}>Cancelar</Button>
+              <Button type="submit">Guardar</Button>
           </DialogFooter>
         </form>
       </DialogContent>

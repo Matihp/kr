@@ -44,8 +44,8 @@ export default function ModalSkills({ skills, onSkillsUpdate }: ModalSkillsProps
       </DialogTrigger>
       <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
-          <DialogTitle>Editar Habilidades</DialogTitle>
-          <DialogDescription>Modifica tus habilidades y guarda los cambios.</DialogDescription>
+          <DialogTitle>Habilidades</DialogTitle>
+          <DialogDescription>Ingresa tus habilidades y guarda los cambios.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <SkillsTagsInput
@@ -53,7 +53,7 @@ export default function ModalSkills({ skills, onSkillsUpdate }: ModalSkillsProps
             onChange={handleSkillsChange}
           />
         </div>
-        <DialogFooter>
+        <DialogFooter className='mxsm:grid mxsm:grid-cols-2 mxsm:gap-4'>
           <Button variant="outline" onClick={handleCancel}>
             Cancelar
           </Button>
