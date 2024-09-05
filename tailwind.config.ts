@@ -110,7 +110,10 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"),animation,addVariablesForColors],
+  plugins: [
+    require("tailwindcss-animate"),animation,addVariablesForColors,
+    require('@tailwindcss/typography'),
+  ],
 } satisfies Config
 
 function addVariablesForColors({ addBase, theme }: any) {
