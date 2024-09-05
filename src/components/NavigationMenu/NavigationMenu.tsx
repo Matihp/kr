@@ -16,41 +16,66 @@ import {
 
 const components: { title: string; href: string; description: string }[] = [
   {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
+    title: "Desarrollo Web",
+    href: "/docs/categories/web-development",
     description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
+      "Freelancers especializados en el desarrollo de sitios web y aplicaciones web.",
   },
   {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
+    title: "Diseño Gráfico",
+    href: "/docs/categories/graphic-design",
     description:
-      "For sighted users to preview content available behind a link.",
+      "Freelancers que ofrecen servicios de diseño gráfico, incluyendo logotipos, branding y más.",
   },
   {
-    title: "Progress",
-    href: "/docs/primitives/progress",
+    title: "Marketing Digital",
+    href: "/docs/categories/digital-marketing",
     description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+      "Expertos en marketing digital que pueden ayudarte a mejorar tu presencia en línea y atraer más clientes.",
   },
   {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
+    title: "Redacción y Traducción",
+    href: "/docs/categories/writing-translation",
+    description:
+      "Freelancers que ofrecen servicios de redacción, edición y traducción de contenido.",
   },
   {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
+    title: "Desarrollo de Software",
+    href: "/docs/categories/software-development",
     description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
+      "Desarrolladores de software que pueden crear aplicaciones personalizadas para tus necesidades.",
   },
   {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
+    title: "Consultoría y Asesoramiento",
+    href: "/docs/categories/consulting-advisory",
     description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
+      "Consultores que ofrecen asesoramiento en diversas áreas, desde negocios hasta tecnología.",
   },
-]
+  {
+    title: "Fotografía y Video",
+    href: "/docs/categories/photography-video",
+    description:
+      "Fotógrafos y videógrafos que pueden capturar y editar imágenes y videos de alta calidad.",
+  },
+  {
+    title: "Administración y Asistencia Virtual",
+    href: "/docs/categories/virtual-assistance",
+    description:
+      "Asistentes virtuales que pueden ayudarte con tareas administrativas y de gestión.",
+  },
+  {
+    title: "Desarrollo de Aplicaciones Móviles",
+    href: "/docs/categories/mobile-app-development",
+    description:
+      "Desarrolladores especializados en la creación de aplicaciones móviles para iOS y Android.",
+  },
+  {
+    title: "SEO y Optimización de Motores de Búsqueda",
+    href: "/docs/categories/seo-optimization",
+    description:
+      "Expertos en SEO que pueden mejorar el posicionamiento de tu sitio web en los motores de búsqueda.",
+  }
+];
 
 export function NavigationMenus() {
   return (
