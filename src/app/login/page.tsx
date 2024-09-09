@@ -5,22 +5,34 @@ import { cn } from "@/lib/utils"
 import {
   IconBrandGithub,
   IconBrandGoogle,
-  IconBrandOnlyfans,
 } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { login } from "@/lib/auth";
 
 export default function SignupFormDemo() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+    console.log(email)
+    console.log(password)
+    try {
+      await login(email, password);
+      console.log("Login successful");
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   };
+
   useEffect(() => {
     const body = document.body;
-    body.classList.add("signup-background"); 
+    body.classList.add("signup-background");
     return () => {
       body.classList.remove("signup-background");
     };
   }, []);
+
   return (
     <div className="max-w-md w-full mx-auto rounded-none sm:rounded-2xl mxmd:my-[20%] md:my-[5%] p-4 md:p-8 md:mt-28 shadow-input bg-white dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
@@ -30,11 +42,11 @@ export default function SignupFormDemo() {
       <form className="mt-5" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">
           <LabelR htmlFor="email">Correo Electronico</LabelR>
-          <InputR id="email" placeholder="ejemplo@ejem.com" type="email" />
+          <InputR id="email" placeholder="ejemplo@ejem.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <LabelR htmlFor="password">Contraseña</LabelR>
-          <InputR id="password" placeholder="••••••••" type="password" />
+          <InputR id="password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </LabelInputContainer>
 
         <button
@@ -73,6 +85,7 @@ export default function SignupFormDemo() {
     </div>
   );
 }
+
 
 const BottomGradient = () => {
   return (

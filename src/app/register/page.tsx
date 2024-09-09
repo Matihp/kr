@@ -5,23 +5,41 @@ import { cn } from "@/lib/utils";
 import {
   IconBrandGithub,
   IconBrandGoogle,
-  IconBrandOnlyfans,
 } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { register } from "@/lib/auth"; 
+import { useRouter } from 'next/navigation'
 
-export default function SignupFormDemo() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+export default function Signup() {
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+    if (password !== confirmPassword) {
+      console.error("Las contraseñas no coinciden");
+      return;
+    }
+    try {
+      await register(firstname, lastname, email, password);
+      router.push('/login');  
+    } catch (error) {
+      console.error("Registro fallido", error);
+    }
   };
+
   useEffect(() => {
     const body = document.body;
-    body.classList.add("signup-background"); 
+    body.classList.add("signup-background");
     return () => {
       body.classList.remove("signup-background");
     };
   }, []);
-  
+
   return (
     <div className="max-w-md w-full mx-auto rounded-none sm:rounded-2xl p-4 my-[10%] md:my-[5%] md:mt-28 md:p-8 shadow-input bg-white dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
@@ -32,24 +50,24 @@ export default function SignupFormDemo() {
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
           <LabelInputContainer>
             <LabelR htmlFor="firstname">Nombre</LabelR>
-            <InputR id="firstname" placeholder="Juan" type="text" />
+            <InputR id="firstname" placeholder="Juan" type="text" value={firstname} onChange={(e) => setFirstname(e.target.value)} />
           </LabelInputContainer>
           <LabelInputContainer>
             <LabelR htmlFor="lastname">Apellido</LabelR>
-            <InputR id="lastname" placeholder="Lopez" type="text" />
+            <InputR id="lastname" placeholder="Lopez" type="text" value={lastname} onChange={(e) => setLastname(e.target.value)} />
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4">
           <LabelR htmlFor="email">Correo Electronico</LabelR>
-          <InputR id="email" placeholder="ejemplo@ejem.com" type="email" />
+          <InputR id="email" placeholder="ejemplo@ejem.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <LabelR htmlFor="password">Contraseña</LabelR>
-          <InputR id="password" placeholder="••••••••" type="password" />
+          <InputR id="password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <LabelR htmlFor="password">Repite tu Contraseña</LabelR>
-          <InputR id="password" placeholder="••••••••" type="password" />
+          <LabelR htmlFor="confirmPassword">Repite tu Contraseña</LabelR>
+          <InputR id="confirmPassword" placeholder="••••••••" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         </LabelInputContainer>
 
         <button
@@ -82,7 +100,6 @@ export default function SignupFormDemo() {
             <BottomGradient />
           </button>
         </div>
-       
       </form>
     </div>
   );
