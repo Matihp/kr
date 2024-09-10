@@ -15,8 +15,6 @@ export default function SignupFormDemo() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(email)
-    console.log(password)
     try {
       await login(email, password);
       console.log("Login successful");
