@@ -16,8 +16,6 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-  SelectLabel,
 } from "../ui/select";
 import { PencilIcon } from "../ui/icons";
 import { Alert, AlertDescription } from "../ui/alert";
@@ -84,7 +82,7 @@ export default function ModalLanguages({
     }
 
     setLocalLanguages(updatedLanguages);
-    setError(null); // Clear any previous error when user makes a change
+    setError(null); 
   };
 
   const availableLanguages = languagesData.filter(
@@ -126,7 +124,7 @@ export default function ModalLanguages({
   };
 
   const cancelChanges = () => {
-    setLocalLanguages(languages); // Restore the original languages
+    setLocalLanguages(languages);
     setIsEditModalOpen(false);
     setError(null);
   };

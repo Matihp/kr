@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button"
 import { PencilIcon } from "../ui/icons"
 import SkillsTagsInput from "../TagsInput/SkillsTagsInput"
 
-const skillsData = ["Java", "JavaScript", "Python", "C++", "Ruby", "Swift", "Go", "Rust", "PHP", "TypeScript"];
-
 interface ModalSkillsProps {
   skills: string[]
   onSkillsUpdate: (updatedSkills: string[]) => void

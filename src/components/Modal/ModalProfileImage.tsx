@@ -86,7 +86,6 @@ const ModalProfileImage: React.FC<ModalProfileImageProps> = ({ onSave, currentIm
       setIsOpen(false);
     } catch (error) {
       console.error('Error processing image:', error);
-      // Aquí podrías mostrar un mensaje de error al usuario
     } finally {
       setIsLoading(false);
     }

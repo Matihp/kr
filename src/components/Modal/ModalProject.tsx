@@ -10,8 +10,6 @@ import {
 } from "@/components/ui/dialog"
 import  webproject from "@/ui/webproject.webp"
 import Image from "next/image"
-import Icon from '@mdi/react';
-import { mdiPencilCircle } from '@mdi/js';
 
 function ModalProject() {
   return (
