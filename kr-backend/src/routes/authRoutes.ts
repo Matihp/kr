@@ -1,11 +1,13 @@
 import express from 'express';
 import passport from 'passport';
-import { register, login, googleCallback, githubCallback } from '../controllers/authController';
+import { register, login, googleCallback, githubCallback, verifyJwt } from '../controllers/authController';
 
 const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
+
+router.post('/verify-token',verifyJwt)
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get(

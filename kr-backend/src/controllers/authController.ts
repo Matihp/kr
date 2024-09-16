@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/userModel';
 import { AppDataSource } from '../config/data-source';
+import { verifyToken } from '../utils/jwtUtils';
 
 const userRepository = AppDataSource.manager.getRepository(User);
 
@@ -56,6 +57,25 @@ export const login = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ message: 'Error logging in' });
   }
+};
+export const verifyJwt = (req: Request, res: Response) => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    return res.status(401).json({ isAuthenticated: false, message: 'No token provided' });
+  }
+
+  try {
+    const decoded = verifyToken(token);
+    res.json({ isAuthenticated: true, user: decoded });
+  } catch (err) {
+    res.status(401).json({ isAuthenticated: false, message: 'Invalid token' });
+  }
+};
+
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie('jwt');
+  res.json({ message: 'Logout successful' });
 };
 
 export const googleCallback = (req: Request, res: Response) => {
