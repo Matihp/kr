@@ -1,43 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { verifyToken, login as authLogin, logout as authLogout } from './auth';
 
-interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
-
-interface AuthState {
-  isAuthenticated: boolean;
-  user: User | null;
-  loading: boolean;
-}
-
 export const useAuth = () => {
-  const [authState, setAuthState] = useState<AuthState>({
+  const [authState, setAuthState] = useState({
     isAuthenticated: false,
     user: null,
     loading: true,
   });
 
-  useEffect(() => {
-    const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
+    try {
       const { isAuthenticated, user } = await verifyToken();
       setAuthState({ isAuthenticated, user, loading: false });
-    };
-
-    checkAuth();
+    } catch (error) {
+      console.error('Error checking auth:', error);
+      setAuthState({ isAuthenticated: false, user: null, loading: false });
+    }
   }, []);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const login = async (email: string, password: string) => {
     try {
       await authLogin(email, password);
-      const { isAuthenticated, user } = await verifyToken();
-      setAuthState({ isAuthenticated, user, loading: false });
+      await checkAuth(); // Verifica el token inmediatamente después del login
       return true;
     } catch (error) {
       console.error('Login failed:', error);
+      setAuthState({ isAuthenticated: false, user: null, loading: false });
       return false;
     }
   };

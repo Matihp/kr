@@ -1,12 +1,4 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
-
-interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
 
 export const register = async (firstName: string, lastName: string, email: string, password: string) => {
   try {
@@ -31,16 +23,12 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const verifyToken = async (): Promise<{ isAuthenticated: boolean; user: User | null }> => {
+
+export const verifyToken = async () => {
   try {
-    // const token = Cookies.get('jwt');
-    // console.log(token)
-    // if (!token) {
-    //   return { isAuthenticated: false, user: null };
-    // }
-    const response = await axios.post('http://localhost:4000/auth/verify-token', {}, 
-      { withCredentials: true }
-    );
+    const response = await axios.get('http://localhost:4000/auth/verify-token', {
+      withCredentials: true
+    });
     return response.data;
   } catch (error) {
     console.error('Error verifying token:', error);
@@ -51,7 +39,6 @@ export const verifyToken = async (): Promise<{ isAuthenticated: boolean; user: U
 export const logout = async () => {
   try {
     await axios.post('http://localhost:4000/auth/logout', {}, { withCredentials: true });
-    Cookies.remove('token');
   } catch (error) {
     console.error('Error during logout:', error);
     throw new Error('Error logging out');

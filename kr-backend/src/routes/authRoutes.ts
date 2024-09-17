@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/register', register);
 router.post('/login', login);
 
-router.post('/verify-token',verifyJwt)
+router.get('/verify-token',verifyJwt)
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get(
