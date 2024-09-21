@@ -7,11 +7,12 @@ import {
   IconBrandGoogle,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { login } from "@/lib/auth";
+import { useAuth } from "@/lib/useAuth";
 
 export default function SignupFormDemo() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login} = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

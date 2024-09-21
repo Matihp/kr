@@ -1,47 +1,45 @@
-import { useState, useEffect, useCallback } from 'react';
+import { create } from 'zustand'
 import { verifyToken, login as authLogin, logout as authLogout } from './auth';
 
-export const useAuth = () => {
-  const [authState, setAuthState] = useState({
-    isAuthenticated: false,
-    user: null,
-    loading: true,
-  });
+interface AuthState {
+  isAuthenticated: boolean;
+  user: any | null;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  checkAuth: () => Promise<void>;
+}
 
-  const checkAuth = useCallback(async () => {
-    try {
-      const { isAuthenticated, user } = await verifyToken();
-      setAuthState({ isAuthenticated, user, loading: false });
-    } catch (error) {
-      console.error('Error checking auth:', error);
-      setAuthState({ isAuthenticated: false, user: null, loading: false });
-    }
-  }, []);
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  const login = async (email: string, password: string) => {
+export const useAuth = create<AuthState>((set) => ({
+  isAuthenticated: false,
+  user: null,
+  login: async (email, password) => {
     try {
       await authLogin(email, password);
-      await checkAuth(); // Verifica el token inmediatamente después del login
+      // await new Promise(resolve => setTimeout(resolve, 1000));   
+      const { isAuthenticated, user } = await verifyToken();
+      set({ isAuthenticated, user });
       return true;
     } catch (error) {
-      console.error('Login failed:', error);
-      setAuthState({ isAuthenticated: false, user: null, loading: false });
+      console.error('Fallo en el login:', error);
+      set({ isAuthenticated: false, user: null });
       return false;
     }
-  };
-
-  const logout = async () => {
+  },
+  logout: async () => {
     try {
       await authLogout();
-      setAuthState({ isAuthenticated: false, user: null, loading: false });
+      set({ isAuthenticated: false, user: null });
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error('Fallo en el logout:', error);
     }
-  };
-
-  return { ...authState, login, logout };
-};
+  },
+  checkAuth: async () => {
+    try {
+      const { isAuthenticated, user } = await verifyToken();
+      set({ isAuthenticated, user });
+    } catch (error) {
+      console.error('Error al verificar autenticación:', error);
+      set({ isAuthenticated: false, user: null });
+    }
+  }
+}));

@@ -15,17 +15,19 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useAuth } from "@/lib/useAuth";
 
 export function AvatarDropdown() {
+  const { logout } = useAuth();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0">
-        <Button variant="ghost" className="inline-flex items-center justify-center h-12 py-2 pl-3 pr-9 text-sm font-medium transition-colors border rounded-md text-neutral-700 hover:bg-neutral-100 disabled:opacity-50 disabled:pointer-events-none">
-          <img src="https://cdn.devdojo.com/images/may2023/adam.jpeg" className="object-cover w-9 h-9 border rounded-full border-neutral-200" />
-          <span className="flex flex-col items-start flex-shrink-0 h-full ml-2 leading-none translate-y-px">
-            <span>Adam Wathan</span>
-            <span className="text-xs font-light text-neutral-400">@adamwathan</span>
-          </span>
+        <Button variant="ghost" className="inline-flex items-center justify-center pl-3 pr-9 text-sm font-medium transition-colors border rounded-md text-neutral-700 hover:bg-neutral-100 disabled:opacity-50 disabled:pointer-events-none">
+          <img src="https://cdn.devdojo.com/images/may2023/adam.jpeg" className="object-cover w-9 border rounded-full border-neutral-200" />
+          <div className="flex flex-col items-start flex-shrink-0 ml-2 leading-none translate-y-px">
+            <span>Juan Gutierrez</span>
+            <span className="text-xs font-light text-neutral-400">@juan.gutierrez</span>
+          </div>
           <svg className="absolute right-0 w-5 h-5 mr-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" /></svg>
         </Button>
       </DropdownMenuTrigger>
@@ -52,30 +54,7 @@ export function AvatarDropdown() {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent>
-                  <DropdownMenuItem>Email</DropdownMenuItem>
-                  <DropdownMenuItem>Message</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>More...</DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            </DropdownMenuSub>
-            <DropdownMenuItem>
-              New Team
-              <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>GitHub</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-          <DropdownMenuItem disabled>API</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={logout}>
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>
