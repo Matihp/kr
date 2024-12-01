@@ -1,14 +1,7 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/YUmZBWYVW6y
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 "use client"
 import { useState, useMemo, SVGProps } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Paginations } from "../Pagination/Pagination"
 
 interface Product {

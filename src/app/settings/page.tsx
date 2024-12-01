@@ -1,170 +1,239 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { BellIcon, LockIcon, SunIcon, UserIcon } from 'lucide-react'
-import Link from 'next/link'
+"use client";
+import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useState } from 'react';
 
-function Settings() {
+interface SettingsPageProps {}
+
+const Settings: React.FC<SettingsPageProps> = () => {
+  const [firstName, setFirstName] = useState<string>('John');
+  const [lastName, setLastName] = useState<string>('Doe');
+  const [country, setCountry] = useState<{ value: string; label: string } | null>(null);
+  const [timezone, setTimezone] = useState<{ value: string; label: string } | null>(null);
+  const [email, setEmail] = useState<string>('user@example.com');
+  const [password, setPassword] = useState<string>('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState<string>('');
+  const [notifications, setNotifications] = useState<boolean>(true);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [showPasswordConfirmAlert, setShowPasswordConfirmAlert] = useState<boolean>(false);
+
+  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value);
+  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value);
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
+  const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value);
+  const handleConfirmNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setConfirmNewPassword(e.target.value);
+  const toggleNotifications = () => setNotifications((prev) => !prev);
+  const toggleTheme = () => setTheme((prev) => prev === 'light' ? 'dark' : 'light');
+
+  const handleSavePersonalInfo = () => {
+    // Lógica para guardar cambios de información personal
+    console.log('Información personal guardada:', { firstName, lastName, country, timezone });
+  };
+
+  const handleSavePassword = () => {
+    if (newPassword.length < 4) {
+      alert('La contraseña debe tener al menos 4 caracteres.');
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      alert('Las contraseñas no coinciden.');
+      return;
+    }
+    setShowPasswordConfirmAlert(true);
+  };
+
+  const handleConfirmPasswordChange = (confirm: boolean) => {
+    if (confirm) {
+      // Lógica para guardar cambios de contraseña
+      console.log('Contraseña actualizada:', { password: newPassword });
+    }
+    setShowPasswordConfirmAlert(false);
+  };
+
   return (
-    <div className="flex min-h-screen mt-20">
-      <div className="bg-background border-r px-2 py-9 flex flex-col gap-4">
-        <nav className="flex flex-col gap-2">
-          <Link
-            href="#"
-            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-            prefetch={false}
-          >
-            <UserIcon className="w-4 h-4" />
-            Profile
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-            prefetch={false}
-          >
-            <LockIcon className="w-4 h-4" />
-            Security
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-            prefetch={false}
-          >
-            <BellIcon className="w-4 h-4" />
-            Notifications
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-foreground bg-muted"
-            prefetch={false}
-          >
-            <SunIcon className="w-4 h-4" />
-            Appearance
-          </Link>
-        </nav>
-      </div>
-      <div className="flex flex-col min-h-screen w-full">
-        <main className="flex-1 bg-muted/40 p-4 md:p-10">
-          <div className="max-w-6xl mx-auto grid gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Appearance</CardTitle>
-                <CardDescription>Choose your preferred theme for the application.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4">
-                  <Select>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select theme" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                      <SelectItem value="system">System</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="flex items-center gap-2">
-                    <Checkbox id="darkMode" />
-                    <label htmlFor="darkMode" className="text-sm font-medium">
-                      Enable dark mode
-                    </label>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button>Save Changes</Button>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Profile</CardTitle>
-                <CardDescription>Update your personal information.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form className="grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input id="name" placeholder="Enter your name" />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" placeholder="Enter your email" type="email" />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="bio">Bio</Label>
-                    <Textarea id="bio" placeholder="Enter your bio" className="min-h-[100px]" />
-                  </div>
-                </form>
-              </CardContent>
-              <CardFooter>
-                <Button>Save Changes</Button>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Security</CardTitle>
-                <CardDescription>Update your account security settings.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form className="grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="currentPassword">Current Password</Label>
-                    <Input id="currentPassword" type="password" placeholder="Enter your current password" />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="newPassword">New Password</Label>
-                    <Input id="newPassword" type="password" placeholder="Enter your new password" />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="confirmPassword">Confirm Password</Label>
-                    <Input id="confirmPassword" type="password" placeholder="Confirm your new password" />
-                  </div>
-                </form>
-              </CardContent>
-              <CardFooter>
-                <Button>Change Password</Button>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Notifications</CardTitle>
-                <CardDescription>Manage your notification preferences.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4">
-                  <div className="flex items-center gap-2">
-                    <Checkbox id="emailNotifications" defaultChecked />
-                    <label htmlFor="emailNotifications" className="text-sm font-medium">
-                      Email Notifications
-                    </label>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Checkbox id="pushNotifications" />
-                    <label htmlFor="pushNotifications" className="text-sm font-medium">
-                      Push Notifications
-                    </label>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Checkbox id="webNotifications" defaultChecked />
-                    <label htmlFor="webNotifications" className="text-sm font-medium">
-                      Web Notifications
-                    </label>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button>Save Changes</Button>
-              </CardFooter>
-            </Card>
+    <div className={`bg-gray-100 min-h-screen py-12 md:pt-24 ${theme === 'dark' ? 'dark' : ''}`}>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8 dark:text-gray-200">Configuración</h1>
+
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg dark:bg-gray-800 dark:text-gray-200">
+          <div className="px-4 py-5 sm:px-6">
+            <h2 className="text-lg leading-6 font-medium">
+              Información personal
+            </h2>
           </div>
-        </main>
+          <div className="border-t border-gray-200 dark:border-gray-600 px-4 py-5 sm:px-6">
+            <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+              <div>
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Nombre
+                </label>
+                <div className="mt-1">
+                  <Input
+                    id="firstName"
+                    value={firstName}
+                    onChange={handleFirstNameChange}
+                    className="block w-full dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Apellido
+                </label>
+                <div className="mt-1">
+                  <Input
+                    id="lastName"
+                    value={lastName}
+                    onChange={handleLastNameChange}
+                    className="block w-full dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="country" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  País
+                </label>
+                <div className="mt-1">
+                  
+                </div>
+              </div>
+              <div>
+                <label htmlFor="timezone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Zona horaria
+                </label>
+                <div className="mt-1">
+
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end mt-8">
+          <Button onClick={handleSavePersonalInfo}>
+            Guardar información
+          </Button>
+        </div>
+          </div>
+        </div>
+
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-8 dark:bg-gray-800 dark:text-gray-200">
+          <div className="px-4 py-5 sm:px-6">
+            <h2 className="text-lg leading-6 font-medium">
+              Cambiar contraseña
+            </h2>
+          </div>
+          <div className="border-t border-gray-200 dark:border-gray-600 px-4 py-5 sm:px-6">
+            <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Contraseña actual
+                </label>
+                <div className="mt-1">
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    className="block w-full dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Nueva contraseña
+                </label>
+                <div className="mt-1">
+                  <Input
+                    id="new-password"
+                    type="password"
+                    value={newPassword}
+                    onChange={handleNewPasswordChange}
+                    className="block w-full dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="confirm-new-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Confirmar nueva contraseña
+                </label>
+                <div className="mt-1">
+                  <Input
+                    id="confirm-new-password"
+                    type="password"
+                    value={confirmNewPassword}
+                    onChange={handleConfirmNewPasswordChange}
+                    className="block w-full dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end mt-4">
+              <Button onClick={handleSavePassword}>
+                Guardar contraseña
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-8 dark:bg-gray-800 dark:text-gray-200">
+          <div className="px-4 py-5 sm:px-6">
+            <h2 className="text-lg leading-6 font-medium">
+              Notificaciones
+            </h2>
+          </div>
+          <div className="border-t border-gray-200 dark:border-gray-600 px-4 py-5 sm:px-6">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Recibir notificaciones
+              </span>
+              <Switch
+                checked={notifications}
+                onChange={toggleNotifications}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-8 dark:bg-gray-800 dark:text-gray-200">
+          <div className="px-4 py-5 sm:px-6">
+            <h2 className="text-lg leading-6 font-medium">
+              Apariencia
+            </h2>
+          </div>
+          <div className="border-t border-gray-200 dark:border-gray-600 px-4 py-5 sm:px-6">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Modo oscuro
+              </span>
+              <Switch
+                checked={theme === 'dark'}
+                onChange={toggleTheme}
+              />
+            </div>
+          </div>
+        </div>
+
+        {showPasswordConfirmAlert && (
+          <Alert variant="default" className="mt-8">
+            <AlertTitle>¿Estás seguro de cambiar la contraseña?</AlertTitle>
+            <AlertDescription>
+              <div className="flex justify-end mt-4">
+                <Button variant="secondary" onClick={() => handleConfirmPasswordChange(false)}>
+                  No
+                </Button>
+                <Button className="ml-4" onClick={() => handleConfirmPasswordChange(true)}>
+                  Sí
+                </Button>
+              </div>
+            </AlertDescription>
+          </Alert>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Settings
+
+export default Settings;
