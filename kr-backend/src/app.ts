@@ -5,7 +5,8 @@ import { AppDataSource } from './config/data-source';
 import authRoutes from './routes/authRoutes';
 import cookieParser from 'cookie-parser';
 import { verifyToken } from './utils/jwtUtils';
-import cors from 'cors'
+import cors from 'cors';
+import passport from './config/passport';
 
 dotenv.config();
 
@@ -13,15 +14,15 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
-
 app.use(cookieParser());
-
 app.use(cors({
   origin: 'http://localhost:3000', // URL de tu frontend
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.use(passport.initialize());
 
 // Middleware para verificar el token en cada solicitud
 app.use((req, res, next) => {
@@ -58,3 +59,4 @@ AppDataSource.initialize().then(() => {
 }).catch((error) => {
   console.log('Error during Data Source initialization', error);
 });
+

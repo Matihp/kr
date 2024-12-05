@@ -12,7 +12,7 @@ export const register = async (firstName: string, lastName: string, email: strin
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await axios.post('http://localhost:4000/auth/login', 
+    const response = await axios.post('http://localhost:4000/auth/login',
       { email, password },
       { withCredentials: true }
     );
@@ -23,6 +23,13 @@ export const login = async (email: string, password: string) => {
   }
 };
 
+export const googleLogin = async () => {
+  window.location.href = 'http://localhost:4000/auth/google';
+};
+
+export const githubLogin = async () => {
+  window.location.href = 'http://localhost:4000/auth/github';
+};
 
 export const verifyToken = async () => {
   try {
@@ -44,5 +51,6 @@ export const logout = async () => {
     throw new Error('Error logging out');
   }
 };
+
 
 

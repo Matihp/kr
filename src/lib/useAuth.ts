@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { verifyToken, login as authLogin, logout as authLogout } from './auth';
+import { verifyToken, login as authLogin, logout as authLogout, googleLogin as authGoogleLogin, githubLogin as authGithubLogin } from './auth';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -7,6 +7,8 @@ interface AuthState {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
+  googleLogin: () => Promise<void>;
+  githubLogin: () => Promise<void>;
 }
 
 export const useAuth = create<AuthState>((set) => ({
@@ -15,7 +17,6 @@ export const useAuth = create<AuthState>((set) => ({
   login: async (email, password) => {
     try {
       await authLogin(email, password);
-      // await new Promise(resolve => setTimeout(resolve, 1000));   
       const { isAuthenticated, user } = await verifyToken();
       set({ isAuthenticated, user });
       return true;
@@ -41,5 +42,11 @@ export const useAuth = create<AuthState>((set) => ({
       console.error('Error al verificar autenticación:', error);
       set({ isAuthenticated: false, user: null });
     }
+  },
+  googleLogin: async () => {
+    await authGoogleLogin();
+  },
+  githubLogin: async () => {
+    await authGithubLogin();
   }
 }));

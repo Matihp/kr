@@ -12,7 +12,7 @@ import { useAuth } from "@/lib/useAuth";
 export default function SignupFormDemo() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login} = useAuth();
+  const { login, googleLogin, githubLogin } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,7 +35,7 @@ export default function SignupFormDemo() {
   return (
     <div className="max-w-md w-full mx-auto rounded-none sm:rounded-2xl mxmd:my-[20%] md:my-[5%] p-4 md:p-8 md:mt-28 shadow-input bg-white dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-      Accede a tu Cuenta
+        Accede a tu Cuenta
       </h2>
 
       <form className="mt-5" onSubmit={handleSubmit}>
@@ -60,8 +60,8 @@ export default function SignupFormDemo() {
 
         <div className="flex flex-col space-y-4">
           <button
-            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="submit"
+            className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+            onClick={githubLogin}
           >
             <IconBrandGithub className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
             <span className="text-neutral-700 dark:text-neutral-300 text-sm">
@@ -70,8 +70,8 @@ export default function SignupFormDemo() {
             <BottomGradient />
           </button>
           <button
-            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-            type="submit"
+            className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+            onClick={googleLogin}
           >
             <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
             <span className="text-neutral-700 dark:text-neutral-300 text-sm">
@@ -84,7 +84,6 @@ export default function SignupFormDemo() {
     </div>
   );
 }
-
 
 const BottomGradient = () => {
   return (

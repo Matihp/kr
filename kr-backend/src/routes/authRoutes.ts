@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
-router.post('/logout',logout)
+router.post('/logout', logout);
 
-router.get('/verify-token',verifyJwt)
+router.get('/verify-token', verifyJwt);
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get(
@@ -25,3 +25,4 @@ router.get(
 );
 
 export default router;
+
