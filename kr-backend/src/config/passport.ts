@@ -4,6 +4,7 @@ import { Strategy as GoogleStrategy, Profile as GoogleProfile } from 'passport-g
 import { Strategy as GitHubStrategy, Profile as GitHubProfile } from 'passport-github2';
 import { User } from '../models/userModel';
 import { AppDataSource } from './data-source';
+import axios from 'axios';
 
 const userRepository = AppDataSource.manager.getRepository(User);
 
@@ -41,10 +42,15 @@ passport.use(
     },
     async (accessToken: string, refreshToken: string, profile: GoogleProfile, done: (err: any, user?: any) => void) => {
       try {
-        let user = await userRepository.findOne({ where: { email: profile.emails![0].value } });
+        const email = profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null;
+        if (!email) {
+          return done(new Error('No email found'), false);
+        }
+
+        let user = await userRepository.findOne({ where: { email } });
         if (!user) {
           user = userRepository.create({
-            email: profile.emails![0].value,
+            email,
             firstName: profile.name?.givenName,
             lastName: profile.name?.familyName,
           });
@@ -64,13 +70,34 @@ passport.use(
       clientID: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
       callbackURL: '/auth/github/callback',
+      scope: ['user:email'],
     },
     async (accessToken: string, refreshToken: string, profile: GitHubProfile, done: (err: any, user?: any) => void) => {
       try {
-        let user = await userRepository.findOne({ where: { email: profile.emails![0].value } });
+        let email: string | null = null;
+
+        // Intentar obtener el correo electrónico a través de la API de GitHub
+        if (profile.emails && profile.emails.length > 0) {
+          email = profile.emails[0].value;
+        } else {
+          const response = await axios.get('https://api.github.com/user/emails', {
+            headers: {
+              Authorization: `token ${accessToken}`,
+            },
+          });
+          if (response.data && response.data.length > 0) {
+            email = response.data.find((emailObj: any) => emailObj.primary).email;
+          }
+        }
+
+        if (!email) {
+          return done(new Error('No email found'), false);
+        }
+
+        let user = await userRepository.findOne({ where: { email } });
         if (!user) {
           user = userRepository.create({
-            email: profile.emails![0].value,
+            email,
             firstName: profile.displayName,
           });
           await userRepository.save(user);

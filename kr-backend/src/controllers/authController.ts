@@ -37,6 +37,7 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    // Verificar si el usuario tiene una contraseña almacenada
     if (user.password) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
@@ -110,7 +111,11 @@ export const googleCallback = async (req: Request, res: Response) => {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000,
   });
-  res.json({ message: 'Google login successful' });
+
+  // Redirigir al cliente a la página de inicio
+  setTimeout(() => {
+    res.redirect('http://localhost:3000');
+  }, 500);
 };
 
 export const githubCallback = async (req: Request, res: Response) => {
@@ -123,5 +128,9 @@ export const githubCallback = async (req: Request, res: Response) => {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000,
   });
-  res.json({ message: 'GitHub login successful' });
+
+  // Redirigir al cliente a la página de inicio
+  setTimeout(() => {
+    res.redirect('http://localhost:3000');
+  }, 500);
 };
