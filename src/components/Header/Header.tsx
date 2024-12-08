@@ -13,7 +13,7 @@ import { useAuth } from "@/lib/useAuth";
 export function Header() {
   const isScrollingHeader = useHeaderStore((state) => state.IsScrollingHeader);
   const [isLoading, setIsLoading] = useState(true);
-  const { isAuthenticated, user, checkAuth } = useAuth();
+  const { isAuthenticated, user, checkAuth,logout } = useAuth();
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -63,7 +63,7 @@ export function Header() {
                     ) : isAuthenticated ? (
                       <>
                         <NotificationDropdown />
-                        <AvatarDropdown />
+                        <AvatarDropdown user={user} logout={logout} />
                       </>
                     ) : (
                       <>

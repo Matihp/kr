@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/useAuth";
 
-export default function SignupFormDemo() {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, googleLogin, githubLogin } = useAuth();
@@ -18,7 +18,6 @@ export default function SignupFormDemo() {
     e.preventDefault();
     try {
       await login(email, password);
-      console.log("Login successful");
     } catch (error) {
       console.error("Login failed", error);
     }
