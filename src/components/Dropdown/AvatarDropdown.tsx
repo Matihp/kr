@@ -10,6 +10,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 interface User {
   id: number;
@@ -24,6 +25,9 @@ interface AvatarDropdownProps {
 }
 
 export function AvatarDropdown({ user, logout }: AvatarDropdownProps) {
+
+  const router = useRouter()
+
   if (!user) {
     return null; // O maneja el caso donde user es null o undefined
   }
@@ -72,13 +76,13 @@ export function AvatarDropdown({ user, logout }: AvatarDropdownProps) {
             Perfil
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => { router.push('/settings') }}>
             Configuración
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>
+        <DropdownMenuItem onClick={() => { logout(); router.push('/login') }}>
           Cerrar Sesión
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
