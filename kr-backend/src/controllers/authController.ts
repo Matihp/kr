@@ -78,15 +78,13 @@ export const login = async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
       path: '/',
     });
-    
+
     res.json({ message: 'Login successful', user: { id: user.id, email: user.email } });
-    setTimeout(() => {
-      res.redirect('http://localhost:3000');
-    }, 200);
   } catch (error) {
     handleError(error, res);
   }
 };
+
 
 export const verifyJwt = async (req: Request, res: Response) => {
   const token = req.cookies.jwt;
@@ -114,6 +112,41 @@ export const verifyJwt = async (req: Request, res: Response) => {
     });
   } catch (err) {
     return res.status(200).json({ isAuthenticated: false, user: null });
+  }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  try {
+    const { email, currentPassword, newPassword } = req.body;
+
+    // Verificar si el usuario existe
+    const user = await userRepository.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.password) {
+      const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+    } else {
+      // Si el usuario no tiene una contraseña almacenada, es probable que se haya autenticado con Google o GitHub
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+    // Encriptar la nueva contraseña
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Actualizar la contraseña del usuario
+    user.password = hashedNewPassword;
+    await userRepository.save(user);
+
+    // Establecer el encabezado de autorización antes de enviar la respuesta
+    res.header('Authorization', `Bearer ${req.cookies.jwt}`);
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    handleError(error, res);
   }
 };
 

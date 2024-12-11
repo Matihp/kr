@@ -43,14 +43,6 @@ app.use((req, res, next) => {
 
 app.use('/auth', authRoutes);
 
-// Ruta protegida de ejemplo
-app.get('/protected', (req, res) => {
-  if (!req.userId) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-  res.json({ message: 'This is a protected route', userId: req.userId });
-});
-
 AppDataSource.initialize().then(() => {
   console.log('Database connected');
   app.listen(PORT, () => {

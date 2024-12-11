@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import { register, login, googleCallback, githubCallback, verifyJwt, logout } from '../controllers/authController';
+import { register, login, googleCallback, githubCallback, verifyJwt, logout, changePassword } from '../controllers/authController';
 
 const router = express.Router();
 
@@ -9,6 +9,8 @@ router.post('/login', login);
 router.post('/logout', logout);
 
 router.get('/verify-token', verifyJwt);
+
+router.post('/change-password', changePassword); 
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get(
