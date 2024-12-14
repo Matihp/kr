@@ -85,7 +85,6 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-
 export const verifyJwt = async (req: Request, res: Response) => {
   const token = req.cookies.jwt;
 
@@ -94,8 +93,11 @@ export const verifyJwt = async (req: Request, res: Response) => {
   }
 
   try {
-    const decoded = verifyToken(token) as { id: number };
-    const user = await userRepository.findOne({ where: { id: decoded.id } });
+    const decodedToken = verifyToken(token) as { id: string };
+    const user = await userRepository.findOne({
+      where: { id: decodedToken.id },
+      relations: ['languages', 'skills', 'projects', 'certifications']
+    });
 
     if (!user) {
       return res.status(200).json({ isAuthenticated: false, user: null });
@@ -107,10 +109,17 @@ export const verifyJwt = async (req: Request, res: Response) => {
         id: user.id,
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
+        description: user.description,
+        avatarSrc: user.avatarSrc,
+        languages: user.languages,
+        skills: user.skills,
+        projects: user.projects,
+        certifications: user.certifications
       }
     });
   } catch (err) {
+    console.error('Error verifying token:', err);
     return res.status(200).json({ isAuthenticated: false, user: null });
   }
 };

@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { ProfileData } from '../../kr-backend/src/types/profileTypes';
+
 
 export const register = async (firstName: string, lastName: string, email: string, password: string) => {
   try {
@@ -51,6 +53,22 @@ export const logout = async () => {
     throw new Error('Error logging out');
   }
 };
+
+export const updateProfile = async (userId: string, profileData: ProfileData) => {
+  try {
+    const response = await axios.put(`http://localhost:4000/profile/update-profile/${userId}`, profileData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    throw new Error('Error updating profile');
+  }
+};
+
 
 
 

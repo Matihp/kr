@@ -22,13 +22,14 @@ import ModalInfo from "@/components/Modal/ModalInfo";
 import PrivateProfileContactCard from "@/components/ProfileContactCard/PrivateProfileContactCard";
 import { Button } from "@/components/ui/button";
 import ModalProfileImage, { EditedImage } from "@/components/Modal/ModalProfileImage";
+import { useAuth } from "@/lib/useAuth";
 
-type LanguageLevel = "beginner" | "intermediate" | "advanced" | string
+type LanguageLevel = "beginner" | "intermediate" | "advanced" | string;
 
 type Language = {
-  language: string
-  level: LanguageLevel
-}
+  language: string;
+  level: LanguageLevel;
+};
 
 type Certification = {
   id: string;
@@ -59,21 +60,21 @@ interface ProjectFormData {
   website: string;
   repository: string;
 }
+
 function Profile() {
   const active =
     "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
   const noActive =
     "flex gap-1 h-12 items-center px-3 border-b-4 border-slate-100";
+  const { user, isAuthenticated, updateProfile } = useAuth();
   const [showNav, setShowNav] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [activeSection, setActiveSection] = useState("sobre-mi");
   const [avatarSrc, setAvatarSrc] = useState(avatar.src);
-  const [description, setDescription] = useState<string>(
-    "With over 14 years of experience in the field of SEO, I have gained extensive knowledge and expertise that enables me to provide effective SEO services to businesses. I previously worked for one of the UK's leading digital marketing agencies and have since then transitioned to directly helping businesses achieve their goals. My passion for helping businesses succeed is reflected in the positive feedback I receive from satisfied clients. Thank you for considering my services - I look forward to the opportunity to work with you and help your business thrive online."
-  );
+  const [description, setDescription] = useState<string>("");
   const [projects, setProjects] = useState<Project[]>([]);
-  const [languages, setLanguages] = useState<Language[]>([])
-  const [skills, setSkills] = useState<string[]>(['JavaScript', 'React', 'TypeScript'])
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([
     {
       id: "1",
@@ -143,6 +144,42 @@ function Profile() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isTablet, isDesktop, isScrollingHeader]);
 
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setDescription(user.description || '');
+      setAvatarSrc(user.avatarSrc || '');
+      setLanguages(user.languages || []);
+      setSkills(user.skills ? user.skills.map(skill => skill.name) : []);
+      setProjects(user.projects || []);
+      setCertifications(user.certifications || []);
+      console.log(user)
+    }
+  }, [isAuthenticated, user]);
+
+  const handleSaveProfile = async () => {
+    if (user && user.id) {
+      const profileData = {
+        description,
+        avatarSrc,
+        languages,
+        skills,
+        projects,
+        certifications,
+      };
+
+      try {
+        await updateProfile(user.id, profileData);          
+
+        alert('Profile updated successfully');
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        alert('Error updating profile');
+      }
+    } else {
+      alert('User not found');
+    }
+  };
+
   const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
     if (sectionRef.current) {
       const yOffset = isDesktop ? -300 : -100;
@@ -167,7 +204,7 @@ function Profile() {
       role: projectData.role,
       description: projectData.description,
       skills: projectData.skills,
-      images: projectData.images.map(image => 
+      images: projectData.images.map(image =>
         typeof image === 'string' ? image : URL.createObjectURL(image)
       ),
       website: projectData.website,
@@ -180,14 +217,14 @@ function Profile() {
   const handleEditProject = (projectData: ProjectFormData) => {
     setProjects(prevProjects =>
       prevProjects.map(project =>
-        project.id === projectData.id 
-          ? { 
-              ...project, 
-              ...projectData, 
-              images: projectData.images.map(image => 
+        project.id === projectData.id
+          ? {
+              ...project,
+              ...projectData,
+              images: projectData.images.map(image =>
                 typeof image === 'string' ? image : URL.createObjectURL(image)
               )
-            } 
+            }
           : project
       )
     );
@@ -197,11 +234,9 @@ function Profile() {
     setProjects(prevProjects => prevProjects.filter(project => project.id !== projectId));
   };
 
-
-
   const handleSkillsUpdate = (updatedSkills: string[]) => {
-    setSkills(updatedSkills)
-  }
+    setSkills(updatedSkills);
+  };
 
   const navItems = [
     {
@@ -246,11 +281,11 @@ function Profile() {
               className=" rounded-full "
             />
             <div className="absolute z-50 top-[70px] left-52 md:top-40 md:left-16 lg:left-24">
-              <ModalProfileImage 
-              onSave={handleSaveImage} 
-              currentImageUrl={avatarSrc} 
+              <ModalProfileImage
+              onSave={handleSaveImage}
+              currentImageUrl={avatarSrc}
                />
-            </div>     
+            </div>
           </div>
 
           <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
@@ -312,10 +347,10 @@ function Profile() {
               <ModalDescription setDescription={setDescription} />
             </div>
             <p className="font-normal break-all text-gray-700 dark:text-gray-400">
-              {description}
+              {user?.description}
             </p>
           </div>
-          
+
         <div
         id="proyectos"
         ref={proyectosRef}
@@ -325,7 +360,7 @@ function Profile() {
           Proyectos
         </h2>
         <Button onClick={() => setIsAddProjectModalOpen(true)}>Agregar Proyecto</Button>
-        <ModalInfo 
+        <ModalInfo
           isOpen={isAddProjectModalOpen}
           onOpenChange={setIsAddProjectModalOpen}
           onAddProject={handleAddProject}
@@ -425,6 +460,7 @@ function Profile() {
               ))}
             </div>
           </div>
+          <button onClick={handleSaveProfile}>Guardar</button>
         </div>
         <PrivateProfileContactCard/>
       </div>
@@ -433,3 +469,4 @@ function Profile() {
 }
 
 export default Profile;
+

@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { verifyToken } from './utils/jwtUtils';
 import cors from 'cors';
 import passport from './config/passport';
+import profileRoutes from './routes/profileRoutes';
 
 dotenv.config();
 
@@ -42,6 +43,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/auth', authRoutes);
+app.use('/profile', profileRoutes);
 
 AppDataSource.initialize().then(() => {
   console.log('Database connected');

@@ -1,14 +1,19 @@
-import { create } from 'zustand'
-import { verifyToken, login as authLogin, logout as authLogout, googleLogin as authGoogleLogin, githubLogin as authGithubLogin } from './auth';
+import { create } from 'zustand';
+import { verifyToken, login as authLogin, logout as authLogout, googleLogin as authGoogleLogin, githubLogin as authGithubLogin, updateProfile as authUpdateProfile } from './auth';
+import axios from 'axios';
+import { User } from '../../kr-backend/src/models/userModel';
+import { ProfileData } from '../../kr-backend/src/types/profileTypes';
 
 interface AuthState {
   isAuthenticated: boolean;
-  user: any | null;
+  user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   googleLogin: () => Promise<void>;
   githubLogin: () => Promise<void>;
+  updateProfile: (userId: string, profileData: ProfileData) => Promise<void>;
+  verifyToken: () => Promise<{ isAuthenticated: boolean; user: User | null }>;
 }
 
 export const useAuth = create<AuthState>((set) => ({
@@ -48,5 +53,28 @@ export const useAuth = create<AuthState>((set) => ({
   },
   githubLogin: async () => {
     await authGithubLogin();
-  }
+  },
+  updateProfile: async (userId: string, profileData: ProfileData) => {
+    try {
+      await authUpdateProfile(userId, profileData);
+      const { isAuthenticated, user } = await verifyToken();
+      set({ isAuthenticated, user });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  },
+  verifyToken: async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/auth/verify-token', {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error verifying token:', error);
+      return { isAuthenticated: false, user: null };
+    }
+  },
 }));
+
+
+
