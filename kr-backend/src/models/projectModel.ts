@@ -22,10 +22,10 @@ export class Project {
   images!: string[];
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  website!: string;
+  website?: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  repository!: string;
+  repository?: string;
 
   @ManyToOne(() => User, user => user.projects)
   user!: User;

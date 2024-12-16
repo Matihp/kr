@@ -14,43 +14,65 @@ const projectRepository = AppDataSource.getRepository(Project);
 const certificationRepository = AppDataSource.getRepository(Certification);
 
 export const updateProfile = async (req: Request, res: Response) => {
-  const { userId } = req.params; // Asegúrate de que userId venga como parámetro de la ruta
-  const profileData: ProfileData = req.body;
+    const { userId } = req.params;
+    const profileData: ProfileData = req.body;
 
-  try {
-    const user = await userRepository.findOne({ where: { id: userId }, relations: ['languages', 'skills', 'projects', 'certifications'] });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    try {
+        // Buscar al usuario y cargar todas las relaciones necesarias
+        const user = await userRepository.findOne({
+            where: { id: userId },
+            relations: ['languages', 'skills', 'projects', 'certifications'],
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Actualizar descripción y avatar
+        user.description = profileData.description || user.description;
+        user.avatarSrc = profileData.avatarSrc || user.avatarSrc;
+
+        // **Actualizar idiomas**
+        if (profileData.languages && Array.isArray(profileData.languages)) {
+            const newLanguages = profileData.languages.map(lang =>
+                languageRepository.create({ ...lang, user })
+            );
+            await languageRepository.save(newLanguages);
+            user.languages = newLanguages;
+        }
+
+        // **Actualizar habilidades**
+        if (profileData.skills && Array.isArray(profileData.skills)) {
+            const newSkills = profileData.skills.map(skillName =>
+                skillRepository.create({ name: skillName, user })
+            );
+            await skillRepository.save(newSkills);
+            user.skills = newSkills;
+        }
+
+        // **Actualizar proyectos**
+        if (profileData.projects && Array.isArray(profileData.projects)) {
+            const newProjects = profileData.projects.map(project =>
+                projectRepository.create({ ...project, user })
+            );
+            await projectRepository.save(newProjects);
+            user.projects = newProjects;
+        }
+
+        // **Actualizar certificaciones**
+        if (profileData.certifications && Array.isArray(profileData.certifications)) {
+            const newCertifications = profileData.certifications.map(cert =>
+                certificationRepository.create({ ...cert, user })
+            );
+            await certificationRepository.save(newCertifications);
+            user.certifications = newCertifications;
+        }
+
+        // Guardar el usuario con las relaciones actualizadas
+        await userRepository.save(user);
+        res.status(200).json({ message: 'Profile updated successfully', user });
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        res.status(500).json({ message: 'Error updating profile' });
     }
-
-    user.description = profileData.description;
-    user.avatarSrc = profileData.avatarSrc;
-
-    // Actualizar idiomas
-    await languageRepository.remove(user.languages);
-    user.languages = profileData.languages.map(lang => languageRepository.create({ ...lang, user }));
-
-    // Actualizar habilidades
-    await skillRepository.remove(user.skills);
-    user.skills = profileData.skills.map(skill => skillRepository.create({ name: skill, user }));
-
-    // Actualizar proyectos
-    await projectRepository.remove(user.projects);
-    user.projects = profileData.projects.map(project => projectRepository.create({ ...project, user }));
-
-    // Actualizar certificaciones
-    await certificationRepository.remove(user.certifications);
-    user.certifications = profileData.certifications.map(cert => certificationRepository.create({ ...cert, user }));
-
-    await userRepository.save(user);
-
-    res.status(200).json({ message: 'Profile updated successfully' });
-  } catch (error) {
-    console.error('Error updating profile:', error);
-    res.status(500).json({ message: 'Error updating profile' });
-  }
 };
-
-
-
-
