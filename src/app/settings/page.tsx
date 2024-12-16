@@ -9,16 +9,7 @@ import { useAuth } from '@/lib/useAuth';
 import useProtectedRoute from '../hooks/useProtectedRoute';
 import { Loader } from 'lucide-react';
 
-interface SettingsPageProps {}
-
-interface User {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
-
-const Settings: React.FC<SettingsPageProps> = () => {
+export default function Settings() {
   const [firstName, setFirstName] = useState<string>('John');
   const [lastName, setLastName] = useState<string>('Doe');
   const [country, setCountry] = useState<{ value: string; label: string } | null>(null);
@@ -34,7 +25,7 @@ const Settings: React.FC<SettingsPageProps> = () => {
 
   const isAuthenticated = useProtectedRoute();
   if (!isAuthenticated) {
-    return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Loader size={40}/></div>;
+    return <div style={{height:'100vh', display:'flex', justifyContent:'center', alignItems:'center'}}><Loader size={40}/></div>;
   }
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value);
@@ -266,6 +257,3 @@ const Settings: React.FC<SettingsPageProps> = () => {
     </div>
   );
 };
-
-
-export default Settings;

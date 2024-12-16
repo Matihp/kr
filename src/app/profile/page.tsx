@@ -21,52 +21,19 @@ import ModalCertification from "@/components/Modal/ModalCertification";
 import ModalInfo from "@/components/Modal/ModalInfo";
 import PrivateProfileContactCard from "@/components/ProfileContactCard/PrivateProfileContactCard";
 import { Button } from "@/components/ui/button";
-import ModalProfileImage, { EditedImage } from "@/components/Modal/ModalProfileImage";
+import ModalProfileImage from "@/components/Modal/ModalProfileImage";
 import { useAuth } from "@/lib/useAuth";
-
-type LanguageLevel = "beginner" | "intermediate" | "advanced" | string;
-
-type Language = {
-  language: string;
-  level: LanguageLevel;
-};
-
-type Certification = {
-  id: string;
-  name: string;
-  date: string;
-  url: string;
-  description: string;
-};
-
-interface Project {
-  id: string;
-  title: string;
-  role: string;
-  description: string;
-  skills: string[];
-  images: string[];
-  website: string;
-  repository: string;
-}
-
-interface ProjectFormData {
-  id?: string;
-  title: string;
-  role: string;
-  description: string;
-  skills: string[];
-  images: (File | string)[];
-  website: string;
-  repository: string;
-}
+import { Certification, Language, Project, ProjectFormData } from "@/types/profile";
+import useProtectedRoute from "../hooks/useProtectedRoute";
+import { Loader } from "lucide-react";
+import { verifyToken } from "@/lib/auth";
 
 function Profile() {
   const active =
     "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
   const noActive =
     "flex gap-1 h-12 items-center px-3 border-b-4 border-slate-100";
-  const { user, isAuthenticated, updateProfile } = useAuth();
+  const { user, isAuthenticated, updateProfile } = useAuth(); 
   const [showNav, setShowNav] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [activeSection, setActiveSection] = useState("sobre-mi");
@@ -75,22 +42,7 @@ function Profile() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
-  const [certifications, setCertifications] = useState<Certification[]>([
-    {
-      id: "1",
-      name: "Certificación 1",
-      date: "2023-01-01",
-      url: "https://example.com/cert1",
-      description: "Descripción de la Certificación 1",
-    },
-    {
-      id: "2",
-      name: "Certificación 2",
-      date: "2023-02-02",
-      url: "https://example.com/cert2",
-      description: "Descripción de la Certificación 2",
-    },
-  ]);
+  const [certifications, setCertifications] = useState<Certification[]>([]);
   const isTablet = useMatchMedia("(max-width: 1023px)");
   const isDesktop = useMatchMedia("(min-width: 1024px)");
   const isScrollingHeader = useHeaderStore(
@@ -100,6 +52,11 @@ function Profile() {
   const proyectosRef = useRef<HTMLDivElement>(null);
   const habilidadesRef = useRef<HTMLDivElement>(null);
   const certificacionesRef = useRef<HTMLDivElement>(null);
+
+  // const isAuthenticat = useProtectedRoute();
+  // if (!isAuthenticat) {
+  //   return <div style={{height:'100vh', display:'flex', justifyContent:'center', alignItems:'center'}}><Loader size={40}/></div>;
+  // }
 
   useEffect(() => {
     if (isTablet) {
@@ -145,16 +102,23 @@ function Profile() {
   }, [isTablet, isDesktop, isScrollingHeader]);
 
   useEffect(() => {
-    if (isAuthenticated && user) {
-      setDescription(user.description || '');
-      setAvatarSrc(user.avatarSrc || '');
-      setLanguages(user.languages || []);
-      setSkills(user.skills ? user.skills.map(skill => skill.name) : []);
-      setProjects(user.projects || []);
-      setCertifications(user.certifications || []);
-      console.log(user)
-    }
-  }, [isAuthenticated, user]);
+    const fetchUserData = async () => {
+      if (isAuthenticated) {
+        const { isAuthenticated, user } = await verifyToken();
+        if (isAuthenticated && user) {
+          console.log('User data fetched:', user);
+          setDescription(user.description || '');
+          setAvatarSrc(user.avatarSrc || '');
+          setLanguages(user.languages || []);
+          setSkills(user.skills.map((skill: { name: any; }) => skill.name) || []);
+          setProjects(user.projects || []);
+          setCertifications(user.certifications || []);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [isAuthenticated, verifyToken]);
 
   const handleSaveProfile = async () => {
     if (user && user.id) {
@@ -167,9 +131,10 @@ function Profile() {
         certifications,
       };
 
-      try {
-        await updateProfile(user.id, profileData);          
+      console.log('Profile data to be saved:', profileData);
 
+      try {
+        await updateProfile(user.id, profileData);
         alert('Profile updated successfully');
       } catch (error) {
         console.error('Error updating profile:', error);
@@ -460,7 +425,7 @@ function Profile() {
               ))}
             </div>
           </div>
-          <button onClick={handleSaveProfile}>Guardar</button>
+          <Button onClick={handleSaveProfile}>Guardar</Button>
         </div>
         <PrivateProfileContactCard/>
       </div>
