@@ -27,6 +27,7 @@ import { Certification, Language, Project, ProjectFormData } from "@/types/profi
 import useProtectedRoute from "../hooks/useProtectedRoute";
 import { Loader } from "lucide-react";
 import { verifyToken } from "@/lib/auth";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function Profile() {
   const active =
@@ -37,7 +38,8 @@ function Profile() {
   const [showNav, setShowNav] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [activeSection, setActiveSection] = useState("sobre-mi");
-  const [avatarSrc, setAvatarSrc] = useState(avatar.src);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [avatarSrc, setAvatarSrc] = useState('');
   const [description, setDescription] = useState<string>("");
   const [projects, setProjects] = useState<Project[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
@@ -107,7 +109,7 @@ function Profile() {
         const { isAuthenticated, user } = await verifyToken();
         if (isAuthenticated && user) {
           setDescription(user.description || '');
-          setAvatarSrc(user.avatarSrc || '');
+          setAvatarSrc(user.avatarSrc || avatar.src);
           setLanguages(user.languages || []);
           setSkills(user.skills.map((skill: { name: any; }) => skill.name) || []);
           setProjects(user.projects || []);
@@ -237,19 +239,28 @@ function Profile() {
       >
         <div className="flex flex-col md:flex-row gap-4 pt-4 md:gap-8 md:mt-16 md:pl-2 lg:pl-5">
           <div className="mx-auto md:mx-0 lg:pl-3">
-            <Image
-              width={80}
-              height={30}
-              alt=""
-              src={avatarSrc}
-              className=" rounded-full "
-            />
-            <div className="absolute z-50 top-[70px] left-52 md:top-40 md:left-16 lg:left-24">
-              <ModalProfileImage
-              onSave={handleSaveImage}
-              currentImageUrl={avatarSrc}
-               />
-            </div>
+            {
+              avatarSrc === '' ? (
+                <Skeleton className="w-20 h-20 rounded-full bg-gray-400" />
+              ) : (
+                <>
+                  <Image
+                    width={80}
+                    height={30}
+                    alt=""
+                    src={avatarSrc}
+                    className=" rounded-full "
+                  />
+                  <div className="absolute z-50 top-[70px] left-52 md:top-40 md:left-16 lg:left-24">
+                    <ModalProfileImage
+                    onSave={handleSaveImage}
+                    currentImageUrl={avatarSrc}
+                    />
+                  </div>                
+                </>
+              )
+            }
+
           </div>
 
           <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
@@ -311,7 +322,7 @@ function Profile() {
               <ModalDescription setDescription={setDescription} />
             </div>
             <p className="font-normal break-all text-gray-700 dark:text-gray-400">
-              {user?.description}
+              {description}
             </p>
           </div>
 
