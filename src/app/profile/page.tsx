@@ -106,7 +106,6 @@ function Profile() {
       if (isAuthenticated) {
         const { isAuthenticated, user } = await verifyToken();
         if (isAuthenticated && user) {
-          console.log('User data fetched:', user);
           setDescription(user.description || '');
           setAvatarSrc(user.avatarSrc || '');
           setLanguages(user.languages || []);

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useCallback, ChangeEvent, useRef } from 'react';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -42,12 +44,12 @@ const ModalProfileImage: React.FC<ModalProfileImageProps> = ({ onSave, currentIm
     setRotation((prev) => (prev + 90) % 360);
   }, []);
 
-  const processImage = (): Promise<string> => {
+  const processImage = (): Promise<Blob> => {
     return new Promise((resolve, reject) => {
       if (imgRef.current && previewUrl) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        
+
         if (!ctx) {
           reject(new Error('Could not get 2D context'));
           return;
@@ -55,22 +57,26 @@ const ModalProfileImage: React.FC<ModalProfileImageProps> = ({ onSave, currentIm
 
         const img = new Image();
         img.onload = () => {
-          canvas.width = img.naturalWidth;
-          canvas.height = img.naturalHeight;
+          const { naturalWidth, naturalHeight } = img;
+
+          canvas.width = naturalWidth;
+          canvas.height = naturalHeight;
 
           ctx.translate(canvas.width / 2, canvas.height / 2);
           ctx.rotate((rotation * Math.PI) / 180);
           ctx.scale(zoom, zoom);
-          ctx.drawImage(
-            img,
-            -img.naturalWidth / 2,
-            -img.naturalHeight / 2,
-            img.naturalWidth,
-            img.naturalHeight
-          );
+          ctx.drawImage(img, -naturalWidth / 2, -naturalHeight / 2);
 
-          resolve(canvas.toDataURL('image/jpeg'));
+          canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error('Could not create Blob'));
+          }, 'image/jpeg');
         };
+
+        img.onerror = () => {
+          reject(new Error('Could not load image'));
+        };
+
         img.src = previewUrl;
       } else {
         reject(new Error('No image to process'));
@@ -78,18 +84,40 @@ const ModalProfileImage: React.FC<ModalProfileImageProps> = ({ onSave, currentIm
     });
   };
 
+  const uploadToCloudinary = async (file: Blob): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Error uploading image to Cloudinary');
+    }
+
+    const data = await response.json();
+    return data.url;
+  };
+
   const handleSave = async () => {
     try {
       setIsLoading(true);
-      const processedImageUrl = await processImage();
-      onSave({ imageUrl: processedImageUrl, zoom, rotation });
+
+      const processedBlob = await processImage();
+
+      const finalImageUrl = await uploadToCloudinary(processedBlob);
+
+      onSave({ imageUrl: finalImageUrl, zoom, rotation });
       setIsOpen(false);
     } catch (error) {
-      console.error('Error processing image:', error);
+      console.error('Error uploading image:', error);
     } finally {
       setIsLoading(false);
     }
   };
+
   const openModal = () => {
     setIsOpen(true);
   };
@@ -141,7 +169,7 @@ const ModalProfileImage: React.FC<ModalProfileImageProps> = ({ onSave, currentIm
             Cancelar
           </Button>
           <Button onClick={handleSave} disabled={isLoading}>
-            {isLoading ? 'Guardando...' : 'Guardar'}
+            {isLoading ? 'Subiendo...' : 'Guardar'}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -150,3 +178,8 @@ const ModalProfileImage: React.FC<ModalProfileImageProps> = ({ onSave, currentIm
 };
 
 export default ModalProfileImage;
+
+
+
+
+
