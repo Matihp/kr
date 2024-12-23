@@ -11,16 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-
-interface User {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
+import { User } from "../../../kr-backend/src/types/userTypes";
 
 interface AvatarDropdownProps {
-  user: User;
+  user: User | null;
   logout: () => void;
 }
 
@@ -72,7 +66,7 @@ export function AvatarDropdown({ user, logout }: AvatarDropdownProps) {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => { router.push('/profile') }}>
             Perfil
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
