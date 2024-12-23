@@ -10,7 +10,7 @@ import {
   mdiInformationOutline,
   mdiTextAccount,
 } from "@mdi/js";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {useCallback, useEffect, useRef, useState } from "react";
 import { DropdownProject } from "@/components/Dropdown/DropdownProject";
 import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";
@@ -40,7 +40,7 @@ function Profile() {
   const [activeSection, setActiveSection] = useState("sobre-mi");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [avatarSrc, setAvatarSrc] = useState('');
-  const [description, setDescription] = useState<string>("");
+  const [description, setDescription] = useState<string>('');
   const [projects, setProjects] = useState<Project[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -55,10 +55,10 @@ function Profile() {
   const habilidadesRef = useRef<HTMLDivElement>(null);
   const certificacionesRef = useRef<HTMLDivElement>(null);
 
-  // const isAuthenticat = useProtectedRoute();
-  // if (!isAuthenticat) {
-  //   return <div style={{height:'100vh', display:'flex', justifyContent:'center', alignItems:'center'}}><Loader size={40}/></div>;
-  // }
+  const isAuthenticat = useProtectedRoute();
+  if (!isAuthenticat) {
+    return <div style={{height:'100vh', display:'flex', justifyContent:'center', alignItems:'center'}}><Loader size={40}/></div>;
+  }
 
   useEffect(() => {
     if (isTablet) {
@@ -111,11 +111,12 @@ function Profile() {
           setDescription(user.description || '');
           setAvatarSrc(user.avatarSrc || avatar.src);
           setLanguages(user.languages || []);
-          setSkills(user.skills.map((skill: { name: any; }) => skill.name) || []);
+          setSkills(user.skills.map((skill: { name: any; }) => skill.name) || null);
           setProjects(user.projects || []);
           setCertifications(user.certifications || []);
         }
-      }
+      setIsLoading(false);  
+      }     
     };
 
     fetchUserData();
@@ -165,7 +166,7 @@ function Profile() {
 
   const handleAddProject = useCallback((projectData: ProjectFormData) => {
     const newProject: Project = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       title: projectData.title,
       role: projectData.role,
       description: projectData.description,
@@ -322,7 +323,7 @@ function Profile() {
               <ModalDescription setDescription={setDescription} />
             </div>
             <p className="font-normal break-all text-gray-700 dark:text-gray-400">
-              {description}
+            {description || <Skeleton className="w-20 h-20 rounded-sm bg-gray-400" />}
             </p>
           </div>
 
@@ -342,7 +343,8 @@ function Profile() {
         />
         </div>
       <div className="bg-slate-100 space-y-3 md:space-y-2 flex flex-col items-center md:w-[60vw] mxmd:mx-8 ml-8 my-2 py-3 md:pl-4 md:ml-4 md:pr-4 lg:ml-8 rounded-md">
-        {projects.map((project) => (
+        {isLoading ? <Skeleton className="w-20 h-20 rounded-full bg-gray-400" /> 
+        : projects.map((project) => (
           <div
             key={project.id}
             className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow w-[95%] md:w-[58.5vw] md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
@@ -387,7 +389,8 @@ function Profile() {
                 <ModalSkills skills={skills} onSkillsUpdate={handleSkillsUpdate} />
               </div>
               <div className="flex flex-wrap gap-2 mt-4">
-                {skills.map((skill, index) => (
+                {isLoading ? <Skeleton className="w-20 h-20 rounded-full bg-gray-400" />  
+                : skills.map((skill, index) => (
                   <span key={index} className="px-2 py-1 bg-violet-100 text-sm font-medium rounded-full">
                     {skill}
                   </span>
@@ -406,7 +409,8 @@ function Profile() {
                 <ModalLanguages languages={languages} setLanguages={setLanguages} />
               </div>
               <ul className="font-normal ">
-                {languages.map((lang, index) => (
+                {isLoading ? <Skeleton className="w-20 h-20 rounded-full bg-gray-400" />  
+                : languages.map((lang, index) => (
                   <li className="font-semibold mb-1" key={index}>{`${lang.language}: `}<span className="text-gray-500">{lang.level}</span></li>
                 ))}
               </ul>
@@ -425,7 +429,7 @@ function Profile() {
               <ModalCertification certifications={certifications} setCertifications={setCertifications} />
             </div>
             <div className="font-normal text-gray-700 dark:text-gray-400 grid grid-cols-1 lg:grid-cols-2 ml-1">
-              {certifications.map((cert) => (
+              {isLoading ? <Skeleton className="w-20 h-20 rounded-full bg-gray-400" /> :  certifications.map((cert) => (
                 <div key={cert.id} className="mb-4">
                   <h6 className="text-lg font-semibold text-gray-900 dark:text-white">{cert.name}</h6>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Fecha: {cert.date}</p>
