@@ -8,6 +8,7 @@ import { verifyToken } from './utils/jwtUtils';
 import cors from 'cors';
 import passport from './config/passport';
 import profileRoutes from './routes/profileRoutes';
+import projectRoutes from './routes/projectRoutes';
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.use((req, res, next) => {
 
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
+app.use('/projects', projectRoutes);
 
 AppDataSource.initialize().then(() => {
   console.log('Database connected');
