@@ -1,6 +1,7 @@
 import { Paginations } from "@/components/Pagination/Pagination";
 import Link from "next/link";
 import newsData from "./news.json";
+import ThemeToggle from "@/components/Toogle/ThemeToogle";
 
 interface NewsItem {
   id: number;
@@ -12,7 +13,7 @@ interface NewsItem {
 
 function News() {
   return (
-    <div className="bg-white py-6 sm:py-6 md:pt-24">
+    <div className="bg-white dark:bg-black py-6 sm:py-6 md:pt-24">
       <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
         <div className="mb-10 md:mb-16">
           <h2 className="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">
@@ -54,6 +55,7 @@ function News() {
           ))}
         </div>
       </div>
+      <ThemeToggle/>
       <Paginations />
     </div>
   );
