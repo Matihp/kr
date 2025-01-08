@@ -55,7 +55,6 @@ function News() {
           ))}
         </div>
       </div>
-      <ThemeToggle/>
       <Paginations />
     </div>
   );

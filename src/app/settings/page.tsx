@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useAuth } from '@/lib/useAuth';
 import useProtectedRoute from '../hooks/useProtectedRoute';
 import { Loader } from 'lucide-react';
+import ThemeToggle from '@/components/Toogle/ThemeToogle';
 
 export default function Settings() {
   const [firstName, setFirstName] = useState<string>('John');
@@ -226,15 +227,7 @@ export default function Settings() {
             </h2>
           </div>
           <div className="border-t border-gray-200 dark:border-gray-600 px-4 py-5 sm:px-6">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Modo oscuro
-              </span>
-              <Switch
-                checked={theme === 'dark'}
-                onChange={toggleTheme}
-              />
-            </div>
+            <ThemeToggle />
           </div>
         </div>
 
