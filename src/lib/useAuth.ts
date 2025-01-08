@@ -28,7 +28,7 @@ export const useAuth = create<AuthState>((set) => ({
     } catch (error) {
       console.error('Fallo en el login:', error);
       set({ isAuthenticated: false, user: null });
-      return false;
+      throw error;
     }
   },
   logout: async () => {
