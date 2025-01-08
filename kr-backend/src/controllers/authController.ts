@@ -3,27 +3,38 @@ import { User } from '../models/userModel';
 import { AppDataSource } from '../config/data-source';
 import bcrypt from 'bcrypt';
 import { generateToken, verifyToken } from '../utils/jwtUtils';
-import { isValidEmail, isValidPassword, isValidName } from '../utils/validationUtils';
 import { handleError } from '../utils/errorUtils';
+import { z } from 'zod';
 
 const userRepository = AppDataSource.manager.getRepository(User);
 
+// Definir esquemas de validación con Zod
+const registerSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(4, 'Password must be at least 4 characters long'),
+});
+
+const loginSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(4, 'Password is required'),
+});
+
+const changePasswordSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  currentPassword: z.string().min(1, 'Current password is required'),
+  newPassword: z.string().min(4, 'New password must be at least 4 characters long'),
+});
+
 export const register = async (req: Request, res: Response) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const validationResult = registerSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({ message: validationResult.error.errors });
+    }
 
-    if (!isValidEmail(email)) {
-      return res.status(400).json({ message: 'Invalid email format' });
-    }
-    if (!isValidPassword(password)) {
-      return res.status(400).json({ message: 'Password must be at least 4 characters long' });
-    }
-    if (!isValidName(firstName)) {
-      return res.status(400).json({ message: 'Invalid first name format' });
-    }
-    if (!isValidName(lastName)) {
-      return res.status(400).json({ message: 'Invalid last name format' });
-    }
+    const { firstName, lastName, email, password } = validationResult.data;
 
     const existingUser = await userRepository.findOne({ where: { email } });
     if (existingUser) {
@@ -46,12 +57,12 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-
-    // Validaciones
-    if (!isValidEmail(email)) {
-      return res.status(400).json({ message: 'Invalid email format' });
+    const validationResult = loginSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({ message: validationResult.error.errors });
     }
+
+    const { email, password } = validationResult.data;
 
     const user = await userRepository.findOne({ where: { email } });
 
@@ -65,7 +76,6 @@ export const login = async (req: Request, res: Response) => {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
     } else {
-      // Si el usuario no tiene una contraseña almacenada, es probable que se haya autenticado con Google o GitHub
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
@@ -126,9 +136,13 @@ export const verifyJwt = async (req: Request, res: Response) => {
 
 export const changePassword = async (req: Request, res: Response) => {
   try {
-    const { email, currentPassword, newPassword } = req.body;
+    const validationResult = changePasswordSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({ message: validationResult.error.errors });
+    }
 
-    // Verificar si el usuario existe
+    const { email, currentPassword, newPassword } = validationResult.data;
+
     const user = await userRepository.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -140,17 +154,13 @@ export const changePassword = async (req: Request, res: Response) => {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
     } else {
-      // Si el usuario no tiene una contraseña almacenada, es probable que se haya autenticado con Google o GitHub
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-    // Encriptar la nueva contraseña
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-    // Actualizar la contraseña del usuario
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedNewPassword;
     await userRepository.save(user);
 
-    // Establecer el encabezado de autorización antes de enviar la respuesta
     res.header('Authorization', `Bearer ${req.cookies.jwt}`);
 
     res.json({ message: 'Password changed successfully' });
