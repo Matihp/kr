@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import { generateToken, verifyToken } from '../utils/jwtUtils';
 import { handleError } from '../utils/errorUtils';
 import { z } from 'zod';
+import { Role, RoleType } from '../models/roleModel';
 
 const userRepository = AppDataSource.manager.getRepository(User);
 
@@ -42,14 +43,35 @@ export const register = async (req: Request, res: Response) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const role = await AppDataSource.manager.getRepository(Role).findOne({
+      where: { type: RoleType.USER }
+    });
+    
+    if (!role) {
+      return res.status(500).json({ message: 'Role configuration error' });
+    }
+
     const user = userRepository.create({
       firstName,
       lastName,
       email,
       password: hashedPassword,
+      role
     });
+    
     await userRepository.save(user);
-    res.json({ message: 'Login successful', user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName } });
+    
+    res.json({ 
+      message: 'Registration successful',
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role.type
+      }
+    });
   } catch (error) {
     handleError(error, res);
   }
@@ -106,7 +128,7 @@ export const verifyJwt = async (req: Request, res: Response) => {
     const decodedToken = verifyToken(token) as { id: string };
     const user = await userRepository.findOne({
       where: { id: decodedToken.id },
-      relations: ['languages', 'skills', 'projects', 'certifications']
+      relations: ['languages', 'skills', 'projects', 'certifications', 'role']
     });
 
     if (!user) {
@@ -121,6 +143,7 @@ export const verifyJwt = async (req: Request, res: Response) => {
         firstName: user.firstName,
         lastName: user.lastName,
         description: user.description,
+        role: user.role.type,
         avatarSrc: user.avatarSrc,
         languages: user.languages,
         skills: user.skills,

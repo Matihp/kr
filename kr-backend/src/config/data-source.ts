@@ -5,6 +5,7 @@ import { Skill } from "../models/skillModel";
 import { Project } from "../models/projectModel";
 import { Certification } from "../models/certificationModel";
 import dotenv from 'dotenv';
+import { Role } from "../models/roleModel";
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [User, Language, Skill, Project, Certification],
+  entities: [User, Language, Skill, Project, Certification,Role],
   synchronize: true,
   logging: false,
 });

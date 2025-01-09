@@ -9,6 +9,7 @@ import cors from 'cors';
 import passport from './config/passport';
 import profileRoutes from './routes/profileRoutes';
 import projectRoutes from './routes/projectRoutes';
+import adminRoutes from './routes/adminRoutes';
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/projects', projectRoutes);
+app.use('/admin', adminRoutes);
 
 AppDataSource.initialize().then(() => {
   console.log('Database connected');

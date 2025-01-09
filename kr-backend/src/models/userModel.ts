@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Language } from './languageModel';
 import { Skill } from './skillModel';
 import { Project } from './projectModel';
 import { Certification } from './certificationModel';
+import { Role } from './roleModel';
 
 @Entity('users')
 export class User {
@@ -33,6 +34,10 @@ export class User {
   @UpdateDateColumn()
   updatedAt!: Date;
 
+  @ManyToOne(() => Role, { eager: true })
+  @JoinColumn()
+  role!: Role;  
+
   @OneToMany(() => Language, language => language.user)
   languages!: Language[];
 
@@ -44,6 +49,7 @@ export class User {
 
   @OneToMany(() => Certification, certification => certification.user)
   certifications!: Certification[];
+
 }
 
 
