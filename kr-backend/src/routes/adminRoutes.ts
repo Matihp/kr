@@ -1,14 +1,10 @@
 import express from 'express';
-import { checkRole } from '../middleware/authMiddleware';
-import { RoleType } from '../models/roleModel';
+import { isAdmin } from '../middleware/authMiddleware';
+import { createUser, deleteUser } from '../controllers/AdminController';
 
 const router = express.Router();
 
-router.get('/admin-only', 
-  checkRole(RoleType.ADMIN),
-  (req, res) => {
-    res.json({ message: 'Admin access granted' });
-  }
-);
+router.delete('/users/:id', isAdmin, deleteUser);
+router.post('/users', isAdmin, createUser);
 
 export default router;

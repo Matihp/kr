@@ -10,6 +10,7 @@ import passport from './config/passport';
 import profileRoutes from './routes/profileRoutes';
 import projectRoutes from './routes/projectRoutes';
 import adminRoutes from './routes/adminRoutes';
+import userRoutes from './routes/userRoutes';
 
 dotenv.config();
 
@@ -45,6 +46,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
 app.use('/profile', profileRoutes);
 app.use('/projects', projectRoutes);
 app.use('/admin', adminRoutes);
