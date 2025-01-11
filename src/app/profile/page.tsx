@@ -266,7 +266,7 @@ function Profile() {
 
           <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
             <div className="flex justify-between">
-              <h2 className="text-xl font-semibold">Juan Perez</h2>
+              <h2 className="text-xl font-semibold">{`${user?.firstName} ${user?.lastName} `}</h2>
               <ModalDescription setDescription={setDescription} />
             </div>
             <div className="flex items-center gap-10 pt-1.5">
