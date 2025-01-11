@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { AppDataSource } from './config/data-source';
 import authRoutes from './routes/authRoutes';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { verifyToken } from './utils/jwtUtils';
 import cors from 'cors';
 import passport from './config/passport';
@@ -11,6 +12,7 @@ import profileRoutes from './routes/profileRoutes';
 import projectRoutes from './routes/projectRoutes';
 import adminRoutes from './routes/adminRoutes';
 import userRoutes from './routes/userRoutes';
+import skillRoutes from './routes/skillRoutes';
 
 dotenv.config();
 
@@ -20,11 +22,12 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:3000', // URL de tu frontend
+  origin: 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+app.use(helmet());
 
 app.use(passport.initialize());
 
@@ -49,6 +52,7 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/profile', profileRoutes);
 app.use('/projects', projectRoutes);
+app.use('/skills', skillRoutes);
 app.use('/admin', adminRoutes);
 
 AppDataSource.initialize().then(() => {
