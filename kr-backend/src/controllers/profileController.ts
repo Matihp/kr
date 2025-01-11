@@ -43,11 +43,18 @@ export const updateProfile = async (req: Request, res: Response) => {
 
         // **Actualizar habilidades**
         if (profileData.skills && Array.isArray(profileData.skills)) {
-            const newSkills = profileData.skills.map(skillName =>
-                skillRepository.create({ name: skillName, user })
+            const skillNames = profileData.skills;
+            const skills = await Promise.all(
+                skillNames.map(async skillName => {
+                    let skill = await skillRepository.findOne({ where: { name: skillName } });
+                    if (!skill) {
+                        skill = skillRepository.create({ name: skillName });
+                        await skillRepository.save(skill);
+                    }
+                    return skill;
+                })
             );
-            await skillRepository.save(newSkills);
-            user.skills = newSkills;
+            user.skills = skills;
         }
 
         // **Actualizar proyectos**

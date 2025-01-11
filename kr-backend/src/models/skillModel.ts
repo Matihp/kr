@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
 import { User } from './userModel';
 
 @Entity('skills')
@@ -6,9 +6,9 @@ export class Skill {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, unique: true })
   name!: string;
 
-  @ManyToOne(() => User, user => user.skills)
-  user!: User;
+  @ManyToMany(() => User, user => user.skills)
+  users!: User[];
 }
