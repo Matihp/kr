@@ -2,18 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Select from 'react-select';
 import { WithContext as ReactTags, Tag } from 'react-tag-input';
 import './TagsInput.css';
-
-const suggestions: Tag[] = [
-  { id: 'JavaScript', text: 'JavaScript' },
-  { id: 'TypeScript', text: 'TypeScript' },
-  { id: 'React', text: 'React' },
-  { id: 'Next.js', text: 'Next.js' },
-  { id: 'C++', text: 'C++' },
-  { id: 'C#', text: 'C#' },
-  { id: 'Java', text: 'Java' },
-  { id: 'Php', text: 'Php' },
-  { id: 'Python', text: 'Python' },
-].map(suggestion => ({ ...suggestion, className: '' }));
+import { fetchSkills } from '@/lib/api';
 
 interface TechTagsInputProps {
   value: string[];
@@ -29,6 +18,16 @@ const SkillsTagsInput: React.FC<TechTagsInputProps> = ({
   );
   const [inputValue, setInputValue] = useState("");
   const [maxTags, setMaxTags] = useState(15);
+  const [suggestions, setSuggestions] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    const loadSkills = async () => {
+      const skills = await fetchSkills();
+      setSuggestions(skills.map((skill: { id: string; name: string }) => ({ id: skill.name, text: skill.name, className: "" })));
+    };
+
+    loadSkills();
+  }, []);
 
   useEffect(() => {
     setTags(value.map((v) => ({ id: v, text: v, className: "" })));
