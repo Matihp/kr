@@ -1,6 +1,11 @@
 import axios from "axios";
 import { ProfileData } from "../../kr-backend/src/types/profileTypes";
 
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+});
+
 export const register = async (
   firstName: string,
   lastName: string,
@@ -8,7 +13,7 @@ export const register = async (
   password: string
 ) => {
   try {
-    const response = await axios.post("http://localhost:4000/auth/register", {
+    const response = await api.post("/auth/register", {
       firstName,
       lastName,
       email,
@@ -23,11 +28,7 @@ export const register = async (
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await axios.post(
-      "http://localhost:4000/auth/login",
-      { email, password },
-      { withCredentials: true }
-    );
+    const response = await api.post("/auth/login", { email, password });
     return response.data;
   } catch (error: any) {
     console.error("Error during login:", error);
@@ -39,21 +40,16 @@ export const login = async (email: string, password: string) => {
 };
 
 export const googleLogin = async () => {
-  window.location.href = "http://localhost:4000/auth/google";
+  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
 };
 
 export const githubLogin = async () => {
-  window.location.href = "http://localhost:4000/auth/github";
+  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/github`;
 };
 
 export const verifyToken = async () => {
   try {
-    const response = await axios.get(
-      "http://localhost:4000/auth/verify-token",
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await api.get("/auth/verify-token");
     return response.data;
   } catch (error) {
     console.error("Error verifying token:", error);
@@ -63,11 +59,7 @@ export const verifyToken = async () => {
 
 export const logout = async () => {
   try {
-    await axios.post(
-      "http://localhost:4000/auth/logout",
-      {},
-      { withCredentials: true }
-    );
+    await api.post("/auth/logout");
   } catch (error) {
     console.error("Error during logout:", error);
     throw new Error("Error logging out");
@@ -79,16 +71,11 @@ export const updateProfile = async (
   profileData: ProfileData
 ) => {
   try {
-    const response = await axios.put(
-      `http://localhost:4000/profile/update-profile/${userId}`,
-      profileData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
+    const response = await api.put(`/profile/update-profile/${userId}`, profileData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error updating profile:", error);
