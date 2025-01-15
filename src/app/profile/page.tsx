@@ -10,7 +10,7 @@ import {
   mdiInformationOutline,
   mdiTextAccount,
 } from "@mdi/js";
-import {useCallback, useEffect, useRef, useState } from "react";
+import {SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { DropdownProject } from "@/components/Dropdown/DropdownProject";
 import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";
@@ -41,6 +41,7 @@ function Profile() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [avatarSrc, setAvatarSrc] = useState('');
   const [description, setDescription] = useState<string>('');
+  const [isDefaultDescription, setIsDefaultDescription] = useState<boolean>(true);
   const [projects, setProjects] = useState<Project[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -77,15 +78,12 @@ function Profile() {
         { name: "habilidades", ref: habilidadesRef },
         { name: "certificaciones", ref: certificacionesRef },
       ];
-
       if (isTablet && scrollPosition > 50) {
         isScrollingHeader(false);
       } else {
         isScrollingHeader(true);
       }
-
       setIsScrolling(scrollPosition > 220);
-
       // Determinar qué sección está actualmente en vista
       for (const section of sections) {
         if (section.ref.current) {
@@ -98,7 +96,6 @@ function Profile() {
         }
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isTablet, isDesktop, isScrollingHeader]);
@@ -108,7 +105,9 @@ function Profile() {
       if (isAuthenticated) {
         const { isAuthenticated, user } = await verifyToken();
         if (isAuthenticated && user) {
-          setDescription(user.description || '');
+          const userDescription = user.description || 'Bienvenido a tu perfil. Edita esta sección para agregar una descripción personalizada.';
+          setDescription(userDescription);
+          setIsDefaultDescription(userDescription === 'Bienvenido a tu perfil. Edita esta sección para agregar una descripción personalizada.');
           setAvatarSrc(user.avatarSrc || avatar.src);
           setLanguages(user.languages || []);
           setSkills(user.skills.map((skill: { name: any; }) => skill.name) || null);
@@ -118,7 +117,6 @@ function Profile() {
       setIsLoading(false);  
       }     
     };
-
     fetchUserData();
   }, [isAuthenticated, verifyToken]);
 
@@ -132,9 +130,6 @@ function Profile() {
         projects,
         certifications,
       };
-
-      console.log('Profile data to be saved:', profileData);
-
       try {
         await updateProfile(user.id, profileData);
         alert('Profile updated successfully');
@@ -147,13 +142,15 @@ function Profile() {
     }
   };
 
+  const updateDescription = (newDescription: SetStateAction<string>) => {
+    setDescription(newDescription);
+    setIsDefaultDescription(newDescription === 'Bienvenido a tu perfil. Edita esta sección para agregar una descripción personalizada.');
+  };
+
   const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
     if (sectionRef.current) {
       const yOffset = isDesktop ? -300 : -100;
-      const y =
-        sectionRef.current.getBoundingClientRect().top +
-        window.pageYOffset +
-        yOffset;
+      const y =sectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
@@ -267,7 +264,7 @@ function Profile() {
           <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
             <div className="flex justify-between">
               <h2 className="text-xl font-semibold">{`${user?.firstName} ${user?.lastName} `}</h2>
-              <ModalDescription setDescription={setDescription} />
+              <ModalDescription setDescription={setDescription} description={description} />
             </div>
             <div className="flex items-center gap-10 pt-1.5">
               <div className="flex items-center">
@@ -320,10 +317,10 @@ function Profile() {
               <h2 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 Sobre Mi
               </h2>
-              <ModalDescription setDescription={setDescription} />
+              <ModalDescription setDescription={updateDescription} description={description} />
             </div>
-            <p className="font-normal break-all text-gray-700 dark:text-gray-400">
-            {description || <Skeleton className="w-20 h-20 rounded-sm bg-gray-400" />}
+            <p className={`${isDefaultDescription ? 'text-gray-500 italic' :  'font-normal break-all text-gray-700 dark:text-gray-400'}`}>
+              {description || <Skeleton className="w-20 h-20 rounded-sm bg-gray-400" />}
             </p>
           </div>
 
