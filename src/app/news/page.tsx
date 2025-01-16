@@ -1,17 +1,48 @@
-import { Paginations } from "@/components/Pagination/Pagination";
-import Link from "next/link";
-import newsData from "./news.json";
-import ThemeToggle from "@/components/Toogle/ThemeToogle";
+"use client"
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 interface NewsItem {
-  id: number;
+  id: string;
   title: string;
-  date: string;
+  content: string;
+  author: string;
   image: string;
-  link: string;
+  createdAt: string;
 }
 
-function News() {
+interface NewsData {
+  news: NewsItem[];
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+}
+
+export default function News() {
+  const [newsData, setNewsData] = useState<NewsData>({
+    news: [],
+    total: 0,
+    page: 1,
+    limit: 18,
+    pages: 1
+  });
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/news`);
+        const data = await response.json();
+        setNewsData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="bg-white dark:bg-black py-6 sm:py-6 md:pt-24">
       <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
@@ -27,7 +58,7 @@ function News() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 md:gap-6 xl:grid-cols-4 xl:gap-8">
-          {newsData.map((item: NewsItem) => (
+          {newsData.news.map((item: NewsItem) => (
             <div
               key={item.id}
               className="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96"
@@ -40,12 +71,12 @@ function News() {
               />
 
               <div className="relative mt-auto p-4">
-                <span className="block text-sm text-gray-200">{item.date}</span>
+                <span className="block text-sm text-gray-200">{new Date(item.createdAt).toLocaleDateString()}</span>
                 <h2 className="mb-2 text-xl font-semibold text-white transition duration-100">
                   {item.title}
                 </h2>
                 <Link
-                  href={item.link}
+                  href={`/news/${item.id}`}
                   className="font-semibold text-indigo-300"
                 >
                   Leer más
@@ -55,9 +86,6 @@ function News() {
           ))}
         </div>
       </div>
-      <Paginations />
     </div>
   );
 }
-
-export default News;
