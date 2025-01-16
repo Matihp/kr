@@ -15,6 +15,7 @@ const paginationSchema = z.object({
     .string()
     .optional()
     .transform((val) => (val ? parseInt(val, 10) : 18)),
+  skillName: z.string().optional(),
 });
 
 export const getUsers = async (req: Request, res: Response) => {
@@ -24,21 +25,41 @@ export const getUsers = async (req: Request, res: Response) => {
       return res.status(400).json({ message: validationResult.error.errors });
     }
 
-    const { page, limit } = validationResult.data;
+    const { page, limit, skillName } = validationResult.data;
+    const skills = skillName ? skillName.split(',') : [];
     const offset = (page - 1) * limit;
 
-    const [users, total] = await userRepository.findAndCount({
-      select: [
-        "id",
-        "firstName",
-        "lastName",
-        "email",
-        "createdAt",
-        "skills",
-      ],
-      skip: offset,
-      take: limit,
-    });
+    let query = userRepository.createQueryBuilder("user")
+      .leftJoinAndSelect("user.skills", "skill")
+      .leftJoinAndSelect("user.role", "role")
+      .select([
+        "user.id",
+        "user.firstName",
+        "user.lastName",
+        "user.description",
+        "user.avatarSrc",
+        "user.email",
+        "user.createdAt",
+        "skill.id",
+        "skill.name",
+        "role"
+      ]);
+
+    if (skills.length > 0) {
+      // Cambiamos a OR en lugar de AND
+      query = query
+        .andWhere("skill.name IN (:...names)", { names: skills })
+        .groupBy("user.id")
+        .addGroupBy("skill.id")
+        .addGroupBy("role.id");
+      // Removemos el HAVING ya que no necesitamos que tenga todas las skills
+    }
+
+    // Aplicamos la paginación después del filtrado
+    const [users, total] = await query
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
 
     res.json({
       users,
@@ -94,3 +115,4 @@ export const updateUser = async (req: Request, res: Response) => {
     handleError(error, res);
   }
 };
+
