@@ -6,6 +6,8 @@ import { generateToken, verifyToken } from '../utils/jwtUtils';
 import { handleError } from '../utils/errorUtils';
 import { z } from 'zod';
 import { Role, RoleType } from '../models/roleModel';
+import { AuthenticationError } from '../types/errors';
+import { EmailService } from '../services/emailService';
 
 const userRepository = AppDataSource.manager.getRepository(User);
 
@@ -41,7 +43,7 @@ export const register = async (req: Request, res: Response) => {
     if (existingUser) {
       return res.status(400).json({ message: 'Email already in use' });
     }
-
+    
     const hashedPassword = await bcrypt.hash(password, 10);
     
     const role = await AppDataSource.manager.getRepository(Role).findOne({
@@ -61,6 +63,8 @@ export const register = async (req: Request, res: Response) => {
     });
     
     await userRepository.save(user);
+
+    await EmailService.sendWelcomeEmail(user);
     
     res.json({ 
       message: 'Registration successful',
@@ -193,34 +197,84 @@ export const changePassword = async (req: Request, res: Response) => {
 };
 
 export const logout = (req: Request, res: Response) => {
-  res.clearCookie('jwt');
-  res.json({ message: 'Logout successful' });
+  try {
+    // Limpiar la cookie JWT
+    res.clearCookie('jwt', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/'
+    });
+    res.json({ message: 'Logout successful' });
+  } catch (error) {
+    console.error('Error during logout:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 };
 
 export const googleCallback = async (req: Request, res: Response) => {
-  const token = generateToken({ id: (req.user as User).id }, process.env.JWT_SECRET!, '1d');
-
-  res.cookie('jwt', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-
-  setTimeout(() => {
-    res.redirect('http://localhost:3000');
-  }, 200);
+  try {
+    res.clearCookie('jwt', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/'
+    });
+    if (req.user) {
+      const token = generateToken(
+        { id: (req.user as User).id },
+        process.env.JWT_SECRET!,
+        '1d'
+      );
+      
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000,
+        path: '/'
+      });
+      res.redirect('http://localhost:3000');
+    } else {
+      // Si no hay usuario, probablemente hubo un error de autenticación
+      res.redirect('http://localhost:3000/login?error=auth_failed');
+    }
+  } catch (error) {
+    console.log('Error en googleCallback:', error);
+    
+    // Manejar específicamente el error de email en uso
+    if (error instanceof AuthenticationError && error.code === 'EMAIL_IN_USE') {
+      res.redirect('http://localhost:3000/login?error=email_in_use');
+    } else {
+      res.redirect('http://localhost:3000/login?error=auth_failed');
+    }
+  }
 };
 
 export const githubCallback = async (req: Request, res: Response) => {
-  const token = generateToken({ id: (req.user as User).id }, process.env.JWT_SECRET!, '1d');
+  try {
+    res.clearCookie('jwt', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/'
+    });
+    const token = generateToken(
+      { id: (req.user as User).id },
+      process.env.JWT_SECRET!,
+      '1d'
+    );
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
+      path: '/'
+    });
 
-  res.cookie('jwt', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-
-  setTimeout(() => {
     res.redirect('http://localhost:3000');
-  }, 200);
+  } catch (error) {
+    console.error('Error en googleCallback:', error);
+    res.redirect('http://localhost:3000/login?error=auth_failed');
+  }
 };

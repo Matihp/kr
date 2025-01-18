@@ -39,16 +39,36 @@ export const login = async (email: string, password: string) => {
   }
 };
 
+let isAuthenticatingWithGoogleOrGithub = false;
 export const googleLogin = async () => {
-  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+  try {
+    isAuthenticatingWithGoogleOrGithub = true;
+    await api.post("/auth/logout");
+    localStorage.removeItem('lastAuthCheck');
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+  } catch (error) {
+    isAuthenticatingWithGoogleOrGithub = false;
+    throw error;
+  }
 };
 
 export const githubLogin = async () => {
-  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/github`;
+  try {
+    isAuthenticatingWithGoogleOrGithub = true;
+    await api.post("/auth/logout");
+    localStorage.removeItem('lastAuthCheck');
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/github`;
+  } catch (error) {
+    isAuthenticatingWithGoogleOrGithub = false;
+    throw error;
+  }
 };
 
 export const verifyToken = async () => {
   try {
+    if (isAuthenticatingWithGoogleOrGithub) {
+      return { isAuthenticated: false, user: null };
+    }
     const response = await api.get("/auth/verify-token");
     return response.data;
   } catch (error) {
@@ -60,6 +80,8 @@ export const verifyToken = async () => {
 export const logout = async () => {
   try {
     await api.post("/auth/logout");
+    isAuthenticatingWithGoogleOrGithub = false;
+    localStorage.removeItem('lastAuthCheck');
   } catch (error) {
     console.error("Error during logout:", error);
     throw new Error("Error logging out");
