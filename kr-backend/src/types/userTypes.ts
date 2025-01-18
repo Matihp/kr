@@ -16,3 +16,8 @@ export interface User {
     projects: Project[];
     certifications: Certification[];
   }
+export enum AuthProvider {
+  LOCAL = 'local',
+  GOOGLE = 'google',
+  GITHUB = 'github'
+}

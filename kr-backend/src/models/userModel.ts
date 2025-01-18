@@ -4,6 +4,7 @@ import { Skill } from './skillModel';
 import { Project } from './projectModel';
 import { Certification } from './certificationModel';
 import { Role } from './roleModel';
+import { AuthProvider } from '../types/userTypes';
 
 @Entity('users')
 export class User {
@@ -33,6 +34,19 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+  @Column({
+    type: 'enum',
+    enum: AuthProvider,
+    default: AuthProvider.LOCAL
+  })
+  authProvider!: AuthProvider;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  googleId?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  githubId?: string;
 
   @ManyToMany(() => Skill, skill => skill.users)
   @JoinTable()

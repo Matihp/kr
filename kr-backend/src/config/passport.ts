@@ -4,11 +4,15 @@ import { Strategy as GoogleStrategy, Profile as GoogleProfile } from 'passport-g
 import { Strategy as GitHubStrategy, Profile as GitHubProfile } from 'passport-github2';
 import { User } from '../models/userModel';
 import { AppDataSource } from './data-source';
+import { Role, RoleType } from '../models/roleModel';
 import axios from 'axios';
+import { AuthProvider } from '../types/userTypes';
+import { AuthenticationError } from '../types/errors';
+import { EmailService } from '../services/emailService';
 
 const userRepository = AppDataSource.manager.getRepository(User);
+const roleRepository = AppDataSource.manager.getRepository(Role);
 
-// Verifica que JWT_SECRET esté definido
 const jwtSecret = process.env.JWT_SECRET;
 if (!jwtSecret) {
   throw new Error('JWT_SECRET environment variable is not defined');
@@ -22,7 +26,10 @@ const jwtOptions: StrategyOptions = {
 passport.use(
   new JwtStrategy(jwtOptions, async (payload, done) => {
     try {
-      const user = await userRepository.findOne({ where: { id: payload.id } });
+      const user = await userRepository.findOne({
+        where: { id: payload.id },
+        relations: ['role']
+      });
       if (user) {
         return done(null, user);
       }
@@ -44,18 +51,52 @@ passport.use(
       try {
         const email = profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null;
         if (!email) {
-          return done(new Error('No email found'), false);
+          throw new AuthenticationError('No email found from Google', 'NO_EMAIL');
         }
 
-        let user = await userRepository.findOne({ where: { email } });
+        // Primero buscar por googleId para mayor precisión
+        let user = await userRepository.findOne({
+          where: [
+            { googleId: profile.id },
+            { email, authProvider: AuthProvider.GOOGLE }
+          ],
+          relations: ['role']
+        });
+
+        // Si no existe el usuario, verificar que el email no esté en uso con otro proveedor
         if (!user) {
+          const existingUser = await userRepository.findOne({
+            where: { email }
+          });
+
+          if (existingUser) {
+            throw new AuthenticationError(
+              'Email already in use with another authentication method',
+              'EMAIL_IN_USE'
+            );
+          }
+
+          // Get the default USER role
+          const defaultRole = await roleRepository.findOne({
+            where: { type: RoleType.USER }
+          });
+
+          if (!defaultRole) {
+            throw new AuthenticationError('Default role not found', 'ROLE_NOT_FOUND');
+          }
+
           user = userRepository.create({
             email,
-            firstName: profile.name?.givenName,
-            lastName: profile.name?.familyName,
+            firstName: profile.name?.givenName || '',
+            lastName: profile.name?.familyName || '',
+            role: defaultRole,
+            authProvider: AuthProvider.GOOGLE,
+            googleId: profile.id
           });
           await userRepository.save(user);
+          await EmailService.sendWelcomeEmail(user);
         }
+
         return done(null, user);
       } catch (error) {
         return done(error);
@@ -76,32 +117,68 @@ passport.use(
       try {
         let email: string | null = null;
 
-        // Intentar obtener el correo electrónico a través de la API de GitHub
         if (profile.emails && profile.emails.length > 0) {
           email = profile.emails[0].value;
         } else {
-          const response = await axios.get('https://api.github.com/user/emails', {
-            headers: {
-              Authorization: `token ${accessToken}`,
-            },
-          });
-          if (response.data && response.data.length > 0) {
-            email = response.data.find((emailObj: any) => emailObj.primary).email;
+          try {
+            const response = await axios.get('https://api.github.com/user/emails', {
+              headers: {
+                Authorization: `token ${accessToken}`,
+              },
+            });
+            if (response.data && response.data.length > 0) {
+              email = response.data.find((emailObj: any) => emailObj.primary).email;
+            }
+          } catch (error) {
+            throw new AuthenticationError('Failed to fetch GitHub email', 'GITHUB_EMAIL_FETCH_ERROR');
           }
         }
 
         if (!email) {
-          return done(new Error('No email found'), false);
+          throw new AuthenticationError('No email found from GitHub', 'NO_EMAIL');
         }
 
-        let user = await userRepository.findOne({ where: { email } });
+        // Primero buscar por githubId para mayor precisión
+        let user = await userRepository.findOne({
+          where: [
+            { githubId: profile.id },
+            { email, authProvider: AuthProvider.GITHUB }
+          ],
+          relations: ['role']
+        });
+
+        // Si no existe el usuario, verificar que el email no esté en uso con otro proveedor
         if (!user) {
+          const existingUser = await userRepository.findOne({
+            where: { email }
+          });
+
+          if (existingUser) {
+            throw new AuthenticationError(
+              'Email already in use with another authentication method',
+              'EMAIL_IN_USE'
+            );
+          }
+
+          const defaultRole = await roleRepository.findOne({
+            where: { type: RoleType.USER }
+          });
+
+          if (!defaultRole) {
+            throw new AuthenticationError('Default role not found', 'ROLE_NOT_FOUND');
+          }
+
           user = userRepository.create({
             email,
-            firstName: profile.displayName,
+            firstName: profile.displayName || '',
+            role: defaultRole,
+            authProvider: AuthProvider.GITHUB,
+            githubId: profile.id
           });
           await userRepository.save(user);
+          await EmailService.sendWelcomeEmail(user);
         }
+
         return done(null, user);
       } catch (error) {
         return done(error);
