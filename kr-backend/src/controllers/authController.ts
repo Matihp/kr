@@ -8,8 +8,11 @@ import { z } from 'zod';
 import { Role, RoleType } from '../models/roleModel';
 import { AuthenticationError } from '../types/errors';
 import { EmailService } from '../services/emailService';
+import { Notification } from '../models/notificationModel';
+import { createNotificationFromTemplate, NotificationTemplates } from '../constants/notificationTemplates';
 
 const userRepository = AppDataSource.manager.getRepository(User);
+const notificationRepository = AppDataSource.manager.getRepository(Notification);
 
 // Definir esquemas de validación con Zod
 const registerSchema = z.object({
@@ -43,13 +46,13 @@ export const register = async (req: Request, res: Response) => {
     if (existingUser) {
       return res.status(400).json({ message: 'Email already in use' });
     }
-    
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     const role = await AppDataSource.manager.getRepository(Role).findOne({
       where: { type: RoleType.USER }
     });
-    
+
     if (!role) {
       return res.status(500).json({ message: 'Role configuration error' });
     }
@@ -61,12 +64,19 @@ export const register = async (req: Request, res: Response) => {
       password: hashedPassword,
       role
     });
-    
+
     await userRepository.save(user);
 
-    await EmailService.sendWelcomeEmail(user);
-    
-    res.json({ 
+    await createNotificationFromTemplate(
+      notificationRepository,
+      user,
+      NotificationTemplates.WELCOME,
+      { firstName: user.firstName }
+    );
+
+    // await EmailService.sendWelcomeEmail(user);
+
+    res.json({
       message: 'Registration successful',
       user: {
         id: user.id,

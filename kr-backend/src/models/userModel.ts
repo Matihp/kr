@@ -5,6 +5,7 @@ import { Project } from './projectModel';
 import { Certification } from './certificationModel';
 import { Role } from './roleModel';
 import { AuthProvider } from '../types/userTypes';
+import { Notification } from './notificationModel';
 
 @Entity('users')
 export class User {
@@ -64,6 +65,9 @@ export class User {
 
   @OneToMany(() => Certification, certification => certification.user)
   certifications!: Certification[];
+
+  @OneToMany(() => Notification, notification => notification.user)
+  notifications: Notification[];
 }
 
 

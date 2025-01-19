@@ -14,6 +14,7 @@ import adminRoutes from './routes/adminRoutes';
 import userRoutes from './routes/userRoutes';
 import skillRoutes from './routes/skillRoutes';
 import newsRoutes from './routes/newsRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 
 dotenv.config();
 
@@ -56,6 +57,7 @@ app.use('/projects', projectRoutes);
 app.use('/skills', skillRoutes);
 app.use('/admin', adminRoutes);
 app.use('/news',newsRoutes)
+app.use('/notifications', notificationRoutes);
 
 AppDataSource.initialize().then(() => {
   console.log('Database connected');
