@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Paginations } from "../Pagination/Pagination"
 import { SVGProps } from "react";
 import { Skill, UserData } from "@/types/user";
+import Link from "next/link";
 
 interface ProfilesListProps {
   user: UserData;
@@ -96,7 +97,12 @@ export default function ProfilesList({ user, skills, selectedSkills, handleSkill
                   <h3 className="text-lg font-semibold mb-2">{user.firstName} {user.lastName}</h3>
                   <p className="text-gray-500 dark:text-gray-400 mb-4">{user.description}</p>
                   <div className="">
-                    <Button className="" variant="outline">Mas info</Button>
+                    <Link
+                    href={`/profile/${user.id}`}
+                    className="font-semibold text-indigo-500"
+                    >
+                    Mas info
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -18,12 +18,12 @@ import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";
 import Image from "next/image";
 import PublicProfileContactCard from "@/components/ProfileContactCard/PublicProfileContactCard";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { User } from "@/types/user";
 
-function PublicProfile() {
-  const active =
-    "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
-  const noActive =
-    "flex gap-1 h-12 items-center px-3 border-b-4 border-slate-100";
+function PublicProfile({params}: Params) {
+  const {id} = params
+  const [user, setUser] = useState<User>();
   const [showNav, setShowNav] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [activeSection, setActiveSection] = useState("");
@@ -31,6 +31,27 @@ function PublicProfile() {
   const isScrollingHeader = useHeaderStore(
     (state) => state.setIsScrollingHeader
   );
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const active =
+    "flex gap-1 h-12 items-center px-3 border-b-4 text-prBlue font-bold border-prBlue";
+  const noActive =
+    "flex gap-1 h-12 items-center px-3 border-b-4 border-slate-100";
+
+  useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`${apiUrl}/users/${id}`);
+          const data = await response.json();
+          setUser(data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [id]);
 
   useEffect(() => {
     if (isTablet) {
@@ -83,14 +104,14 @@ function PublicProfile() {
               width={80}
               height={30}
               alt=""
-              src={avatar}
+              src={user?.avatarSrc || avatar}
               className=" rounded-full  "
             />
           </div>
 
           <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
             <div className="flex justify-between">
-              <h2 className="text-xl font-bold">Juan Perez</h2>
+              <h2 className="text-xl font-bold">{`${user?.firstName} ${user?.lastName}`}</h2>
             </div>
             <div className="flex items-center gap-10 pt-1.5">
               <div className="flex items-center">
@@ -174,8 +195,7 @@ function PublicProfile() {
             </div>
 
             <p className="font-normal text-gray-700 dark:text-gray-400">
-              Here are the biggest enterprise technology acquisitions of 2021 so
-              far, in reverse chronological order.
+              {user?.description}
             </p>
           </div>
 
