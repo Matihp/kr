@@ -1,49 +1,36 @@
 import { Request, Response } from 'express';
-import { User } from '../models/userModel';
-import { AppDataSource } from '../config/data-source';
-import { handleError } from '../utils/errorUtils';
-import bcrypt from 'bcrypt';
-import { Role, RoleType } from '../models/roleModel';
+import { plainToInstance } from 'class-transformer';
+import { NotFoundError, handleError } from '../utils/errorUtils';
+import { CreateUserDto } from '../dtos/userDto';
+import { AdminService } from '../services/adminService';
 
-const userRepository = AppDataSource.manager.getRepository(User);
+export class AdminController {
+  private adminService: AdminService;
 
-export const deleteUser = async (req: Request, res: Response) => {
-  try {
-    const user = await userRepository.findOne({ where: { id: req.params.id } });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    await userRepository.remove(user);
-    res.json({ message: 'User deleted successfully' });
-  } catch (error) {
-    handleError(error, res);
+  constructor() {
+    this.adminService = new AdminService();
   }
-};
 
-export const createUser = async (req: Request, res: Response) => {
-  try {
-    const { firstName, lastName, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const role = await AppDataSource.manager.getRepository(Role).findOne({
-      where: { type: RoleType.USER }
-    });
-
-    if (!role) {
-      return res.status(500).json({ message: 'Role configuration error' });
+  public deleteUser = async (req: Request, res: Response) => {
+    try {
+      await this.adminService.delete(req.params.id);
+      res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ message: error.message });
+      }
+      handleError(error, res);
     }
+  };
 
-    const user = userRepository.create({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-      role
-    });
+  public createUser = async (req: Request, res: Response) => {
+    try {
+      const dto = plainToInstance(CreateUserDto, req.body);
+      const user = await this.adminService.create(dto);
+      res.json({ message: 'User created successfully', user });
+    } catch (error) {
+      handleError(error, res);
+    }
+  };
+}
 
-    await userRepository.save(user);
-    res.json({ message: 'User created successfully', user });
-  } catch (error) {
-    handleError(error, res);
-  }
-};

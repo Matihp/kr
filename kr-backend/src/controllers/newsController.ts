@@ -1,10 +1,9 @@
-import { Request, Response } from "express";
-import { News } from "../models/newsModel";
-import { AppDataSource } from "../config/data-source";
-import { handleError } from "../utils/errorUtils";
-import { z } from "zod";
-
-const newsRepository = AppDataSource.manager.getRepository(News);
+import { Request, Response } from 'express';
+import { NewsService } from '../services/newsService';
+import { plainToInstance } from 'class-transformer';
+import { NotFoundError, handleError } from '../utils/errorUtils';
+import { CreateNewsDto, UpdateNewsDto } from '../dtos/newsDto';
+import { z } from 'zod';
 
 const paginationSchema = z.object({
   page: z
@@ -17,101 +16,79 @@ const paginationSchema = z.object({
     .transform((val) => (val ? parseInt(val, 10) : 18)),
 });
 
-export const getNews = async (req: Request, res: Response) => {
-  try {
-    const validationResult = paginationSchema.safeParse(req.query);
-    if (!validationResult.success) {
-      return res.status(400).json({ message: validationResult.error.errors });
+export class NewsController {
+  private newsService: NewsService;
+
+  constructor() {
+    this.newsService = new NewsService();
+  }
+
+  public getNews = async (req: Request, res: Response) => {
+    try {
+      const validationResult = paginationSchema.safeParse(req.query);
+      if (!validationResult.success) {
+        return res.status(400).json({ message: validationResult.error.errors });
+      }
+
+      const { page, limit } = validationResult.data;
+      const { news, total, pages } = await this.newsService.findAll(page, limit);
+
+      res.json({
+        news,
+        total,
+        page,
+        limit,
+        pages,
+      });
+    } catch (error) {
+      handleError(error, res);
     }
+  };
 
-    const { page, limit } = validationResult.data;
-    const offset = (page - 1) * limit;
-
-    const [news, total] = await newsRepository.findAndCount({
-      select: [
-        "id",
-        "title",
-        "content",
-        "author",
-        "image",
-        "createdAt",
-      ],
-      skip: offset,
-      take: limit,
-    });
-
-    res.json({
-      news,
-      total,
-      page,
-      limit,
-      pages: Math.ceil(total / limit),
-    });
-  } catch (error) {
-    handleError(error, res);
-  }
-};
-
-export const getNewsById = async (req: Request, res: Response) => {
-  try {
-    const news = await newsRepository.findOne({
-      where: { id: req.params.id },
-      select: [
-        "id",
-        "title",
-        "content",
-        "author",
-        "image",
-        "createdAt",
-        "updatedAt",
-      ],
-    });
-    if (!news) {
-      return res.status(404).json({ message: "News not found" });
+  public getNewsById = async (req: Request, res: Response) => {
+    try {
+      const news = await this.newsService.findById(req.params.id);
+      res.json(news);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ message: error.message });
+      }
+      handleError(error, res);
     }
-    res.json(news);
-  } catch (error) {
-    handleError(error, res);
-  }
-};
+  };
 
-export const createNews = async (req: Request, res: Response) => {
-  try {
-    const newNews = newsRepository.create(req.body);
-    const result = await newsRepository.save(newNews);
-    res.json(result);
-  } catch (error) {
-    handleError(error, res);
-  }
-};
-
-export const updateNews = async (req: Request, res: Response) => {
-  try {
-    const news = await newsRepository.findOne({ where: { id: req.params.id } });
-
-    if (!news) {
-      return res.status(404).json({ message: "News not found" });
+  public createNews = async (req: Request, res: Response) => {
+    try {
+      const dto = plainToInstance(CreateNewsDto, req.body);
+      const news = await this.newsService.create(dto);
+      res.status(201).json(news);
+    } catch (error) {
+      handleError(error, res);
     }
+  };
 
-    newsRepository.merge(news, req.body);
-    const result = await newsRepository.save(news);
-    res.json(result);
-  } catch (error) {
-    handleError(error, res);
-  }
-};
-
-export const deleteNews = async (req: Request, res: Response) => {
-  try {
-    const news = await newsRepository.findOne({ where: { id: req.params.id } });
-
-    if (!news) {
-      return res.status(404).json({ message: "News not found" });
+  public updateNews = async (req: Request, res: Response) => {
+    try {
+      const dto = plainToInstance(UpdateNewsDto, req.body);
+      const news = await this.newsService.update(req.params.id, dto);
+      res.json(news);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ message: error.message });
+      }
+      handleError(error, res);
     }
+  };
 
-    await newsRepository.remove(news);
-    res.json({ message: "News deleted successfully" });
-  } catch (error) {
-    handleError(error, res);
-  }
-};
+  public deleteNews = async (req: Request, res: Response) => {
+    try {
+      await this.newsService.delete(req.params.id);
+      res.json({ message: 'News deleted successfully' });
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ message: error.message });
+      }
+      handleError(error, res);
+    }
+  };
+}

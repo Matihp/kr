@@ -1,10 +1,9 @@
-import { Request, Response } from "express";
-import { User } from "../models/userModel";
-import { AppDataSource } from "../config/data-source";
-import { handleError } from "../utils/errorUtils";
-import { z } from "zod";
-
-const userRepository = AppDataSource.manager.getRepository(User);
+import { Request, Response } from 'express';
+import { UserService } from '../services/userService';
+import { plainToInstance } from 'class-transformer';
+import { NotFoundError, handleError } from '../utils/errorUtils';
+import { UpdateUserDto } from '../dtos/userDto';
+import { z } from 'zod';
 
 const paginationSchema = z.object({
   page: z
@@ -18,101 +17,63 @@ const paginationSchema = z.object({
   skillName: z.string().optional(),
 });
 
-export const getUsers = async (req: Request, res: Response) => {
-  try {
-    const validationResult = paginationSchema.safeParse(req.query);
-    if (!validationResult.success) {
-      return res.status(400).json({ message: validationResult.error.errors });
-    }
+export class UserController {
+  private userService: UserService;
 
-    const { page, limit, skillName } = validationResult.data;
-    const skills = skillName ? skillName.split(',') : [];
-    const offset = (page - 1) * limit;
-
-    let query = userRepository.createQueryBuilder("user")
-      .leftJoinAndSelect("user.skills", "skill")
-      .leftJoinAndSelect("user.role", "role")
-      .select([
-        "user.id",
-        "user.firstName",
-        "user.lastName",
-        "user.description",
-        "user.avatarSrc",
-        "user.email",
-        "user.createdAt",
-        "skill.id",
-        "skill.name",
-        "role"
-      ]);
-
-    if (skills.length > 0) {
-      // Cambiamos a OR en lugar de AND
-      query = query
-        .andWhere("skill.name IN (:...names)", { names: skills })
-        .groupBy("user.id")
-        .addGroupBy("skill.id")
-        .addGroupBy("role.id");
-      // Removemos el HAVING ya que no necesitamos que tenga todas las skills
-    }
-
-    // Aplicamos la paginación después del filtrado
-    const [users, total] = await query
-      .skip(offset)
-      .take(limit)
-      .getManyAndCount();
-
-    res.json({
-      users,
-      total,
-      page,
-      limit,
-      pages: Math.ceil(total / limit),
-    });
-  } catch (error) {
-    handleError(error, res);
+  constructor() {
+    this.userService = new UserService();
   }
-};
 
-export const getUser = async (req: Request, res: Response) => {
-  try {
-    const user = await userRepository.findOne({
-      where: { id: req.params.id },
-      select: [
-        "id",
-        "firstName",
-        "lastName",
-        "email",
-        "createdAt",
-        "updatedAt",
-      ],
-    });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+  public getUsers = async (req: Request, res: Response) => {
+    try {
+      const validationResult = paginationSchema.safeParse(req.query);
+      if (!validationResult.success) {
+        return res.status(400).json({ message: validationResult.error.errors });
+      }
+
+      const { page, limit, skillName } = validationResult.data;
+      const { users, total, pages } = await this.userService.findAll(page, limit, skillName);
+
+      res.json({
+        users,
+        total,
+        page,
+        limit,
+        pages,
+      });
+    } catch (error) {
+      handleError(error, res);
     }
-    res.json(user);
-  } catch (error) {
-    handleError(error, res);
-  }
-};
+  };
 
-export const updateUser = async (req: Request, res: Response) => {
-  try {
-    const userId = req.userId; // ID del usuario autenticado
-    const user = await userRepository.findOne({ where: { id: req.params.id } });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+  public getUser = async (req: Request, res: Response) => {
+    try {
+      const user = await this.userService.findById(req.params.id);
+      res.json(user);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ message: error.message });
+      }
+      handleError(error, res);
     }
+  };
 
-    if (user.id !== userId) {
-      return res.status(403).json({ message: "Forbidden" });
+  public updateUser = async (req: Request, res: Response) => {
+    try {
+      const userId = req.userId; // ID del usuario autenticado
+      const dto = plainToInstance(UpdateUserDto, req.body);
+
+      if (req.params.id !== userId) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+
+      const user = await this.userService.update(req.params.id, dto);
+      res.json(user);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ message: error.message });
+      }
+      handleError(error, res);
     }
-
-    userRepository.merge(user, req.body);
-    const result = await userRepository.save(user);
-    res.json(result);
-  } catch (error) {
-    handleError(error, res);
-  }
-};
-
+  };
+}
