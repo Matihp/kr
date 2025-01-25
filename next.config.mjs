@@ -1,8 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
-      domains: ['horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app','images.unsplash.com','res.cloudinary.com'],
-    },
-  }
-  
-  export default nextConfig;
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
+  },
+};
+
+export default nextConfig;
+
