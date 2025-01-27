@@ -1,11 +1,26 @@
-import express from 'express';
-import { createSkill, deleteSkill, getAllSkills, updateSkill } from '../controllers/skillController';
+import { Router } from 'express';
+import { SkillController } from '../controllers/skillController';
+import { validate } from '../middleware/validationMiddleware';
+import { CreateSkillDto, UpdateSkillDto } from '../dtos/skillDto';
 
-const router = express.Router();
+const router = Router();
+const skillController = new SkillController();
 
-router.get('/', getAllSkills);
-router.post('/create', createSkill);
-router.put('/:id', updateSkill);
-router.delete('/:id', deleteSkill);
+router.get('/', skillController.getAllSkills);
+router.get('/:id', skillController.getSkillById);
+
+router.post('/',
+  validate(CreateSkillDto),
+  skillController.createSkill
+);
+
+router.put('/:id',
+  validate(UpdateSkillDto),
+  skillController.updateSkill
+);
+
+router.delete('/:id',
+  skillController.deleteSkill
+);
 
 export default router;

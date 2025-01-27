@@ -1,10 +1,12 @@
 import express from 'express';
+import { AdminController } from '../controllers/adminController';
 import { isAdmin } from '../middleware/authMiddleware';
-import { createUser, deleteUser } from '../controllers/AdminController';
 
 const router = express.Router();
+const adminController = new AdminController();
 
-router.delete('/users/:id', isAdmin, deleteUser);
-router.post('/users', isAdmin, createUser);
+router.delete('/users/:id', isAdmin, adminController.deleteUser);
+router.post('/users', isAdmin, adminController.createUser);
 
 export default router;
+

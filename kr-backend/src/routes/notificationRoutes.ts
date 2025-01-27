@@ -1,10 +1,11 @@
 import express from 'express';
-import { getUserNotifications, markAllAsRead, markAsRead } from "../controllers/notificationController";
+import { NotificationController } from '../controllers/notificationController';
 
 const router = express.Router();
+const notificationController = new NotificationController();
 
-router.get('/user/:userId', getUserNotifications);
-router.put('/:id/read', markAsRead);
-router.put('/user/:userId/read-all', markAllAsRead);
+router.get('/user/:userId', notificationController.getUserNotifications);
+router.put('/:id/read', notificationController.markAsRead);
+router.put('/user/:userId/read-all', notificationController.markAllAsRead);
 
 export default router;

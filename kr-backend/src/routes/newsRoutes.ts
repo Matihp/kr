@@ -1,12 +1,14 @@
 import express from 'express';
-import { getNews, getNewsById, createNews, updateNews, deleteNews } from '../controllers/newsController';
+import { NewsController } from '../controllers/newsController';
 
 const router = express.Router();
+const newsController = new NewsController();
 
-router.get('/', getNews);
-router.get('/:id', getNewsById);
-router.post('/', createNews);
-router.put('/:id', updateNews);
-router.delete('/:id', deleteNews);
+router.get('/', newsController.getNews);
+router.get('/:id', newsController.getNewsById);
+router.post('/', newsController.createNews);
+router.put('/:id', newsController.updateNews);
+router.delete('/:id', newsController.deleteNews);
 
 export default router;
+
