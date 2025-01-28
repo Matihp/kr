@@ -13,9 +13,18 @@ export class ProjectController {
       this.projectService = new ProjectService();
     }
   
-    public getAllProjects = async (_req: Request, res: Response) => {
+    public getAllProjects = async (req: Request, res: Response) => {
       try {
-        const projects = await this.projectService.findAll();
+        const page = parseInt(req.query.page as string) || 1;
+        const pageSize = parseInt(req.query.pageSize as string) || 9;
+        const skillIds = req.query.skillIds ? (req.query.skillIds as string).split(',') : [];
+  
+        const projects = await this.projectService.findAll({
+          page,
+          pageSize,
+          skillIds
+        });
+  
         return res.json(projects);
       } catch (error) {
         console.error('Error al obtener proyectos:', error);

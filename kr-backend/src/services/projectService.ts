@@ -6,25 +6,65 @@ import { CreateProjectDto } from '../dtos/projectDto/createProjectDto';
 import { UpdateProjectDto } from '../dtos/projectDto/updateProjectDto';
 import { NotFoundError, UnauthorizedError } from '../utils/errorUtils';
 
+interface PaginatedResponse<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+interface FindAllOptions {
+  page?: number;
+  pageSize?: number;
+  skillIds?: string[];
+}
+
 export class ProjectService {
-    private projectRepository = AppDataSource.getRepository(Project);
-    private skillRepository = AppDataSource.getRepository(Skill);
-  
-    async findAll(): Promise<ProjectResponseDto[]> {
-      const projects = await this.projectRepository.find({
-        relations: ['user', 'skills'],
-        select: {
-          user: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            avatarSrc: true
-          }
-        }
-      });
-  
-      return projects;
+  private projectRepository = AppDataSource.getRepository(Project);
+  private skillRepository = AppDataSource.getRepository(Skill);
+
+  async findAll(options: FindAllOptions = {}): Promise<PaginatedResponse<ProjectResponseDto>> {
+    const {
+      page = 1,
+      pageSize = 9,
+      skillIds = []
+    } = options;
+
+    const queryBuilder = this.projectRepository
+      .createQueryBuilder('project')
+      .leftJoinAndSelect('project.user', 'user')
+      .leftJoinAndSelect('project.skills', 'skills')
+      .select([
+        'project',
+        'user.id',
+        'user.firstName',
+        'user.lastName',
+        'user.avatarSrc',
+        'skills'
+      ]);
+
+    if (skillIds.length > 0) {
+      queryBuilder.andWhere('skills.id IN (:...skillIds)', { skillIds });
     }
+
+    // Calcular total y aplicar paginación
+    const total = await queryBuilder.getCount();
+    const totalPages = Math.ceil(total / pageSize);
+
+    const projects = await queryBuilder
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getMany();
+
+    return {
+      items: projects,
+      total,
+      page,
+      pageSize,
+      totalPages
+    };
+  }
   
     async findById(id: string): Promise<ProjectResponseDto> {
       const project = await this.projectRepository.findOne({
