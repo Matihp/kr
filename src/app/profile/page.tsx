@@ -25,7 +25,6 @@ import ModalSkills from "@/components/Modal/ModalSkills";
 import ModalDescription from "@/components/Modal/ModalDescription";
 import ModalCertification from "@/components/Modal/ModalCertification";
 import ModalInfo from "@/components/Modal/ModalInfo";
-import PrivateProfileContactCard from "@/components/ProfileContactCard/PrivateProfileContactCard";
 import { Button } from "@/components/ui/button";
 import ModalProfileImage from "@/components/Modal/ModalProfileImage";
 import { useAuth } from "@/lib/useAuth";
@@ -38,6 +37,8 @@ import {
 import { verifyToken } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
+import PublicProfileContactCard from "@/components/Profile/PublicProfileContactCard";
+import ProfileStatsWidget from "@/components/Profile/ProfileStatsWidget";
 
 function Profile() {
   const { user, isAuthenticated, updateProfile } = useAuth();
@@ -281,7 +282,7 @@ function Profile() {
               )}
             </div>
 
-            <div className="p-2 bg-slate-100 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
+            <div className="p-2 bg-gray-50 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
               <div className="flex justify-between">
                 <h2 className="text-xl font-semibold">{`${user?.firstName} ${user?.lastName} `}</h2>
                 <ModalDescription
@@ -298,8 +299,12 @@ function Profile() {
                   <Icon path={mdiAccountSchool} size={1} />
                   <p className="text-slate-400">Profesión</p>
                 </div>
-              </div>
+              </div>             
             </div>
+            <div className="ml-0 hidden lg:block lg:ml-12">
+              <ProfileStatsWidget/>              
+            </div>
+
           </div>
 
           <div
@@ -510,7 +515,7 @@ function Profile() {
             </div>
             <Button onClick={handleSaveProfile}>Guardar</Button>
           </div>
-          <PrivateProfileContactCard />
+          <PublicProfileContactCard />
         </div>
       </div>
     </ProtectedRoute>

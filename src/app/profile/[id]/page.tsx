@@ -17,7 +17,7 @@ import ModalProject from "@/components/Modal/ModalProject";
 import useMatchMedia from "@/components/ui/matchMedia";
 import useHeaderStore from "@/lib/store/headerStore";
 import Image from "next/image";
-import PublicProfileContactCard from "@/components/ProfileContactCard/PublicProfileContactCard";
+import PublicProfileContactCard from "@/components/Profile/PublicProfileContactCard";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { User } from "@/types/user";
 
