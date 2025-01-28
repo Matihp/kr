@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne,
+JoinColumn, ManyToMany, JoinTable, OneToOne } from 'typeorm';
 import { Language } from './languageModel';
 import { Skill } from './skillModel';
 import { Project } from './projectModel';
@@ -6,6 +7,7 @@ import { Certification } from './certificationModel';
 import { Role } from './roleModel';
 import { AuthProvider } from '../types/userTypes';
 import { Notification } from './notificationModel';
+import { LevelProgress } from './levelProgressModel';
 
 @Entity('users')
 export class User {
@@ -68,10 +70,7 @@ export class User {
 
   @OneToMany(() => Notification, notification => notification.user)
   notifications: Notification[];
+
+  @OneToOne(() => LevelProgress, levelProgress => levelProgress.user)
+  levelProgress!: LevelProgress;
 }
-
-
-
-
-
-

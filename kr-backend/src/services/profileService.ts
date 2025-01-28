@@ -6,6 +6,8 @@ import { Project } from '../models/projectModel';
 import { Certification } from '../models/certificationModel';
 import { ProfileData } from '../types/profileTypes';
 import { NotFoundError } from '../utils/errorUtils';
+import { LevelProgressService } from './levelProgressService';
+import { LevelProgress } from '../models/levelProgressModel';
 
 const userRepository = AppDataSource.getRepository(User);
 const languageRepository = AppDataSource.getRepository(Language);
@@ -14,7 +16,13 @@ const projectRepository = AppDataSource.getRepository(Project);
 const certificationRepository = AppDataSource.getRepository(Certification);
 
 export class ProfileService {
-  async updateProfile(userId: string, profileData: ProfileData): Promise<User> {
+  private levelProgressService: LevelProgressService;
+
+  constructor() {
+    this.levelProgressService = new LevelProgressService();
+  }
+
+  async updateProfile(userId: string, profileData: ProfileData): Promise<{user: User, levelProgress: LevelProgress}> {
     const user = await userRepository.findOne({
       where: { id: userId },
       relations: ['languages', 'skills', 'projects', 'certifications'],
@@ -85,6 +93,8 @@ export class ProfileService {
 
     // Guardar el usuario con las relaciones actualizadas
     await userRepository.save(user);
-    return user;
+    const levelProgress = await this.levelProgressService.updateProfileProgress(userId, user);
+
+    return { user, levelProgress };
   }
 }
