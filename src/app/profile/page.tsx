@@ -37,8 +37,8 @@ import {
 import { verifyToken } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
-import PublicProfileContactCard from "@/components/Profile/PublicProfileContactCard";
 import ProfileStatsWidget from "@/components/Profile/ProfileStatsWidget";
+import PrivateProfileContactCard from "@/components/Profile/PrivateProfileContactCard";
 
 function Profile() {
   const { user, isAuthenticated, updateProfile } = useAuth();
@@ -337,7 +337,7 @@ function Profile() {
             <div
               id="sobre-mi"
               ref={sobreMiRef}
-              className={`block md:w-[60vw] m-8 p-6 md:ml-4 lg:ml-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${
+              className={`block md:w-[60vw] mx-8 mb-8 mt-6 p-6 md:ml-4 lg:ml-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ${
                 showNav && isScrolling ? "mt-28" : ""
               } `}
             >
@@ -515,7 +515,7 @@ function Profile() {
             </div>
             <Button onClick={handleSaveProfile}>Guardar</Button>
           </div>
-          <PublicProfileContactCard />
+          <PrivateProfileContactCard />
         </div>
       </div>
     </ProtectedRoute>
