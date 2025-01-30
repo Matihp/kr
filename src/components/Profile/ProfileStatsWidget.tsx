@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 function ProfileStatsWidget() {
   return (
-    <div className="flex gap-10 px-4 bg-gray-50 border-2 border-gray-300 shadow-xl rounded-lg">
+    <div className="flex items-center gap-10 px-4 bg-gray-50 border-2 border-gray-300 shadow-xl rounded-lg">
       <div className="flex flex-col p-2 max-w-md mx-auto ">
 
         <div className="flex flex-col w-20 space-y-2">
@@ -23,15 +23,15 @@ function ProfileStatsWidget() {
         </div> */}
 
       </div>
+      <div className="h-12 w-[1.2px]" style={{ background: 'linear-gradient(to bottom, transparent 0%, #9CA3AF 20%, #9CA3AF 80%, transparent 100%)' }} />
       <div>
-
         {/* <div className="mt-6 p-2 bg-blue-50 rounded-full">
           <span className="text-sm text-blue-600">
             🏆 Top 10% en JavaScript
           </span>
         </div> */}
 
-        <div className="mt-6 flex space-x-4">
+        <div className=" flex space-x-4">
           <Button variant={"outline"} className="flex-1 px-4 ">
             Vista Pública
           </Button>
