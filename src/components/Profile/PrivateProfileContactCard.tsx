@@ -55,7 +55,7 @@ function PrivateProfileContactCard() {
 
   const timeOptions = generateTimeOptions();
   return (
-    <div className="mx-auto sticky top-[250px] hidden md:block w-[30vw] h-[56vh] mt-6 xl:ml-4 bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="mx-auto sticky top-[250px] hidden md:block w-[30vw] h-[56vh] my-6 xl:ml-4 bg-white rounded-lg shadow-md overflow-hidden">
       <div className="bg-gray-100 px-6 py-2">
         <EditableField
           value={profile.title}
