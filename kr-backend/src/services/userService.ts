@@ -56,8 +56,15 @@ export class UserService {
         "firstName",
         "lastName",
         "email",
-        "createdAt",
-        "updatedAt",
+        "description",
+        "avatarSrc",
+      ],
+      relations: [
+        "levelProgress",
+        "skills",
+        "projects",
+        "languages",
+        "certifications"
       ],
     });
 

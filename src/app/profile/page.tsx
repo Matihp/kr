@@ -302,7 +302,7 @@ function Profile() {
               </div>             
             </div>
             <div className="ml-0 hidden lg:block lg:ml-12">
-              <ProfileStatsWidget/>              
+              <ProfileStatsWidget userId={user?.id}/>              
             </div>
 
           </div>
@@ -421,7 +421,7 @@ function Profile() {
               <div
                 id="habilidades"
                 ref={habilidadesRef}
-                className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 lg:min-w-[29.4vw]"
+                className="block p-6 md:min-w-[29vw] lg:min-w-[29.4vw] bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
               >
                 <div className="flex justify-between">
                   <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -450,7 +450,7 @@ function Profile() {
 
               <div
                 id="idiomas"
-                className="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 lg:min-w-[29.4vw]"
+                className="block p-6  md:min-w-[29vw] lg:min-w-[29.4vw] bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
               >
                 <div className="flex justify-between">
                   <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -513,7 +513,7 @@ function Profile() {
                 )}
               </div>
             </div>
-            <Button onClick={handleSaveProfile}>Guardar</Button>
+            <Button className="ml-8 mb-6" onClick={handleSaveProfile}>Guardar</Button>
           </div>
           <PrivateProfileContactCard />
         </div>

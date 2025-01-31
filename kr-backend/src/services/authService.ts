@@ -98,6 +98,7 @@ export class AuthService {
               firstName: user.firstName,
               lastName: user.lastName,
               description: user.description,
+              levelProgress:user.levelProgress,
               role: user.role, // Accedemos a la propiedad 'type' del objeto 'Role'
               avatarSrc: user.avatarSrc,
               languages: user.languages,

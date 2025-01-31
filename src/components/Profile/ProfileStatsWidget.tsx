@@ -1,11 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Link, Share, Copy, Check } from "lucide-react";
+import { Alert } from "@/components/ui/alert";
+import { useRouter } from 'next/navigation';
 
-function ProfileStatsWidget() {
+function ProfileStatsWidget({ userId }: { userId: string | undefined }) {
+  const router = useRouter();
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const profileUrl = `${window.location.origin}/profile/${userId}`;
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
+  const handlePublicView = () => {
+    router.push(`/profile/${userId}`);
+  };
+
   return (
     <div className="flex items-center gap-10 px-4 bg-gray-50 border-2 border-gray-300 shadow-xl rounded-lg">
-      <div className="flex flex-col p-2 max-w-md mx-auto ">
-
+      <div className="flex flex-col p-2 max-w-md mx-auto">
         <div className="flex flex-col w-20 space-y-2">
           <span className="text-sm font-bold text-gray-800">Nivel 32</span>
           <div className="w-full h-2 bg-gray-200 rounded-full">
@@ -16,31 +39,56 @@ function ProfileStatsWidget() {
           </div>
           <span className="text-xs text-gray-500">70%</span>
         </div>
-
-        {/* <div className="mt-6 flex items-center space-x-2">
-          <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-          <span className="text-sm text-gray-800">Disponible</span>
-        </div> */}
-
       </div>
-      <div className="h-12 w-[1.2px]" style={{ background: 'linear-gradient(to bottom, transparent 0%, #9CA3AF 20%, #9CA3AF 80%, transparent 100%)' }} />
-      <div>
-        {/* <div className="mt-6 p-2 bg-blue-50 rounded-full">
-          <span className="text-sm text-blue-600">
-            🏆 Top 10% en JavaScript
-          </span>
-        </div> */}
 
-        <div className=" flex space-x-4">
-          <Button variant={"outline"} className="flex-1 px-4 ">
+      <div 
+        className="h-12 w-[1.2px]" 
+        style={{ background: 'linear-gradient(to bottom, transparent 0%, #9CA3AF 20%, #9CA3AF 80%, transparent 100%)' }} 
+      />
+      <div>
+        <div className="flex space-x-4">
+          <Button 
+            variant="outline" 
+            className="flex-1 px-4 gap-2"
+            onClick={handlePublicView}
+          >
+            <Link className="h-4 w-4" />
             Vista Pública
           </Button>
-          <Button className="flex-1 px-4 ">
+          <Button 
+            className="flex-1 px-4 gap-2"
+            onClick={() => setShowShareDialog(true)}
+          >
+            <Share className="h-4 w-4" />
             Compartir Perfil
           </Button>
         </div>
-
       </div>
+
+      <Dialog open={showShareDialog} onOpenChange={setShowShareDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Compartir Perfil</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-4">
+            <Alert className="flex items-center justify-between p-6">
+              <span className="text-sm break-all">{profileUrl}</span>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => copyToClipboard(profileUrl)}
+                className="ml-2"
+              >
+                {copied ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+              </Button>
+            </Alert>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
