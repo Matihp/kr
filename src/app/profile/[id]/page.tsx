@@ -21,8 +21,8 @@ import PublicProfileContactCard from "@/components/Profile/PublicProfileContactC
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { User } from "@/types/user";
 
-function PublicProfile({params}: Params) {
-  const {id} = params
+function PublicProfile({ params }: Params) {
+  const { id } = params;
   const [user, setUser] = useState<User>();
   const [showNav, setShowNav] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -198,90 +198,79 @@ function PublicProfile({params}: Params) {
               {user?.description}
             </p>
           </div>
-
           <div id="proyectos">
             <h2 className="ml-8 text-xl font-bold tracking-tight text-gray-900">
               Proyectos
             </h2>
           </div>
-
-          <div className="flex flex-col items-center m-8 bg-white border border-gray-200 rounded-lg shadow md:w-[60vw] md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-            <Image
-              unoptimized
-              className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg "
-              src={project}
-              alt=""
-            />
-            <div className="flex flex-col justify-between p-4 leading-normal w-full">
-              <div className="flex justify-between">
-                <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-                  Noteworthy technology acquisitions 2021
-                </h5>
-              </div>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
-              <div>
-                <ModalProject />
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col items-center m-8 bg-white border border-gray-200 rounded-lg shadow md:w-[60vw] md:flex-row  hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-            <Image
-              unoptimized
-              className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg "
-              src={certs}
-              alt=""
-            />
-            <div className="flex flex-col justify-between p-4 leading-normal w-full">
-              <div className="flex justify-between">
-                <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-                  Noteworthy technology acquisitions 2021
-                </h5>
-              </div>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
-              <div>
-                <ModalProject />
+          {user?.projects?.map((project) => (
+            <div
+              key={project.id}
+              className="flex flex-col items-center m-8 bg-white border border-gray-200 rounded-lg shadow w-[95%] md:w-[60vw] md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+            >
+              <Image
+                unoptimized
+                className="object-cover w-full rounded-t-lg h-full md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+                src={project.images[0]}
+                alt=""
+                width={192}
+                height={192}
+              />
+              <div className="flex flex-col justify-between p-4 leading-normal w-full">
+                <div className="flex justify-between">
+                  <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+                    {project.title}
+                  </h5>
+                </div>
+                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                  {project.description}
+                </p>
               </div>
             </div>
-          </div>
-
+          ))}
+          
           <div className="flex flex-col md:flex-row md:w-[60vw] gap-y-4 md:gap-x-4 m-8">
             <div
               id="habilidades"
-              className="block   p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+              className="block p-6 md:min-w-[29.4vw] bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
             >
               <div className="flex justify-between">
                 <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                   Habilidades
                 </h5>
               </div>
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
+              <div className="flex flex-wrap gap-2 mt-4">
+                {user?.skills?.map((skill, index) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-violet-100 text-sm font-medium rounded-full"
+                        >
+                          {skill.name}
+                        </span>
+                      ))
+                }
+              </div>
             </div>
             <div
               id="idiomas"
-              className="block  p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+              className="block p-6 md:min-w-[29.4vw] bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
             >
               <div className="flex justify-between">
                 <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                   Idiomas
                 </h5>
               </div>
-
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
+              <ul className="font-normal ">
+              {user?.languages?.map((lang, index) => (
+                      <li className="font-semibold mb-1" key={index}>
+                        {`${lang.language}: `}
+                        <span className="text-gray-500">{lang.level}</span>
+                      </li>
+                    ))
+              }
+              </ul>
             </div>
           </div>
-
           <div
             id="certificaciones"
             className="block md:w-[60vw] m-8 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
@@ -291,13 +280,26 @@ function PublicProfile({params}: Params) {
                 Certificaciones
               </h5>
             </div>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              Here are the biggest enterprise technology acquisitions of 2021 so
-              far, in reverse chronological order.
-            </p>
+            { user?.certifications?.map((cert) => (
+                    <div key={cert.id} className="mb-4">
+                      <h6 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        {cert.name}
+                      </h6>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Fecha: {cert.date}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        URL: <a href={cert.url}>{cert.url}</a>
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Descripción: {cert.description}
+                      </p>
+                    </div>
+                  ))
+                }
           </div>
         </div>
-        <PublicProfileContactCard/>
+        <PublicProfileContactCard />
       </div>
     </div>
   );
