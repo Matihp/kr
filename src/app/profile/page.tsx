@@ -302,7 +302,7 @@ function Profile() {
               </div>             
             </div>
             <div className="ml-0 hidden lg:block lg:ml-12">
-              <ProfileStatsWidget userId={user?.id}/>              
+              <ProfileStatsWidget userId={user?.id} levelProgress={user?.levelProgress}/>              
             </div>
 
           </div>

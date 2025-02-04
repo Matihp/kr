@@ -20,6 +20,7 @@ import Image from "next/image";
 import PublicProfileContactCard from "@/components/Profile/PublicProfileContactCard";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { User } from "@/types/user";
+import ProfileStatsWidget from "@/components/Profile/ProfileStatsWidget";
 
 function PublicProfile({ params }: Params) {
   const { id } = params;
@@ -123,6 +124,9 @@ function PublicProfile({ params }: Params) {
                 <p className="text-slate-400">Profesión</p>
               </div>
             </div>
+          </div>
+          <div className="ml-0 hidden lg:block lg:ml-12">
+              <ProfileStatsWidget levelProgress={user?.levelProgress}/>              
           </div>
         </div>
 

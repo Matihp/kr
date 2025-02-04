@@ -83,7 +83,7 @@ export class AuthService {
         const decodedToken = verifyToken(token) as { id: string };
         const user = await userRepository.findOne({
           where: { id: decodedToken.id },
-          relations: ['languages', 'skills', 'projects', 'certifications', 'role']
+          relations: ['languages', 'skills', 'projects', 'certifications', 'role','levelProgress']
         });
   
         if (!user) {
