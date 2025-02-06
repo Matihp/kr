@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { LevelProgress } from "@/types/user";
 
 interface ProfileStatsWidgetProps {
-  userId?: string | undefined;
+  userId?: string;
   levelProgress: LevelProgress | undefined;
 }
 
