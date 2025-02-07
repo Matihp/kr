@@ -39,6 +39,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 import ProfileStatsWidget from "@/components/Profile/ProfileStatsWidget";
 import PrivateProfileContactCard from "@/components/Profile/PrivateProfileContactCard";
+import ModalDetails, { EditProfileModalProps } from "@/components/Modal/ModalDetails";
 
 function Profile() {
   const { user, isAuthenticated, updateProfile } = useAuth();
@@ -52,6 +53,12 @@ function Profile() {
   const [isScrolling, setIsScrolling] = useState(false);
   const [activeSection, setActiveSection] = useState("sobre-mi");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userDetails, setUserDetails] = useState<any>({
+    firstName: '',
+    lastName: '',
+    location: '',
+    socialNetworks: []
+  });
   const [avatarSrc, setAvatarSrc] = useState("");
   const [description, setDescription] = useState<string>("");
   const [isDefaultDescription, setIsDefaultDescription] =useState<boolean>(true);
@@ -285,10 +292,7 @@ function Profile() {
             <div className="p-2 bg-gray-50 w-[70%] mx-auto md:mx-0 md:w-[30vw] rounded-md shadow-xl border-2 border-gray-300">
               <div className="flex justify-between">
                 <h2 className="text-xl font-semibold">{`${user?.firstName} ${user?.lastName} `}</h2>
-                <ModalDescription
-                  setDescription={setDescription}
-                  description={description}
-                />
+                <ModalDetails profile={userDetails} setProfile={setUserDetails} />
               </div>
               <div className="flex items-center gap-10 pt-1.5">
                 <div className="flex items-center">
