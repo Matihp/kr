@@ -1,5 +1,6 @@
 import { IsString, IsEmail, IsOptional } from 'class-validator';
 import { RoleType } from '../models/roleModel';
+import { AvailabilityType } from '../types/userTypes';
 
 export class CreateUserDto {
   @IsString({ message: 'El nombre debe ser un string' })
@@ -48,6 +49,8 @@ export interface UserDto {
   authProvider: any;
   role: RoleType;
   avatarSrc: string;
+  levelProgress: number;
+  availabilityType: AvailabilityType;
   languages: any[];
   skills: any[];
   projects: any[];
