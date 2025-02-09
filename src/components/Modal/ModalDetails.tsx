@@ -6,63 +6,104 @@ import { Button } from '@/components/ui/button';
 import { PencilIcon } from '../ui/icons';
 import { Dispatch, FormEvent, SetStateAction, useState, useEffect } from 'react';
 
-type SocialNetwork = {
-  platform: string;
-  url: string;
-};
-
 type Profile = {
   firstName: string;
   lastName: string;
   location: string;
-  socialNetworks: SocialNetwork[];
+  socialLinks: {
+    linkedin?: string;
+    instagram?: string;
+    twitter?: string;
+  };
 };
 
 export type EditProfileModalProps = {
   profile: Profile;
-  setProfile: Dispatch<SetStateAction<Profile>>;
+  setProfile: React.Dispatch<React.SetStateAction<Profile>>;
+};
+
+const defaultProfile: Profile = {
+  firstName: '',
+  lastName: '',
+  location: '',
+  socialLinks: {
+    linkedin: '',
+    instagram: '',
+    twitter: ''
+  }
 };
 
 function EditProfileModal({ profile, setProfile }: EditProfileModalProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState<Profile>(profile);
-  const [newSocialNetwork, setNewSocialNetwork] = useState<SocialNetwork>({
-    platform: '',
-    url: ''
+  const [formData, setFormData] = useState<Profile>({
+    ...defaultProfile,
+    ...profile,
+    socialLinks: {
+      ...defaultProfile.socialLinks,
+      ...profile.socialLinks
+    }
   });
+  const [locationSuggestions, setLocationSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      setFormData(profile);
+      setFormData({
+        ...defaultProfile,
+        ...profile,
+        socialLinks: {
+          ...defaultProfile.socialLinks,
+          ...profile.socialLinks
+        }
+      });
     }
   }, [isOpen, profile]);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const fetchLocationSuggestions = async (query: string) => {
+    if (query.length < 3) {
+      setLocationSuggestions([]);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1`
+      );
+      const data = await response.json();
+      
+      const suggestions = data
+        .filter((item: any) => item.address.city || item.address.town || item.address.village)
+        .map((item: any) => {
+          const city = item.address.city || item.address.town || item.address.village;
+          return `${city}, ${item.address.country}`;
+        })
+        .filter((value: string, index: number, self: string[]) => self.indexOf(value) === index)
+        .slice(0, 5);
+
+      setLocationSuggestions(suggestions);
+      setShowSuggestions(true);
+    } catch (error) {
+      console.error('Error fetching locations:', error);
+      setLocationSuggestions([]);
+    }
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setProfile(formData);
     setIsOpen(false);
   };
 
   const handleClose = () => {
-    setFormData(profile);
+    setFormData({
+      ...defaultProfile,
+      ...profile,
+      socialLinks: {
+        ...defaultProfile.socialLinks,
+        ...profile.socialLinks
+      }
+    });
     setIsOpen(false);
-  };
-
-  const addSocialNetwork = () => {
-    if (newSocialNetwork.platform && newSocialNetwork.url) {
-      setFormData(prev => ({
-        ...prev,
-        socialNetworks: [...prev.socialNetworks, newSocialNetwork]
-      }));
-      setNewSocialNetwork({ platform: '', url: '' });
-    }
-  };
-
-  const removeSocialNetwork = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      socialNetworks: prev.socialNetworks.filter((_, i) => i !== index)
-    }));
   };
 
   return (
@@ -71,9 +112,7 @@ function EditProfileModal({ profile, setProfile }: EditProfileModalProps) {
       setIsOpen(open);
     }}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <PencilIcon className="h-4 w-4" />
-        </Button>
+        <PencilIcon />
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
@@ -108,69 +147,77 @@ function EditProfileModal({ profile, setProfile }: EditProfileModalProps) {
               </div>
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 relative">
               <Label htmlFor="location">Ubicación</Label>
               <Input
                 id="location"
                 value={formData.location}
-                onChange={(e) => setFormData(prev => ({
-                  ...prev,
-                  location: e.target.value
-                }))}
+                onChange={(e) => {
+                  setFormData(prev => ({
+                    ...prev,
+                    location: e.target.value
+                  }));
+                  fetchLocationSuggestions(e.target.value);
+                }}
+                onFocus={() => setShowSuggestions(true)}
               />
+              {showSuggestions && locationSuggestions.length > 0 && (
+                <div className="absolute z-10 w-full bg-white border rounded-md shadow-lg mt-1">
+                  {locationSuggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setFormData(prev => ({
+                          ...prev,
+                          location: suggestion
+                        }));
+                        setShowSuggestions(false);
+                      }}
+                    >
+                      {suggestion}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
               <Label>Redes Sociales</Label>
-              {formData.socialNetworks.map((social, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    value={social.platform}
-                    disabled
-                    className="w-1/3"
-                  />
-                  <Input
-                    value={social.url}
-                    disabled
-                    className="w-2/3"
-                  />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => removeSocialNetwork(index)}
-                  >
-                    ×
-                  </Button>
-                </div>
-              ))}
-              
-              <div className="flex gap-2">
+              <div className="space-y-2">
                 <Input
-                  placeholder="Plataforma"
-                  value={newSocialNetwork.platform}
-                  onChange={(e) => setNewSocialNetwork(prev => ({
+                  placeholder="URL de LinkedIn"
+                  value={formData.socialLinks.linkedin}
+                  onChange={(e) => setFormData(prev => ({
                     ...prev,
-                    platform: e.target.value
+                    socialLinks: {
+                      ...prev.socialLinks,
+                      linkedin: e.target.value
+                    }
                   }))}
-                  className="w-1/3"
                 />
                 <Input
-                  placeholder="URL"
-                  value={newSocialNetwork.url}
-                  onChange={(e) => setNewSocialNetwork(prev => ({
+                  placeholder="URL de Instagram"
+                  value={formData.socialLinks.instagram}
+                  onChange={(e) => setFormData(prev => ({
                     ...prev,
-                    url: e.target.value
+                    socialLinks: {
+                      ...prev.socialLinks,
+                      instagram: e.target.value
+                    }
                   }))}
-                  className="w-2/3"
                 />
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={addSocialNetwork}
-                >
-                  +
-                </Button>
+                <Input
+                  placeholder="URL de Twitter"
+                  value={formData.socialLinks.twitter}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    socialLinks: {
+                      ...prev.socialLinks,
+                      twitter: e.target.value
+                    }
+                  }))}
+                />
               </div>
             </div>
           </div>
