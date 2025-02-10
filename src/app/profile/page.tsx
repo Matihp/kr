@@ -53,12 +53,7 @@ function Profile() {
   const [isScrolling, setIsScrolling] = useState(false);
   const [activeSection, setActiveSection] = useState("sobre-mi");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userDetails, setUserDetails] = useState<any>({
-    firstName: '',
-    lastName: '',
-    location: '',
-    socialNetworks: []
-  });
+  const [userDetails, setUserDetails] = useState<any>({});
   const [avatarSrc, setAvatarSrc] = useState("");
   const [description, setDescription] = useState<string>("");
   const [isDefaultDescription, setIsDefaultDescription] =useState<boolean>(true);
@@ -131,6 +126,11 @@ function Profile() {
             userDescription ===
               "Bienvenido a tu perfil. Edita esta sección para agregar una descripción personalizada."
           );
+          setUserDetails({
+            firstName: verifiedUser.firstName,
+            lastName: verifiedUser.lastName,
+            location: verifiedUser.location,
+            socialNetworks: verifiedUser.socialNetworks});
           setAvatarSrc(verifiedUser.avatarSrc || avatar.src);
           setLanguages(verifiedUser.languages || []);
           setSkills(
@@ -149,15 +149,16 @@ function Profile() {
     setAvatarSrc(editedImage.imageUrl);
   };
   const handleAddProject = useCallback((projectData: ProjectFormData) => {
+    const processedImages = projectData.images.map((image) =>
+      typeof image === "string" ? image : URL.createObjectURL(image)
+    );
     const newProject: Project = {
       id: crypto.randomUUID(),
       title: projectData.title,
       role: projectData.role,
       description: projectData.description,
       skills: projectData.skills,
-      images: projectData.images.map((image) =>
-        typeof image === "string" ? image : URL.createObjectURL(image)
-      ),
+      images: processedImages,
       website: projectData.website,
       repository: projectData.repository,
     };
@@ -182,6 +183,13 @@ function Profile() {
   };
 
   const handleDeleteProject = (projectId: string) => {
+    // Primero verificamos si el proyecto existe
+    const projectToDelete = projects.find(project => project.id === projectId);
+    if (!projectToDelete) {
+      console.error('Project not found');
+      return;
+    }
+    // Actualizamos el estado local
     setProjects((prevProjects) =>
       prevProjects.filter((project) => project.id !== projectId)
     );
@@ -193,6 +201,10 @@ function Profile() {
   const handleSaveProfile = async () => {
     if (user && user.id) {
       const profileData = {
+        firstName : userDetails.firstName,
+        lastName: userDetails.lastName,
+        location: userDetails.location,
+        socialNetworks: userDetails.socialNetworks,
         description,
         avatarSrc,
         languages,
@@ -297,11 +309,11 @@ function Profile() {
               <div className="flex items-center gap-10 pt-1.5">
                 <div className="flex items-center">
                   <Icon path={mdiMapMarker} size={1} />
-                  <p className="text-slate-400">Ubicación</p>
+                  <p className="text-slate-400">{user?.location}</p>
                 </div>
                 <div className="flex items-center">
                   <Icon path={mdiAccountSchool} size={1} />
-                  <p className="text-slate-400">Profesión</p>
+                  <p className="text-slate-400">Freelancer</p>
                 </div>
               </div>             
             </div>

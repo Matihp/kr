@@ -70,8 +70,7 @@ function PrivateProfileContactCard() {
         <div className="space-y-4">
           <div className="flex items-start gap-3">
           <Clock className="w-5 h-5 text-gray-500 mt-1" />
-            <div className="flex-1">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="flex-initial">
                 <div className="space-y-2">
                   <label className="text-sm text-gray-500">Tipo de Disponibilidad</label>
                   <Select
@@ -86,70 +85,7 @@ function PrivateProfileContactCard() {
                       <SelectItem value="part-time">Part-time</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm text-gray-500">Horario de Trabajo</label>
-                  <div className="flex items-center justify-between group">
-                    <span className="block py-2">{profile.workingHours}</span>
-                    <Dialog open={isTimeDialogOpen} onOpenChange={setIsTimeDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="opacity-0 group-hover:opacity-100"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Set Working Hours</DialogTitle>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Start Time</label>
-                            <Select
-                              value={tempStartHour}
-                              onValueChange={setTempStartHour}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select start time" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {timeOptions.map((time) => (
-                                  <SelectItem key={time} value={time}>
-                                    {time}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">End Time</label>
-                            <Select
-                              value={tempEndHour}
-                              onValueChange={setTempEndHour}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select end time" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {timeOptions.map((time) => (
-                                  <SelectItem key={time} value={time}>
-                                    {time}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <Button onClick={handleTimeUpdate}>Save</Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </div>
-              </div>
+                </div>               
             </div>
           </div>
 

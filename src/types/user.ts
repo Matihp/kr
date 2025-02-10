@@ -5,6 +5,8 @@ export interface User {
     id: string;
     firstName: string;
     lastName: string;
+    email: string;
+    location:string;
     description:string;
     avatarSrc: string;
     projects: Project[];

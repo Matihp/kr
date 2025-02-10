@@ -117,11 +117,11 @@ function PublicProfile({ params }: Params) {
             <div className="flex items-center gap-10 pt-1.5">
               <div className="flex items-center">
                 <Icon path={mdiMapMarker} size={1} />
-                <p className="text-slate-400">Ubicacion</p>
+                <p className="text-slate-400">{ user?.location}</p>
               </div>
               <div className="flex items-center">
                 <Icon path={mdiAccountSchool} size={1} />
-                <p className="text-slate-400">Profesión</p>
+                <p className="text-slate-400">Freelancer</p>
               </div>
             </div>
           </div>

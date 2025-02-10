@@ -1,3 +1,5 @@
+import { SocialNetwork } from "./userTypes";
+
 export type Language = {
     language: string;
     level: string;
@@ -8,6 +10,7 @@ export type Language = {
   };
   
   export type Project = {
+    id: string;
     title: string;
     role: string;
     description: string;
@@ -25,6 +28,10 @@ export type Language = {
   };
   
   export type ProfileData = {
+    firstName: string;
+    lastName: string;
+    location?: string;
+    socialNetworks?: SocialNetwork[];
     description?: string;
     avatarSrc?: string;
     languages: Language[];

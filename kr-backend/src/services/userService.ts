@@ -58,6 +58,7 @@ export class UserService {
         "email",
         "description",
         "avatarSrc",
+        "location",
       ],
       relations: [
         "levelProgress",
