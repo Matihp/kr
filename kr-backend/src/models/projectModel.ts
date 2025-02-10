@@ -34,8 +34,10 @@ export class Project {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @ManyToOne(() => User, user => user.projects, { eager: true })
-  user!: User;
+  @ManyToOne(() => User, (user) => user.projects, {
+    onDelete: 'CASCADE',
+  })
+  user!: User; 
 
   @ManyToMany(() => Skill)
   @JoinTable()

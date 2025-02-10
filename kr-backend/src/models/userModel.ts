@@ -85,7 +85,7 @@ export class User {
   @OneToMany(() => Language, (language) => language.user)
   languages!: Language[];
 
-  @OneToMany(() => Project, (project) => project.user)
+  @OneToMany(() => Project, (project) => project.user,{ cascade: true })
   projects!: Project[];
 
   @OneToMany(() => Certification, (certification) => certification.user)
