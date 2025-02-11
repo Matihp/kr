@@ -19,10 +19,22 @@ export async function POST(req: NextRequest) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    // Subir la imagen a Cloudinary
+    // Upload the image to Cloudinary with transformation parameters
     const uploadPromise = new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { folder: 'uploads' }, // Opcional: carpeta en Cloudinary
+        {
+          folder: 'uploads',
+          transformation: [
+            {
+              width: 800, // Set your desired width
+              height: 600, // Set your desired height
+              crop: 'fill', // This ensures the image fills the specified dimensions
+              quality: 'auto:good', // Optimize quality
+              format: 'webp' // Use modern format for better compression
+            }
+          ],
+        },
+        
         (error, result) => {
           if (error) reject(error);
           resolve(result);
@@ -46,11 +58,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
-
-
-
-
-
-
-

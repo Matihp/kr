@@ -39,7 +39,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 import ProfileStatsWidget from "@/components/Profile/ProfileStatsWidget";
 import PrivateProfileContactCard from "@/components/Profile/PrivateProfileContactCard";
-import ModalDetails, { EditProfileModalProps } from "@/components/Modal/ModalDetails";
+import ModalDetails from "@/components/Modal/ModalDetails";
 
 function Profile() {
   const { user, isAuthenticated, updateProfile } = useAuth();
@@ -129,7 +129,7 @@ function Profile() {
           setUserDetails({
             firstName: verifiedUser.firstName,
             lastName: verifiedUser.lastName,
-            location: verifiedUser.location,
+            location: verifiedUser.location || "Ubicación",
             socialNetworks: verifiedUser.socialNetworks});
           setAvatarSrc(verifiedUser.avatarSrc || avatar.src);
           setLanguages(verifiedUser.languages || []);
@@ -284,18 +284,20 @@ function Profile() {
                 <Skeleton className="w-20 h-20 rounded-full bg-gray-400" />
               ) : (
                 <>
-                  <Image
-                    width={80}
-                    height={30}
-                    alt=""
-                    src={avatarSrc}
-                    className=" rounded-full "
-                  />
-                  <div className="absolute z-50 top-[70px] left-52 md:top-40 md:left-16 lg:left-24">
-                    <ModalProfileImage
-                      onSave={handleSaveImage}
-                      currentImageUrl={avatarSrc}
+                  <div className="relative w-20 h-20"> 
+                    <Image
+                      width={80}
+                      height={80} 
+                      alt="Profile avatar"
+                      src={avatarSrc}
+                      className="rounded-full object-cover w-full h-full" 
                     />
+                    <div className="absolute z-50 top-[60px] left-14">
+                      <ModalProfileImage
+                        onSave={handleSaveImage}
+                        currentImageUrl={avatarSrc}
+                      />
+                    </div>
                   </div>
                 </>
               )}
@@ -309,7 +311,7 @@ function Profile() {
               <div className="flex items-center gap-10 pt-1.5">
                 <div className="flex items-center">
                   <Icon path={mdiMapMarker} size={1} />
-                  <p className="text-slate-400">{user?.location}</p>
+                  <p className="text-slate-400">{userDetails?.location}</p>
                 </div>
                 <div className="flex items-center">
                   <Icon path={mdiAccountSchool} size={1} />

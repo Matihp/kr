@@ -14,7 +14,7 @@ import { Textarea } from "../ui/textarea";
 import Dropzone from "../ui/file-input";
 import TechTagsInput from "../TagsInput/TechTagsInput";
 import { Alert, AlertDescription } from "../ui/alert";
-
+import { Loader2 } from "lucide-react";
 
 interface ProjectFormData {
   id?: string;
@@ -44,6 +44,8 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
     website: "",
     repository: "",
   });
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<Record<string, boolean>>({});
   const [tagError, setTagError] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
 
@@ -72,8 +74,8 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await fetch('/api/upload', {
-      method: 'POST',
+    const response = await fetch("/api/upload", {
+      method: "POST",
       body: formData,
     });
 
@@ -86,8 +88,24 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
   };
 
   const handleImageUpload = useCallback(async (files: File[]) => {
+    setIsUploading(true);
+    const newUploadProgress = { ...uploadProgress };
+    
     try {
-      const uploadedImages = await Promise.all(files.map(uploadToCloudinary));
+      const uploadPromises = files.map(async (file) => {
+        const fileId = URL.createObjectURL(file);
+        newUploadProgress[fileId] = false;
+        setUploadProgress(newUploadProgress);
+        
+        const url = await uploadToCloudinary(file);
+        
+        newUploadProgress[fileId] = true;
+        setUploadProgress(newUploadProgress);
+        return url;
+      });
+
+      const uploadedImages = await Promise.all(uploadPromises);
+      
       setFormData((prev) => ({
         ...prev,
         images: [...prev.images, ...uploadedImages],
@@ -95,8 +113,12 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
       setFileError(null);
     } catch (error) {
       setFileError("Error al subir las imágenes. Por favor, inténtalo nuevamente.");
+    } finally {
+      setIsUploading(false);
+      setUploadProgress({});
     }
-  }, []);
+  }, [uploadProgress]);
+
 
   const handleRemoveImage = useCallback((index: number) => {
     setFormData((prev) => ({
@@ -140,7 +162,9 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
       <DialogContent className="w-full max-w-none max-h-[95vh] overflow-y-auto">
         <form onSubmit={handleSubmit} className="px-4">
           <DialogHeader>
-            <DialogTitle>{projectToEdit ? "Edit Project" : "Agregar un nuevo proyecto"}</DialogTitle>
+            <DialogTitle>
+              {projectToEdit ? "Edit Project" : "Agregar un nuevo proyecto"}
+            </DialogTitle>
             <DialogDescription>
               All fields are required unless otherwise indicated.
             </DialogDescription>
@@ -148,7 +172,10 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
           <div className="space-y-5 mt-4">
             <div className="md:grid md:grid-cols-2 md:gap-5">
               <div className="space-y-2">
-                <label htmlFor="project-title" className="block text-sm font-medium">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
                   Titulo del proyecto
                 </label>
                 <Input
@@ -162,7 +189,10 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
                 />
               </div>
               <div className="space-y-2 pt-5 md:pt-0">
-                <label htmlFor="project-title" className="block text-sm font-medium">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
                   Rol que desempeñaste en el proyecto
                 </label>
                 <Input
@@ -177,7 +207,10 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
               </div>
             </div>
             <div className="space-y-2">
-              <label htmlFor="project-title" className="block text-sm font-medium">
+              <label
+                htmlFor="project-title"
+                className="block text-sm font-medium"
+              >
                 Descripción del proyecto
               </label>
               <Textarea
@@ -190,10 +223,16 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="project-title" className="block text-sm font-medium">
+              <label
+                htmlFor="project-title"
+                className="block text-sm font-medium"
+              >
                 Tecnologías del proyecto
               </label>
-              <TechTagsInput value={formData.skills} onChange={handleSkillsChange} />
+              <TechTagsInput
+                value={formData.skills}
+                onChange={handleSkillsChange}
+              />
               {tagError && (
                 <Alert variant="destructive">
                   <AlertDescription>{tagError}</AlertDescription>
@@ -201,39 +240,51 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
               )}
             </div>
             <div className="space-y-2">
-              <label htmlFor="project-title" className="block text-sm font-medium">
-                Archivos del proyecto
-              </label>
-              <Dropzone onDrop={handleImageUpload} />
-            </div>
-            {formData.images.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {formData.images.map((image, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={image}
-                      alt={`Project image ${index + 1}`}
-                      className="w-20 h-20 object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(index)}
-                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
-                    >
-                      x
-                    </button>
-                  </div>
-                ))}
+            <label htmlFor="project-title" className="block text-sm font-medium">
+              Archivos del proyecto
+            </label>
+            <Dropzone onDrop={handleImageUpload} />
+            
+            {isUploading && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Subiendo imágenes...</span>
               </div>
             )}
-            {fileError && (
-              <Alert variant="destructive">
-                <AlertDescription>{fileError}</AlertDescription>
-              </Alert>
-            )}
+          </div>
+
+          {formData.images.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {formData.images.map((image, index) => (
+                <div key={index} className="relative w-[200px] h-[150px]">
+                  <img
+                    src={image}
+                    alt={`Project image ${index + 1}`}
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(index)}
+                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {fileError && (
+            <Alert variant="destructive">
+              <AlertDescription>{fileError}</AlertDescription>
+            </Alert>
+          )}
             <div className="md:grid md:grid-cols-2 md:gap-5">
               <div className="space-y-2">
-                <label htmlFor="project-title" className="block text-sm font-medium">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
                   Sitio Web del proyecto
                 </label>
                 <Input
@@ -245,7 +296,10 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
                 />
               </div>
               <div className="space-y-2 pt-5 md:pt-0">
-                <label htmlFor="project-title" className="block text-sm font-medium">
+                <label
+                  htmlFor="project-title"
+                  className="block text-sm font-medium"
+                >
                   Repositorio del proyecto
                 </label>
                 <Input
@@ -259,7 +313,11 @@ function ModalInfo({ isOpen, onOpenChange, onAddProject, projectToEdit }: ModalI
             </div>
           </div>
           <DialogFooter className="mxmd:grid mxmd:grid-cols-2 mxmd:gap-4 mt-8">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
               Cancelar
             </Button>
             <Button type="submit" variant="default">
