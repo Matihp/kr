@@ -59,8 +59,13 @@ export class ProfileService {
       }
 
       // Actualizar campos básicos
+      if (profileData.firstName) user.firstName = profileData.firstName;
+      if (profileData.lastName) user.lastName = profileData.lastName;
       if (profileData.description) user.description = profileData.description;
       if (profileData.avatarSrc) user.avatarSrc = profileData.avatarSrc;
+      if (profileData.location) user.location = profileData.location;
+      if (profileData.socialNetworks)
+        user.socialNetworks = profileData.socialNetworks;
 
       // Actualizar idiomas
       if (profileData.languages && Array.isArray(profileData.languages)) {
