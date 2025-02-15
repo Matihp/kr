@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/useAuth';
 import { useRouter } from 'next/navigation';
+import { useOnboarding } from '@/lib/store/useOnboarding';
 
 const useProtectedRoute = () => {
   const { isAuthenticated, checkAuth } = useAuth();
+  const { isCompleted} = useOnboarding();
   const router = useRouter();
   const [verified, setVerified] = useState(false);
 
@@ -16,8 +18,9 @@ const useProtectedRoute = () => {
         if (isMounted && !isAuthenticated) {
           router.push('/login');
           console.log('no autenticado');
-        } else {
-          console.log('autenticado');
+        } else if( isMounted && !isCompleted) {
+          router.push('/onboarding');
+          console.log('no completado');
         }
       } catch (error) {
         console.error('Error verifying authentication:', error);

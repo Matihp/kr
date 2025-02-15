@@ -29,6 +29,13 @@ export const register = async (
 export const login = async (email: string, password: string) => {
   try {
     const response = await api.post("/auth/login", { email, password });
+
+    const onboardingStatus = await api.get("/onboarding/status");
+    
+    if (!onboardingStatus.data.isCompleted) {
+      window.location.href = '/onboarding';
+      return;
+    }
     return response.data;
   } catch (error: any) {
     console.error("Error during login:", error);
