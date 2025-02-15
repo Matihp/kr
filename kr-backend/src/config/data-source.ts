@@ -9,6 +9,7 @@ import { Role } from "../models/roleModel";
 import { News } from "../models/newsModel";
 import { Notification } from "../models/notificationModel";
 import { LevelProgress } from "../models/levelProgressModel";
+import { Onboarding } from "../models/onboardingModel";
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [User,Language,Skill,Project,Certification,Role,News,Notification,LevelProgress],
+  entities: [User,Language,Skill,Project,Certification,Role,News,Notification,LevelProgress,Onboarding],
   synchronize: true,
   logging: false,
 });
