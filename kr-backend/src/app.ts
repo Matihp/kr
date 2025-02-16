@@ -15,6 +15,7 @@ import userRoutes from './routes/userRoutes';
 import skillRoutes from './routes/skillRoutes';
 import newsRoutes from './routes/newsRoutes';
 import notificationRoutes from './routes/notificationRoutes';
+import onboardingRoutes from './routes/onboardingRoutes';
 
 dotenv.config();
 
@@ -58,6 +59,7 @@ app.use('/skills', skillRoutes);
 app.use('/admin', adminRoutes);
 app.use('/news',newsRoutes)
 app.use('/notifications', notificationRoutes);
+app.use('/onboarding', onboardingRoutes);
 
 AppDataSource.initialize().then(() => {
   console.log('Database connected');

@@ -1,5 +1,5 @@
+"use client"
 import { useOnboarding } from '@/lib/store/useOnboarding';
-import { useAuth } from '@/lib/useAuth';
 import { UserType } from '@/types/onboarding';
 import { FreelancerProfileForm } from './FreelancerProfileForm';
 import { RecruiterProfileForm } from './RecruiterProfileForm';
@@ -7,8 +7,7 @@ import { SkillsAndExperienceForm } from './SkillsAndExperiencieForm';
 import { Progress } from '../ui/progress';
 
 export const OnboardingFlow = () => {
-  const { currentStep, userType, setUserType } = useOnboarding();
-  const { user } = useAuth();
+  const { currentStep, userType, setUserType , setStep } = useOnboarding();
 
   const renderStep = () => {
     switch (currentStep) {
@@ -19,13 +18,13 @@ export const OnboardingFlow = () => {
             <p>¿Te unes a nosotros como freelancer o reclutador?</p>
             <div className="space-x-4">
               <button
-                onClick={() => setUserType(UserType.FREELANCER)}
+                onClick={() =>{ setUserType(UserType.FREELANCER); setStep(2)}}
                 className="px-4 py-2 bg-blue-500 text-white rounded"
               >
                 Soy un Freelancer
               </button>
               <button
-                onClick={() => setUserType(UserType.RECRUITER)}
+                onClick={() => {setUserType(UserType.RECRUITER); setStep(2)}}
                 className="px-4 py-2 bg-green-500 text-white rounded"
               >
                 Soy un Reclutador
@@ -35,7 +34,7 @@ export const OnboardingFlow = () => {
         );
       
       case 2:
-        return userType === 'freelancer' ? (
+        return userType === UserType.FREELANCER ? (
           <FreelancerProfileForm />
         ) : (
           <RecruiterProfileForm />
