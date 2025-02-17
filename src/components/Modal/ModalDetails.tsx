@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PencilIcon } from '../ui/icons';
-import { Dispatch, FormEvent, SetStateAction, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 type Profile = {
   firstName: string;
@@ -151,7 +151,7 @@ function EditProfileModal({ profile, setProfile }: EditProfileModalProps) {
               <Label htmlFor="location">Ubicación</Label>
               <Input
                 id="location"
-                value={formData.location}
+                value={formData.location !== 'Ubicación' ? formData.location : ''}
                 onChange={(e) => {
                   setFormData(prev => ({
                     ...prev,
