@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ProposalController } from '../controllers/proposalController';
 import { validate } from '../middleware/validationMiddleware';
-import { isFreelancer, isRecruiter } from '../middleware/roleMiddleware';
+import { isFreelancer, isRecruiter } from '../middleware/userTypeMiddleware';
 import { createProposalSchema, updateProposalStatusSchema } from '../validators/proposalValidators';
 
 const router = Router();
