@@ -16,6 +16,8 @@ import skillRoutes from './routes/skillRoutes';
 import newsRoutes from './routes/newsRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import onboardingRoutes from './routes/onboardingRoutes';
+import gigRoutes from './routes/gigRoutes';
+import proposalRoutes from './routes/proposalRoutes';
 
 dotenv.config();
 
@@ -37,11 +39,9 @@ app.use(passport.initialize());
 // Middleware para verificar el token en cada solicitud
 app.use((req, res, next) => {
   const token = req.cookies.jwt;
-
   if (!token) {
     return next(); // Si no hay token, continúa con la siguiente ruta
   }
-
   try {
     const decodedToken = verifyToken(token);
     req.userId = decodedToken.id;
@@ -60,6 +60,8 @@ app.use('/admin', adminRoutes);
 app.use('/news',newsRoutes)
 app.use('/notifications', notificationRoutes);
 app.use('/onboarding', onboardingRoutes);
+app.use('/gig', gigRoutes);
+app.use('/proposals', proposalRoutes);
 
 AppDataSource.initialize().then(() => {
   console.log('Database connected');
