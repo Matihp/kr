@@ -60,7 +60,7 @@ app.use('/admin', adminRoutes);
 app.use('/news',newsRoutes)
 app.use('/notifications', notificationRoutes);
 app.use('/onboarding', onboardingRoutes);
-app.use('/gig', gigRoutes);
+app.use('/gigs', gigRoutes);
 app.use('/proposals', proposalRoutes);
 
 AppDataSource.initialize().then(() => {
