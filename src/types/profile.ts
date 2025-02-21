@@ -1,10 +1,22 @@
-export type LanguageLevel = "beginner" | "intermediate" | "advanced" | string;
+import { SocialNetwork } from "./user";
 
+  export type ProfileData = {
+    firstName: string;
+    lastName: string;
+    location?: string;
+    socialNetworks?: SocialNetwork[];
+    description?: string;
+    avatarSrc?: string;
+    languages: Language[];
+    skills: string[];
+    projects: Project[];
+    certifications: Certification[];
+  };
+export type LanguageLevel = "beginner" | "intermediate" | "advanced" | string;
 export type Language = {
   language: string;
   level: LanguageLevel;
 };
-
 export type Certification = {
   id: string;
   name: string;
@@ -12,7 +24,6 @@ export type Certification = {
   url: string;
   description: string;
 };
-
 export interface Project {
   id: string;
   title: string;
@@ -23,7 +34,6 @@ export interface Project {
   website: string;
   repository: string;
 }
-
 export interface ProjectFormData {
   id?: string;
   title: string;

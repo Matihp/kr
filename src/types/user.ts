@@ -14,6 +14,8 @@ export interface User {
     languages: Language[];
     certifications: Certification[];
     levelProgress: LevelProgress;
+    socialNetworks: SocialNetwork[];
+    userType: string;
   }
   export interface UserData {
     users: User[];
@@ -30,4 +32,8 @@ export interface Skill {
     id: string;
     level: number;
     experiencePoints: number;
+  }
+  export interface SocialNetwork {
+    platform: string;
+    url: string;
   }

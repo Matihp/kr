@@ -14,6 +14,9 @@ import {
 } from "../types/userTypes";
 import { Notification } from "./notificationModel";
 import { LevelProgress } from "./levelProgressModel";
+import { Gig } from "./gigModel";
+import { Proposal } from "./proposalModel";
+import { ProposalFeedback } from "./proposalFeedbackModel";
 
 @Entity("users")
 export class User {
@@ -96,4 +99,13 @@ export class User {
 
   @OneToOne(() => LevelProgress, (levelProgress) => levelProgress.user)
   levelProgress!: LevelProgress;
+
+  @OneToMany(() => Gig, gig => gig.recruiter)
+  recruitedGigs!: Gig[];
+
+  @OneToMany(() => Proposal, proposal => proposal.freelancer)
+  proposals!: Proposal[];
+
+  @OneToMany(() => ProposalFeedback, feedback => feedback.user)
+  givenFeedback!: ProposalFeedback[];
 }

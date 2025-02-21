@@ -50,12 +50,20 @@ export function Header() {
                     Freelancers
                   </Link>
                   {isAuthenticated ? (
+                    <>
                     <Link
                       className={stylesLink}
                       href="/projects"
                     >
                       Proyectos
                     </Link>
+                    <Link
+                      className={stylesLink}
+                      href="/gigs"
+                    >
+                      Trabajos
+                    </Link>
+                    </>
                   ) : (
                     <>
                       <Link

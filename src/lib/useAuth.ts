@@ -7,9 +7,9 @@ import {
   githubLogin as authGithubLogin,
   updateProfile as authUpdateProfile 
 } from './auth';
-import { User } from '../../kr-backend/src/models/userModel';
-import { ProfileData } from '../../kr-backend/src/types/profileTypes';
 import { persist } from 'zustand/middleware';
+import { User } from '@/types/user';
+import { ProfileData } from '@/types/profile';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -36,7 +36,7 @@ export const useAuth = create<AuthState>()(
       login: async (email, password) => {
         try {
           set({ isLoading: true });
-          await authLogin(email, password);
+          await authLogin(email, password );
           const { isAuthenticated, user } = await verifyToken();
           set({ isAuthenticated, user, isLoading: false });
           return true;

@@ -2,9 +2,9 @@ import { Router } from "express";
 import { validate } from "../middleware/validationMiddleware";
 import { GigController } from "../controllers/gigController";
 import { isRecruiter } from "../middleware/userTypeMiddleware";
-import {
-  createGigSchema,
-  updateGigStageSchema,
+import { 
+  createGigSchema, 
+  updateGigStageSchema 
 } from "../validators/gigValidators";
 
 const router = Router();
