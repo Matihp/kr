@@ -1,15 +1,6 @@
-export class CreateProposalDto {
-    gigId!: string;
-    price!: number;
-    description!: string;
-    videoUrl?: string;
-    priceOptions?: {
-      price: number;
-      scope: string;
-    }[];
-  }
-  
-  export class UpdateProposalStatusDto {
-    status!: string;
-    feedback?: string;
-  }
+import { z } from 'zod';
+import { createProposalSchema } from '../validators/proposalValidators';
+import { updateProposalStatusSchema } from '../validators/proposalValidators';
+
+export type CreateProposalDto = z.infer<typeof createProposalSchema>;
+export type UpdateProposalStatusDto = z.infer<typeof updateProposalStatusSchema>;

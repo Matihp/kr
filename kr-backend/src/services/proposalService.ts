@@ -1,11 +1,15 @@
+import { Not } from 'typeorm';
 import { AppDataSource } from '../config/data-source';
 import { CreateProposalDto, UpdateProposalStatusDto } from '../dtos/proposalDto';
 import { ProposalFeedback } from '../models/proposalFeedbackModel';
 import { Proposal } from '../models/proposalModel';
 import { ProposalStatus } from '../types/proposalTypes';
+import { NotificationService } from './notificationService';
+import { NotificationType } from '../types/notificationTypes';
 
 export class ProposalService {
   private proposalRepository = AppDataSource.getRepository(Proposal);
+  private notificationService = new NotificationService();
 
   async createProposal(freelancerId: string, createProposalDto: CreateProposalDto): Promise<Proposal> {
     // Verificar que el gig existe
@@ -41,7 +45,7 @@ export class ProposalService {
   ): Promise<Proposal> {
     const proposal = await this.proposalRepository.findOne({
       where: { id: proposalId },
-      relations: ['freelancer', 'gig'] // Cargar las relaciones
+      relations: ['freelancer', 'gig', 'gig.recruiter']
     });
 
     if (!proposal) {
@@ -49,37 +53,54 @@ export class ProposalService {
     }
 
     proposal.status = updateStatusDto.status as ProposalStatus;
-    
-    // Si hay feedback, añadirlo
-    if (updateStatusDto.feedback) {
-      const feedback = new ProposalFeedback();
-      feedback.proposal = proposal;
-      feedback.content = updateStatusDto.feedback;
-      // Guardar el feedback
-      await AppDataSource.getRepository('ProposalFeedback').save(feedback);
+
+    // Si la propuesta es aceptada
+    if (updateStatusDto.status === ProposalStatus.ACCEPTED) {
+      // Rechazar automáticamente otras propuestas
+      await this.rejectOtherProposals(proposal.gig.id, proposalId);
+      
+      // Notificar al freelancer aceptado
+      await this.notificationService.create({
+        userId: proposal.freelancer.id,
+        message: `¡Felicitaciones! Tu propuesta para "${proposal.gig.title}" ha sido aceptada.`,
+        type: NotificationType.SUCCESS,
+        isRead: false
+      });
+
+      // Si hay feedback, añadirlo (solo para propuestas aceptadas)
+      if (updateStatusDto.feedback) {
+        const feedback = new ProposalFeedback();
+        feedback.proposal = proposal;
+        feedback.user = proposal.gig.recruiter;
+        feedback.content = updateStatusDto.feedback;
+        await AppDataSource.getRepository(ProposalFeedback).save(feedback);
+      }
     }
 
     return this.proposalRepository.save(proposal);
   }
 
-  async getProposalsByGig(gigId: string): Promise<Proposal[]> {
-    return this.proposalRepository.find({
-      where: { gig: { id: gigId } },
-      relations: ['freelancer', 'feedback', 'gig'],
-      order: {
-        createdAt: 'DESC'
-      }
+  private async rejectOtherProposals(gigId: string, acceptedProposalId: string): Promise<void> {
+    const otherProposals = await this.proposalRepository.find({
+      where: {
+        gig: { id: gigId },
+        id: Not(acceptedProposalId),
+        status: Not(ProposalStatus.REJECTED)
+      },
+      relations: ['freelancer', 'gig']
     });
-  }
 
-  // Método adicional útil
-  async getFreelancerProposals(freelancerId: string): Promise<Proposal[]> {
-    return this.proposalRepository.find({
-      where: { freelancer: { id: freelancerId } },
-      relations: ['gig', 'feedback'],
-      order: {
-        createdAt: 'DESC'
-      }
-    });
+    for (const proposal of otherProposals) {
+      proposal.status = ProposalStatus.REJECTED;
+      await this.proposalRepository.save(proposal);
+
+      // Notificar a los freelancers rechazados
+      await this.notificationService.create({
+        userId: proposal.freelancer.id,
+        message: `Tu propuesta para "${proposal.gig.title}" no ha sido seleccionada. ¡No te desanimes, hay más oportunidades!`,
+        type: NotificationType.INFO,
+        isRead: false
+      });
+    }
   }
 }
