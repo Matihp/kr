@@ -18,6 +18,7 @@ import notificationRoutes from './routes/notificationRoutes';
 import onboardingRoutes from './routes/onboardingRoutes';
 import gigRoutes from './routes/gigRoutes';
 import proposalRoutes from './routes/proposalRoutes';
+import { levelProgressRoutes } from './routes/levelProgressRoutes';
 
 dotenv.config();
 
@@ -59,6 +60,7 @@ app.use('/skills', skillRoutes);
 app.use('/admin', adminRoutes);
 app.use('/news',newsRoutes)
 app.use('/notifications', notificationRoutes);
+app.use('/level-progress', levelProgressRoutes);
 app.use('/onboarding', onboardingRoutes);
 app.use('/gigs', gigRoutes);
 app.use('/proposals', proposalRoutes);
