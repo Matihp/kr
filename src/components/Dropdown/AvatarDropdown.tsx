@@ -11,9 +11,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import { User } from "../../../kr-backend/src/types/userTypes";
 import avatar from "@/ui/avatar.jpg";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { LevelProgress, fetchLevelProgress } from "@/api/levelProgressApi";
+import { ProfileCompletionIndicator } from "../Profile/ProfileCompletionIndicator";
+import { User } from "@/types/user";
 
 interface AvatarDropdownProps {
   user: User | null;
@@ -22,6 +25,25 @@ interface AvatarDropdownProps {
 
 export function AvatarDropdown({ user, logout }: AvatarDropdownProps) {
   const router = useRouter();
+  const [levelProgress, setLevelProgress] = useState<LevelProgress | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Solo hacer fetch si tenemos un usuario
+    if (user && user.id) {
+      setLoading(true);
+      fetchLevelProgress(user.id)
+        .then(data => {
+          setLevelProgress(data);
+        })
+        .catch(err => {
+          console.error("Error obteniendo levelProgress:", err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [user]);
 
   if (!user) {
     return null; // O maneja el caso donde user es null o undefined
@@ -45,6 +67,11 @@ export function AvatarDropdown({ user, logout }: AvatarDropdownProps) {
               src={user.avatarSrc ? user.avatarSrc : avatar.src}
               className="rounded-full object-cover w-full h-full border border-neutral-200"
             />
+            {!loading && levelProgress && (
+              <div className="absolute -bottom-1 -right-1 bg-blue-500 text-white text-xs font-medium rounded-full w-5 h-5 flex items-center justify-center">
+                {levelProgress.level}
+              </div>
+            )}
           </div>
           <div className="flex flex-col items-start flex-shrink-0 ml-2 leading-none translate-y-px">
             <span>{`${user.firstName} ${user.lastName}`}</span>
@@ -69,8 +96,17 @@ export function AvatarDropdown({ user, logout }: AvatarDropdownProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="absolute top-0 z-50 w-56 -translate-x-1/2 left-1/2">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
+        
+        {!loading && levelProgress && (
+          <>
+            <div className="px-2 py-2">
+              <ProfileCompletionIndicator profileCompletion={levelProgress.profileCompletion} />
+            </div>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        
         <DropdownMenuGroup>
           <DropdownMenuItem
             onClick={() => {
