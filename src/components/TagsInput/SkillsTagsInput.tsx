@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Select from 'react-select';
 import { WithContext as ReactTags, Tag } from 'react-tag-input';
 import './TagsInput.css';
-import { fetchSkills } from '@/lib/api';
+import { fetchSkills } from '@/api/api';
 
 interface TechTagsInputProps {
   value: string[];

@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
-import { api } from '@/lib/api'
+import { api } from '@/api/api'
 
 export default function CreateGigPage() {
   const router = useRouter()
