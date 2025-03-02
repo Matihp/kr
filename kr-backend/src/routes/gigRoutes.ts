@@ -10,6 +10,7 @@ import {
 const router = Router();
 const gigController = new GigController();
 
+// Existing routes
 router.post(
   "/",
   isRecruiter,
@@ -18,6 +19,31 @@ router.post(
 );
 
 router.get("/", gigController.getGigs.bind(gigController));
+
+// New routes
+router.get(
+  "/my-gigs",
+  isRecruiter,
+  gigController.getRecruiterGigs.bind(gigController)
+);
+
+router.get(
+  "/:id",
+  gigController.getGigById.bind(gigController)
+);
+
+router.put(
+  "/:id",
+  isRecruiter,
+  validate(createGigSchema),
+  gigController.updateGig.bind(gigController)
+);
+
+router.delete(
+  "/:id",
+  isRecruiter,
+  gigController.deleteGig.bind(gigController)
+);
 
 router.patch(
   "/:gigId/stages/:stageId",

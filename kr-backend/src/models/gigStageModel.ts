@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 import { Gig } from "./gigModel";
 @Entity("gig_stages")
 export class GigStage {
@@ -7,6 +7,9 @@ export class GigStage {
 
   @ManyToOne(() => Gig)
   gig!: Gig;
+
+  @OneToMany(() => Gig, gig => gig.currentStage)
+gigsAtThisStage: Gig[];
 
   @Column("varchar")
   name!: string;

@@ -43,6 +43,9 @@ export class Gig {
   @OneToMany(() => GigStage, stage => stage.gig)
   stages!: GigStage[];
 
+  @ManyToOne(() => GigStage, stage => stage.gigsAtThisStage, { nullable: true })
+  currentStage: GigStage;
+
   @OneToMany(() => GigReward, reward => reward.gig)
   rewards!: GigReward[];
 
