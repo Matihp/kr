@@ -138,7 +138,7 @@ export default function CreateGigPage() {
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
-          Create Gig
+          Crear trabajo
         </button>
       </form>
     </div>

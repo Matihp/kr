@@ -1,24 +1,28 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useOnboarding } from '@/lib/store/useOnboarding'
 import { useAuth } from '@/lib/useAuth'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 interface Gig {
-  _id: string
+  id: string
   title: string
   description: string
   budgetMin: number
   budgetMax: number
   status: string
   createdBy: string
+  // Añadir más campos según tu modelo
 }
 
 export default function GigsPage() {
   const [gigs, setGigs] = useState<Gig[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const { user }= useAuth()
+  const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({})
+  const { user } = useAuth()
 
   useEffect(() => {
     const fetchGigs = async () => {
@@ -36,38 +40,96 @@ export default function GigsPage() {
     fetchGigs()
   }, [])
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
+  const toggleDescription = (gigId: string) => {
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [gigId]: !prev[gigId]
+    }))
+  }
+
+  const truncateDescription = (description: string, expanded: boolean) => {
+    if (expanded || description.length <= 100) return description
+    return `${description.substring(0, 100)}...`
+  }
+
+  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>
+  if (error) return <div className="flex justify-center items-center h-screen text-red-500">Error: {error}</div>
 
   return (
-    <div className="pl-10 py-24">
-      <h1 className="text-2xl font-bold mb-6">Trabajos disponibles</h1>
-      {
-        user?.userType === 'recruiter' && (
-          <Link 
-            href="/gigs/create" 
-            className="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block"
-          >
-            Create New Gig
-          </Link>
-        )
-      }
-      <div className="grid w-96 gap-4 mt-4">
-        {gigs.map((gig , index) => (
-          <div key={index} className="border p-4 rounded">
-            <h2 className="text-xl font-semibold">{gig.title}</h2>
-            <p className="text-gray-600">{gig.description}</p>
-            <p className="text-green-600 font-bold">Budget: ${gig.budgetMin}</p>
-            <p className="text-green-600 font-bold">Budget: ${gig.budgetMax}</p>
-            <Link 
-              href={`/gigs/${index}`}
-              className="text-blue-500 hover:underline mt-2 inline-block"
-            >
-              View Details
+    <div className="container mx-auto mt-28 pb-20 px-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Trabajos disponibles</h1>
+        
+        <div className="flex gap-4">
+          {user?.userType === 'recruiter' && (
+            <>
+              <Link href="/gigs/create">
+                <Button variant="default">Crear nuevo Gig</Button>
+              </Link>
+              <Link href="/gigs/my-gigs">
+                <Button variant="outline">Mis Gigs</Button>
+              </Link>
+            </>
+          )}
+          
+          {user?.userType === 'freelancer' && (
+            <Link href="/gigs/my-proposals">
+              <Button variant="outline">Mis Propuestas</Button>
             </Link>
-          </div>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {gigs.map((gig) => (
+          <Card key={gig.id} className="h-full flex flex-col">
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <CardTitle className="text-xl">{gig.title}</CardTitle>
+                <Badge variant="outline">{gig.status}</Badge>
+              </div>
+            </CardHeader>
+            
+            <CardContent className="flex-grow">
+              <CardDescription className="mb-4">
+                {truncateDescription(gig.description, !!expandedDescriptions[gig.id])}
+                {gig.description.length > 100 && (
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-blue-500" 
+                    onClick={() => toggleDescription(gig.id)}
+                  >
+                    {expandedDescriptions[gig.id] ? 'Leer menos' : 'Leer más'}
+                  </Button>
+                )}
+              </CardDescription>
+              
+              <div className="flex justify-between text-sm">
+                <span>Presupuesto:</span>
+                <span className="font-medium">${gig.budgetMin} - ${gig.budgetMax}</span>
+              </div>
+            </CardContent>
+            
+            <CardFooter className="flex justify-between pt-4 border-t">
+              <Link href={`/gigs/${gig.id}`}>
+                <Button variant="outline" size="sm">Ver detalles</Button>
+              </Link>
+              
+              {user?.userType === 'freelancer' && (
+                <Link href={`/gigs/${gig.id}/proposals/create`}>
+                  <Button size="sm">Postularme</Button>
+                </Link>
+              )}
+            </CardFooter>
+          </Card>
         ))}
       </div>
+      
+      {gigs.length === 0 && (
+        <div className="text-center py-10 text-gray-500">
+          No hay gigs disponibles en este momento.
+        </div>
+      )}
     </div>
   )
 }
