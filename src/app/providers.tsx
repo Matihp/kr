@@ -4,7 +4,6 @@ import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ThemeProvider } from 'next-themes';
 import { useAuth } from '@/lib/useAuth';
-import { useOnboarding } from '@/lib/store/useOnboarding';
 
 interface ProvidersProps {
   children: ReactNode;
