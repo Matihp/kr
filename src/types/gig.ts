@@ -5,7 +5,14 @@ export interface Gig {
     budgetMin: number
     budgetMax: number
     status: string
+    createdAt: string
     createdBy: string
+    recruiter: {
+      id: string
+      firstName: string
+      lastName: string
+      email: string
+    }
     stages?: {
       id: string
       name: string
@@ -25,4 +32,5 @@ export interface Gig {
       id: string
       name: string
     }
+    proposalsCount?: number
   }

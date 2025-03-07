@@ -1,3 +1,5 @@
+import { User } from "./user"
+
 export interface Proposal {
     id: string
     price: number
@@ -9,10 +11,12 @@ export interface Proposal {
     updatedAt: string
     freelancer: {
       id: string
-      name: string
+      firstName: string
+      lastName: string
       email: string
     }
     gig: {
+      recruiter: User
       id: string
       title: string
       description: string      
