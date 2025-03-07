@@ -5,17 +5,7 @@ import { useAuth } from '@/lib/useAuth'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-
-interface Gig {
-  id: string
-  title: string
-  description: string
-  budgetMin: number
-  budgetMax: number
-  status: string
-  createdBy: string
-  // Añadir más campos según tu modelo
-}
+import { Gig } from '@/types/gig'
 
 export default function GigsPage() {
   const [gigs, setGigs] = useState<Gig[]>([])
@@ -73,7 +63,7 @@ export default function GigsPage() {
           )}
           
           {user?.userType === 'freelancer' && (
-            <Link href="/gigs/my-proposals">
+            <Link href="/proposals">
               <Button variant="outline">Mis Propuestas</Button>
             </Link>
           )}

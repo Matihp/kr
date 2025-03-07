@@ -7,20 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { fetchMyGigs } from '@/api/gigsApi'
-
-interface Gig {
-  id: string
-  title: string
-  description: string
-  budgetMin: number
-  budgetMax: number
-  status: string
-  createdAt: string
-  proposalsCount?: number
-  currentStage?: {
-    name: string
-  }
-}
+import { Gig } from '@/types/gig'
 
 export default function MyGigsPage() {
   const router = useRouter()
