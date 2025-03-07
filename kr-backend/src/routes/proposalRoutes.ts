@@ -26,4 +26,15 @@ router.get(
   proposalController.getGigProposals.bind(proposalController)
 );
 
+router.get(
+  '/my-proposals',
+  isFreelancer,
+  proposalController.getFreelancerProposals.bind(proposalController)
+);
+
+router.get(
+  '/:proposalId',
+  proposalController.getProposalById.bind(proposalController)
+);
+
 export default router;

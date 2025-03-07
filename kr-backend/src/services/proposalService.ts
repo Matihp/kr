@@ -11,6 +11,34 @@ export class ProposalService {
   private proposalRepository = AppDataSource.getRepository(Proposal);
   private notificationService = new NotificationService();
 
+  async getFreelancerProposals(freelancerId: string): Promise<Proposal[]> {
+    return this.proposalRepository.find({
+      where: { freelancer: { id: freelancerId } },
+      relations: ['gig', 'gig.recruiter'],
+      order: { createdAt: 'DESC' }
+    });
+  }
+
+  async getProposalById(proposalId: string, freelancerId?: string): Promise<Proposal> {
+    const queryOptions: any = {
+      where: { id: proposalId },
+      relations: ['freelancer', 'gig', 'gig.recruiter']
+    };
+    
+    // Si se proporciona freelancerId, verificar que la propuesta pertenezca a ese freelancer
+    if (freelancerId) {
+      queryOptions.where.freelancer = { id: freelancerId };
+    }
+    
+    const proposal = await this.proposalRepository.findOne(queryOptions);
+    
+    if (!proposal) {
+      throw new Error('Proposal not found or you do not have permission to view it');
+    }
+    
+    return proposal;
+  }
+
   async createProposal(freelancerId: string, createProposalDto: CreateProposalDto): Promise<Proposal> {
     // Verificar que el gig existe
     const gig = await AppDataSource.getRepository('Gig').findOne({
