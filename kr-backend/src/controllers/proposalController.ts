@@ -35,7 +35,7 @@ export class ProposalController {
   async getGigProposals(req: Request, res: Response) {
     try {
       const { gigId } = req.params;
-      const proposals = await this.proposalService.getProposalById(gigId);     
+      const proposals = await this.proposalService.getGigProposals(gigId);
       res.json(proposals);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
@@ -58,8 +58,10 @@ export class ProposalController {
   async getProposalById(req: Request, res: Response) {
     try {
       const { proposalId } = req.params;
-      const freelancerId = req.userId;     
-      const proposal = await this.proposalService.getProposalById(proposalId, freelancerId);
+      const userId = req.userId;
+      const userType = req.userType;
+      
+      const proposal = await this.proposalService.getProposalById(proposalId, userId, userType);
       res.json(proposal);
     } catch (error: any) {
       res.status(400).json({ message: error.message });

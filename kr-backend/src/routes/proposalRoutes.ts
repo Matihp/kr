@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ProposalController } from '../controllers/proposalController';
 import { validate } from '../middleware/validationMiddleware';
-import { isFreelancer, isRecruiter } from '../middleware/userTypeMiddleware';
+import { getUserType, isFreelancer, isRecruiter } from '../middleware/userTypeMiddleware';
 import { createProposalSchema, updateProposalStatusSchema } from '../validators/proposalValidators';
 
 const router = Router();
@@ -23,6 +23,7 @@ router.patch(
 
 router.get(
   '/gig/:gigId',
+  isRecruiter,
   proposalController.getGigProposals.bind(proposalController)
 );
 
@@ -34,6 +35,7 @@ router.get(
 
 router.get(
   '/:proposalId',
+  getUserType,
   proposalController.getProposalById.bind(proposalController)
 );
 

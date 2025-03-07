@@ -19,15 +19,18 @@ export class ProposalService {
     });
   }
 
-  async getProposalById(proposalId: string, freelancerId?: string): Promise<Proposal> {
+  async getProposalById(proposalId: string, userId?: string, userType?: string): Promise<Proposal> {
     const queryOptions: any = {
       where: { id: proposalId },
       relations: ['freelancer', 'gig', 'gig.recruiter']
     };
     
-    // Si se proporciona freelancerId, verificar que la propuesta pertenezca a ese freelancer
-    if (freelancerId) {
-      queryOptions.where.freelancer = { id: freelancerId };
+    if (userId) {
+      if (userType === 'freelancer') {
+        queryOptions.where.freelancer = { id: userId };
+      } else if (userType === 'recruiter') {
+        queryOptions.where.gig = { recruiter: { id: userId } };
+      }
     }
     
     const proposal = await this.proposalRepository.findOne(queryOptions);
@@ -37,6 +40,14 @@ export class ProposalService {
     }
     
     return proposal;
+  }
+
+  async getGigProposals(gigId: string): Promise<Proposal[]> {
+    return this.proposalRepository.find({
+      where: { gig: { id: gigId } },
+      relations: ['freelancer', 'gig', 'gig.recruiter'],
+      order: { createdAt: 'DESC' }
+    });
   }
 
   async createProposal(freelancerId: string, createProposalDto: CreateProposalDto): Promise<Proposal> {
