@@ -61,7 +61,7 @@ export default function MyProposalsPage() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Mis Propuestas</h1>
         <Link href="/gigs">
-          <Button variant="outline">Ver Gigs Disponibles</Button>
+          <Button variant="outline">Ver Trabajos Disponibles</Button>
         </Link>
       </div>
 
@@ -103,7 +103,7 @@ export default function MyProposalsPage() {
               </Link>
               
               <Link href={`/gigs/${proposal.gig.id}`}>
-                <Button variant="ghost" size="sm">Ver gig</Button>
+                <Button variant="secondary" size="sm">Ver trabajo</Button>
               </Link>
             </CardFooter>
           </Card>
