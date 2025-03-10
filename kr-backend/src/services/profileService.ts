@@ -102,8 +102,60 @@ export class ProfileService {
       // Actualizar proyectos
       if (profileData.projects && Array.isArray(profileData.projects)) {
         this.logger.info('Processing projects update');
+        
+        // Obtener IDs de proyectos existentes
+        const existingProjectIds = user.projects.map(p => p.id);
+        
+        // Obtener IDs de proyectos en la actualización
+        const updatedProjectIds = profileData.projects
+          .filter(p => p.id)
+          .map(p => p.id as string);
+        
+        // Encontrar proyectos que deben eliminarse (están en existentes pero no en actualizados)
+        const projectsToDelete = existingProjectIds.filter(id => !updatedProjectIds.includes(id));
+        
+        if (projectsToDelete.length > 0) {
+          this.logger.info(`Deleting ${projectsToDelete.length} projects`);
+          await queryRunner.manager.delete(Project, projectsToDelete);
+        }
+        
         const newProjects = await Promise.all(
           profileData.projects.map(async project => {
+            // Si el proyecto ya existe, lo actualizamos en lugar de crear uno nuevo
+            if (project.id) {
+              const existingProject = await queryRunner.manager.findOne(Project, {
+                where: { id: project.id },
+                relations: ['skills']
+              });
+              
+              if (existingProject) {
+                // Actualizar propiedades del proyecto existente
+                existingProject.title = project.title;
+                existingProject.role = project.role;
+                existingProject.description = project.description;
+                existingProject.images = project.images;
+                existingProject.website = project.website;
+                existingProject.repository = project.repository;
+                
+                // Actualizar skills
+                const skillEntities = await Promise.all(
+                  (project.skills || []).map(async skillName => {
+                    let skill = await queryRunner.manager.findOne(Skill, { where: { name: skillName } });
+                    if (!skill) {
+                      skill = queryRunner.manager.create(Skill, { name: skillName });
+                      await queryRunner.manager.save(Skill, skill);
+                    }
+                    return skill;
+                  })
+                );
+                
+                existingProject.skills = skillEntities.filter(s => s !== null);
+                await queryRunner.manager.save(Project, existingProject);
+                return existingProject;
+              }
+            }
+            
+            // Si no existe, creamos uno nuevo
             const skillEntities = await Promise.all(
               (project.skills || []).map(async skillName => {
                 let skill = await queryRunner.manager.findOne(Skill, { where: { name: skillName } });
@@ -114,6 +166,7 @@ export class ProfileService {
                 return skill;
               })
             );
+            
             return queryRunner.manager.create(Project, { 
               ...project, 
               user, 
@@ -121,7 +174,9 @@ export class ProfileService {
             });
           })
         );
-        await queryRunner.manager.save(Project, newProjects);
+        
+        // Guardar los proyectos nuevos
+        await queryRunner.manager.save(Project, newProjects.filter(p => !p.id));
         user.projects = newProjects;
       }
 
