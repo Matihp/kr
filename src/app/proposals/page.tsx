@@ -1,18 +1,17 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useAuth } from '@/lib/useAuth'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { fetchMyProposals } from '@/api/proposalApi'
 import { Proposal } from '@/types/proposal'
+import { proposalStatusTranslations } from '@/lang/translations'
 
 export default function MyProposalsPage() {
   const [proposals, setProposals] = useState<Proposal[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const { user } = useAuth()
 
   useEffect(() => {
     const getMyProposals = async () => {
@@ -29,28 +28,9 @@ export default function MyProposalsPage() {
     getMyProposals()
   }, [])
 
-  const getStatusBadgeVariant = (status: string) => {
-    switch (status) {
-      case 'ACCEPTED':
-        return 'success'
-      case 'REJECTED':
-        return 'destructive'
-      default:
-        return 'outline'
-    }
-  }
-
   const getStatusText = (status: string) => {
-    switch (status) {
-      case 'PENDING':
-        return 'Pendiente'
-      case 'ACCEPTED':
-        return 'Aceptada'
-      case 'REJECTED':
-        return 'Rechazada'
-      default:
-        return status
-    }
+    const statusKey = status.toLowerCase() as keyof typeof proposalStatusTranslations;
+    return proposalStatusTranslations[statusKey] || status;
   }
 
   if (loading) return <div className="flex justify-center items-center h-screen">Cargando...</div>
@@ -71,7 +51,7 @@ export default function MyProposalsPage() {
             <CardHeader>
               <div className="flex justify-between items-start">
                 <CardTitle className="text-xl">{proposal.gig.title}</CardTitle>
-                <Badge variant="default">
+                <Badge variant={'default'}>
                   {getStatusText(proposal.status)}
                 </Badge>
               </div>
