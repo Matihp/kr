@@ -43,6 +43,20 @@ export class GigController {
     }
   }
 
+  async getParticipatingGigs(req: Request, res: Response) {
+    try {
+      const freelancerId = req.userId;
+      if (!freelancerId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      const gigs = await this.gigService.getParticipatingGigs(freelancerId);
+      res.json(gigs);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  }
+
   async getGigById(req: Request, res: Response) {
     try {
       const { id } = req.params;

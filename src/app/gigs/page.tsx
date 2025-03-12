@@ -63,9 +63,14 @@ export default function GigsPage() {
           )}
           
           {user?.userType === 'freelancer' && (
+            <>
+            <Link href="/gigs/participating">
+              <Button variant="outline">Mis Trabajos</Button>
+            </Link>            
             <Link href="/proposals">
               <Button variant="outline">Mis Propuestas</Button>
             </Link>
+            </>
           )}
         </div>
       </div>

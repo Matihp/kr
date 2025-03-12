@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validate } from "../middleware/validationMiddleware";
 import { GigController } from "../controllers/gigController";
-import { isRecruiter } from "../middleware/userTypeMiddleware";
+import { isFreelancer, isRecruiter } from "../middleware/userTypeMiddleware";
 import { 
   createGigSchema, 
   updateGigStageSchema 
@@ -20,11 +20,16 @@ router.post(
 
 router.get("/", gigController.getGigs.bind(gigController));
 
-// New routes
 router.get(
   "/my-gigs",
   isRecruiter,
   gigController.getRecruiterGigs.bind(gigController)
+);
+
+router.get(
+  "/participating",
+  isFreelancer,
+  gigController.getParticipatingGigs.bind(gigController)
 );
 
 router.get(

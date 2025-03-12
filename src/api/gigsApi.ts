@@ -1,5 +1,14 @@
 import { api } from "./api";
 
+export const createGig = async (gigData: any) => {
+  try {
+    const response = await api.post('/gigs', gigData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const fetchGigs = async () => {
     try {
       const response = await api.get('/gigs');
@@ -17,6 +26,15 @@ export const fetchGigs = async () => {
       throw new Error('Error fetching your gigs');
     }
   };
+
+  export const fetchParticipatingGigs = async () => {
+    try {
+      const response = await api.get('/gigs/participating');
+      return response.data;
+    } catch (error) {
+      throw new Error('Error fetching gigs');
+    }
+  }
   
   export const fetchGigById = async (id: string) => {
     try {

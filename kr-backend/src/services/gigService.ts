@@ -3,12 +3,14 @@ import { CreateGigDto } from '../dtos/gigDto';
 import { Gig } from '../models/gigModel';
 import { GigReward } from '../models/gigRewardModel';
 import { GigStage } from '../models/gigStageModel';
+import { Proposal } from '../models/proposalModel';
 import { GigType } from '../types/gigTypes';
 
 export class GigService {
   private gigRepository = AppDataSource.getRepository(Gig);
   private stageRepository = AppDataSource.getRepository(GigStage);
   private rewardRepository = AppDataSource.getRepository(GigReward);
+  private proposalRepository = AppDataSource.getRepository(Proposal);
 
   async createGig(recruiterId: string, createGigDto: CreateGigDto): Promise<Gig> {
     const gig = new Gig();
@@ -112,6 +114,42 @@ export class GigService {
       relations: ['stages', 'rewards', 'currentStage'],
       order: { createdAt: 'DESC' }
     });
+  }
+
+  async getParticipatingGigs(freelancerId: string): Promise<any[]> {
+    const proposals = await this.proposalRepository.find({
+      where: { freelancer: { id: freelancerId } },
+      relations: ['gig']
+    });
+    // Extraemos los IDs de los gigs
+    const gigIds = proposals.map(proposal => proposal.gig.id);
+    if (gigIds.length === 0) {
+      return [];
+    }
+    // Obtenemos los gigs completos con sus relaciones
+    const gigs = await this.gigRepository
+      .createQueryBuilder('gig')
+      .leftJoinAndSelect('gig.stages', 'stages')
+      .leftJoinAndSelect('gig.rewards', 'rewards')
+      .leftJoinAndSelect('gig.currentStage', 'currentStage')
+      .leftJoinAndSelect('gig.recruiter', 'recruiter')
+      .where('gig.id IN (:...gigIds)', { gigIds })
+      .getMany();
+    // Para cada gig, añadimos la información de la propuesta del freelancer
+    const gigsWithProposalInfo = await Promise.all(gigs.map(async (gig) => {
+      const proposal = proposals.find(p => p.gig.id === gig.id);
+      // Obtenemos la propuesta completa con su estado
+      const fullProposal = await this.proposalRepository.findOne({
+        where: { id: proposal?.id },
+        select: ['id', 'price', 'status', 'createdAt']
+      });
+      return {
+        ...gig,
+        myProposal: fullProposal
+      };
+    }));
+
+    return gigsWithProposalInfo;
   }
 
   async getGigById(gigId: string): Promise<Gig | null> {
