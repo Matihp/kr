@@ -21,13 +21,19 @@ export class ProposalController {
   async updateProposalStatus(req: Request, res: Response) {
     try {
       const { proposalId } = req.params;
-      const updateStatusDto: UpdateProposalStatusDto = req.body;   
+      const updateStatusDto: UpdateProposalStatusDto = {
+        status: req.body.status,
+        feedback: req.body.feedback,
+        freelancerId: req.body.freelancerId,
+        gigId: req.body.gigId
+      };    
       const proposal = await this.proposalService.updateProposalStatus(
         proposalId,
         updateStatusDto
       );    
       res.json(proposal);
     } catch (error: any) {
+      console.error('Error updating proposal status:', error);
       res.status(400).json({ message: error.message });
     }
   }

@@ -28,7 +28,9 @@ export const updateProposalStatusSchema = z.object({
     (val) => ({
       message: "Feedback can only be provided for accepted proposals"
     })
-  )
+  ),
+  freelancerId: z.string().uuid().optional(),
+  gigId: z.string().uuid().optional()
 }).refine(
   (data) => {
     if (data.feedback && data.status !== ProposalStatus.ACCEPTED) {

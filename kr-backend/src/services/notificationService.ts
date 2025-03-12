@@ -41,21 +41,29 @@ export class NotificationService {
       return notification;
     }
   
-    async create(dto: CreateNotificationDto): Promise<NotificationResponseDto> {
+    async create(notificationData: CreateNotificationDto): Promise<any> {
       try {
-        const newNotification = this.notificationRepository.create(dto);
-        const savedNotification = await this.notificationRepository.save(newNotification);
-        return {
-          id: savedNotification.id,
-          message: savedNotification.message,
-          type: savedNotification.type,
-          createdAt: savedNotification.createdAt,
-          expiresAt: savedNotification.expiresAt,
-          isRead: savedNotification.isRead,
-          userId: savedNotification.user.id,
-        };
-      } catch (error: any) {
-        throw error;
+        if (!notificationData) {
+          console.error('Invalid notification data:', notificationData);
+          return null;
+        }
+        if (!notificationData.userId) {
+          console.error('Error: userId is required for notification', notificationData);
+          return null; 
+        }
+        
+        const notification = this.notificationRepository.create({
+          user: { id: notificationData.userId },
+          message: notificationData.message,
+          type: notificationData.type,
+          isRead: notificationData.isRead || false,
+          expiresAt: notificationData.expiresAt
+        });
+        
+        return this.notificationRepository.save(notification);
+      } catch (error) {
+        console.error('Error creating notification:', error);
+        return null;
       }
     }
   
@@ -107,3 +115,4 @@ export class NotificationService {
       });
     }
   }
+

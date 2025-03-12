@@ -91,23 +91,27 @@ export class ProposalService {
       throw new Error('Proposal not found');
     }
 
+    if (!proposal.freelancer || !proposal.gig) {
+      throw new Error('Proposal data is incomplete');
+    }
+
     proposal.status = updateStatusDto.status as ProposalStatus;
 
     // Si la propuesta es aceptada
     if (updateStatusDto.status === ProposalStatus.ACCEPTED) {
       // Rechazar automáticamente otras propuestas
-      await this.rejectOtherProposals(proposal.gig.id, proposalId);
-      
-      // Notificar al freelancer aceptado
-      await this.notificationService.create({
-        userId: proposal.freelancer.id,
-        message: `¡Felicitaciones! Tu propuesta para "${proposal.gig.title}" ha sido aceptada.`,
-        type: NotificationType.SUCCESS,
-        isRead: false
-      });
-
+      await this.rejectOtherProposals(proposal.gig.id, proposalId);    
+      // Notificar al freelancer aceptado - with null check
+      if (proposal.freelancer && proposal.freelancer.id) {
+        await this.notificationService.create({
+          userId: proposal.freelancer.id,
+          message: `¡Felicitaciones! Tu propuesta para "${proposal.gig.title}" ha sido aceptada.`,
+          type: NotificationType.SUCCESS,
+          isRead: false
+        });
+      }
       // Si hay feedback, añadirlo (solo para propuestas aceptadas)
-      if (updateStatusDto.feedback) {
+      if (updateStatusDto.feedback && proposal.gig.recruiter) {
         const feedback = new ProposalFeedback();
         feedback.proposal = proposal;
         feedback.user = proposal.gig.recruiter;
@@ -133,13 +137,16 @@ export class ProposalService {
       proposal.status = ProposalStatus.REJECTED;
       await this.proposalRepository.save(proposal);
 
-      // Notificar a los freelancers rechazados
-      await this.notificationService.create({
-        userId: proposal.freelancer.id,
-        message: `Tu propuesta para "${proposal.gig.title}" no ha sido seleccionada. ¡No te desanimes, hay más oportunidades!`,
-        type: NotificationType.INFO,
-        isRead: false
-      });
+      // Add null check for freelancer
+      if (proposal.freelancer && proposal.freelancer.id && proposal.gig) {
+        // Notificar a los freelancers rechazados
+        await this.notificationService.create({
+          userId: proposal.freelancer.id,
+          message: `Tu propuesta para "${proposal.gig.title}" no ha sido seleccionada. ¡No te desanimes, hay más oportunidades!`,
+          type: NotificationType.INFO,
+          isRead: false
+        });
+      }
     }
   }
 }

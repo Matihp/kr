@@ -4,14 +4,33 @@ export interface Gig {
     description: string
     budgetMin: number
     budgetMax: number
-    status: string
+    status?: string
+    type: GigType
+    isAnonymous?: boolean
+    requiresTeam?: boolean
+    flashDeadline?: string
     createdAt: string
-    createdBy: string
+    createdBy?: string
     recruiter: {
       id: string
       firstName: string
       lastName: string
       email: string
+    }
+    myProposal: {
+      price: number
+      id: string
+      title: string
+      description: string
+      status: string
+      createdAt: string
+      createdBy: string
+      reviewer: {
+        id: string
+        firstName: string
+        lastName: string
+        email: string
+      }
     }
     stages?: {
       id: string
@@ -33,4 +52,9 @@ export interface Gig {
       name: string
     }
     proposalsCount?: number
+  }
+  export enum GigType {
+    STANDARD = 'standard',
+    FLASH = 'flash',
+    TEAM = 'team'
   }
