@@ -58,6 +58,14 @@ export class ProfileService {
         throw new NotFoundError('User not found');
       }
 
+      // Guardar estado anterior para verificar eliminaciones
+      const previousState = {
+        hasSkills: user.skills?.length > 0,
+        hasLanguages: user.languages?.length > 0,
+        hasProjects: user.projects?.length > 0,
+        hasCertifications: user.certifications?.length > 0
+      };
+
       // Actualizar campos básicos
       if (profileData.firstName) user.firstName = profileData.firstName;
       if (profileData.lastName) user.lastName = profileData.lastName;
@@ -192,7 +200,27 @@ export class ProfileService {
 
       // Guardar usuario y actualizar progreso
       await queryRunner.manager.save(user);
-      const levelProgress = await this.levelProgressService.updateProfileProgress(userId, user);
+      
+      // Verificar si se eliminaron elementos y actualizar XP
+      let levelProgress;
+      
+      // Verificar si se eliminaron todos los elementos de alguna categoría
+      if (previousState.hasProjects && user.projects.length === 0) {
+        this.logger.info('All projects were removed, updating level progress');
+        levelProgress = await this.levelProgressService.handleItemRemoval(userId, user, 'projects');
+      } else if (previousState.hasSkills && user.skills.length === 0) {
+        this.logger.info('All skills were removed, updating level progress');
+        levelProgress = await this.levelProgressService.handleItemRemoval(userId, user, 'skills');
+      } else if (previousState.hasLanguages && user.languages.length === 0) {
+        this.logger.info('All languages were removed, updating level progress');
+        levelProgress = await this.levelProgressService.handleItemRemoval(userId, user, 'languages');
+      } else if (previousState.hasCertifications && user.certifications.length === 0) {
+        this.logger.info('All certifications were removed, updating level progress');
+        levelProgress = await this.levelProgressService.handleItemRemoval(userId, user, 'certifications');
+      } else {
+        // Si no se eliminaron elementos, actualizar normalmente
+        levelProgress = await this.levelProgressService.updateProfileProgress(userId, user);
+      }
 
       // Commit transacción
       await queryRunner.commitTransaction();
