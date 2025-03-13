@@ -56,7 +56,7 @@ export default function GigProposalsPage() {
     <div className="container mx-auto mt-28 pb-20 px-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Propuestas Recibidas</h1>
-        <Link href={`/my-gigs`}>
+        <Link href={`/gigs/my-gigs`}>
           <Button variant="outline">Mis trabajos</Button>
         </Link>
       </div>

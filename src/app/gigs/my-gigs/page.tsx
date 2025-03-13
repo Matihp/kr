@@ -96,7 +96,7 @@ export default function MyGigsPage() {
                   <Link href={`/gigs/${gig.id}/proposals`}>
                     <Button size="sm" variant="secondary">Propuestas</Button>
                   </Link>
-                  <Link href={`/gigs/my-gigs/${gig.id}/edit`}>
+                  <Link href={`/gigs/${gig.id}/edit`}>
                     <Button size="sm">Editar</Button>
                   </Link>
                 </div>

@@ -87,7 +87,7 @@ export default function CreateProposalPage() {
         priceOptions: priceOptions.length > 0 ? priceOptions : undefined
       }
       await createProposal(id as string, proposalData)
-      router.push(`/gigs/${id}`)
+      router.push(`/gigs`)
     } catch (err) {
       setError('Error al enviar la propuesta')
     } finally {
@@ -209,7 +209,7 @@ export default function CreateProposalPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => router.push(`/gigs/${id}`)}
+                  onClick={() => router.push(`/gigs`)}
                   disabled={submitting}
                 >
                   Cancelar
@@ -230,10 +230,10 @@ export default function CreateProposalPage() {
               <CardTitle className="text-lg">Detalles del Trabajo</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* <div>
+              <div>
                 <h3 className="text-sm font-medium text-gray-500">Cliente</h3>
-                <p>{gig.createdBy?.name}</p>
-              </div> */}
+                <p className='text-sm'>{`${gig.recruiter.firstName} ${gig.recruiter.lastName}`}</p>
+              </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Descripción del proyecto</h3>
                 <p className="text-sm whitespace-pre-wrap">{gig.description}</p>
@@ -244,7 +244,7 @@ export default function CreateProposalPage() {
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Estado</h3>
-                <p>{gig.status}</p>
+                <p>{gig.currentStage?.name}</p>
               </div>
             </CardContent>
           </Card>

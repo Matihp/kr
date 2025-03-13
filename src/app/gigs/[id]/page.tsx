@@ -130,7 +130,7 @@ export default function GigDetailPage() {
                 </Link>
               ) : (
                 user?.userType === "freelancer" && (
-                  <Link href={`/gigs/${gig.id}/apply`}>
+                  <Link href={`/gigs/${gig.id}/proposals/create`}>
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full">
                       Aplicar
                     </Button>
@@ -303,7 +303,7 @@ export default function GigDetailPage() {
               </div>
               {isGigOwner && (
                 <div className="mt-8 space-y-3">
-                  <Link href={`/gigs/my-gigs/${gig.id}/edit`}>
+                  <Link href={`/gigs/${gig.id}/edit`}>
                     <Button
                       variant="outline"
                       className="w-full rounded-lg border-gray-300 hover:bg-gray-100 hover:text-gray-800 transition-colors"
