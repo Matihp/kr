@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { fetchProposalById, updateProposalStatus } from "@/api/proposalApi";
+import { fetchProposalById, updatePropStatus } from "@/api/proposalApi";
 import { Proposal } from "@/types/proposal";
 import { proposalStatusTranslations } from "@/lang/translations";
 
@@ -53,14 +53,16 @@ export default function ProposalDetailsPage() {
   }, [loading, proposal, user, router]);
 
   const handleStatusUpdate = async (newStatus: string) => {
-    if (!proposal) return;
+    if (!proposal) return; 
     try {
-      const updatedProposal = await updateProposalStatus(
+      const updatedProposal = await updatePropStatus(
         proposal.id,
         newStatus
       );
       setProposal(updatedProposal);
-    } catch {
+
+    } catch (error) {
+      console.error("Error al actualizar:", error);
       setError("No se pudo actualizar el estado de la propuesta");
     }
   };
