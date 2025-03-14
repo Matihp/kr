@@ -3,7 +3,6 @@ import { AppDataSource } from '../config/data-source';
 import { User } from '../models/userModel';
 import { RoleType } from '../models/roleModel';
 import { verifyToken } from '../utils/jwtUtils';
-import { Onboarding } from '../models/onboardingModel';
 
 // Add userType to Express Request interface
 declare global {
@@ -68,28 +67,5 @@ export const checkUserJwt = async (req: Request, res: Response, next: NextFuncti
     next();
   } catch (error) {
     return res.status(401).json({ message: 'Unauthorized' });
-  }
-};
-
-// New middleware to get user type
-export const getUserType = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!req.userId) {
-      return next(); // Skip if no userId (will be caught by auth middleware)
-    }
-
-    const onboardingRepository = AppDataSource.getRepository(Onboarding);
-    const onboarding = await onboardingRepository.findOne({
-      where: { user: { id: req.userId } }
-    });
-
-    if (onboarding) {
-      req.userType = onboarding.userType;
-    }
-
-    next();
-  } catch (error) {
-    // Just continue if there's an error getting user type
-    next();
   }
 };
