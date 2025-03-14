@@ -32,14 +32,7 @@ export interface Gig {
         email: string
       }
     }
-    stages?: {
-      id: string
-      name: string
-      description: string
-      payment: number
-      order: number
-      isCompleted: boolean
-    }[]
+    stages?: GigStage[]
     rewards?: {
       id: string
       name: string
@@ -57,4 +50,13 @@ export interface Gig {
     STANDARD = 'standard',
     FLASH = 'flash',
     TEAM = 'team'
+  }
+  export interface GigStage {
+    id: string;
+    name: string;
+    description: string;
+    payment: number;
+    order: number;
+    isCompleted: boolean;
+    gig?: Gig;
   }
