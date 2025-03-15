@@ -14,6 +14,8 @@ import {
   Check,
   Award,
   Layers,
+  Edit,
+  MoveVertical,
 } from "lucide-react";
 import { Gig } from "@/types/gig";
 import { deleteGig } from "@/api/gigsApi";
@@ -28,6 +30,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { updateGigStageOrder } from "@/api/stagesGigApi";
+import ModalStageOrder from "@/components/Modal/ModalStageOrder";
 
 export default function GigDetailPage() {
   const params = useParams();
@@ -43,6 +47,16 @@ export default function GigDetailPage() {
     const fetchGigData = async () => {
       try {
         const data = await fetchGigById(params.id as string);
+        
+        // Ordenar las etapas si tienen el campo order
+        if (data.stages && data.stages.length > 0) {
+          data.stages.sort((a: { order: undefined; }, b: { order: undefined; }) => {
+            const orderA = a.order !== undefined ? a.order : 0;
+            const orderB = b.order !== undefined ? b.order : 0;
+            return orderA - orderB;
+          });
+        }
+        console.log(data)
         setGig(data);
       } catch (err) {
         setError("Failed to load gig details");
@@ -97,6 +111,45 @@ export default function GigDetailPage() {
     } finally {
       setIsDeleting(false);
       setDeleteDialogOpen(false);
+    }
+  };
+  const handleStageOrderUpdate = async (
+    newOrder: { id: string; order: number }[]
+  ) => {
+    try {
+      await updateGigStageOrder(gig.id, newOrder);
+      // Actualizar el estado local con el nuevo orden
+      setGig((prevGig) => {
+        if (!prevGig) return null;
+        const updatedStages = [...prevGig.stages];
+        newOrder.forEach((item) => {
+          const stageIndex = updatedStages.findIndex((s) => s.id === item.id);
+          if (stageIndex !== -1) {
+            updatedStages[stageIndex] = {
+              ...updatedStages[stageIndex],
+              order: item.order,
+            };
+          }
+        });
+        // Ordenar las etapas según el nuevo orden
+        updatedStages.sort((a, b) => {
+          const orderA = a.order !== undefined ? a.order : 0;
+          const orderB = b.order !== undefined ? b.order : 0;
+          return orderA - orderB;
+        });
+
+        return { ...prevGig, stages: updatedStages };
+      });
+
+      toast.success("Orden actualizado", {
+        description: "El orden de las etapas ha sido actualizado exitosamente",
+      });
+    } catch (error) {
+      console.error("Error updating stage order:", error);
+      toast.error("Error", {
+        description:
+          "No se pudo actualizar el orden de las etapas. Intente nuevamente.",
+      });
     }
   };
 
@@ -167,6 +220,36 @@ export default function GigDetailPage() {
                     <Layers size={18} className="text-purple-600" />
                   </div>
                   Etapas del Proyecto
+                  {isGigOwner && (
+                    <div className="ml-auto flex gap-2">
+                      {gig.stages && gig.stages.length > 1 && (
+                        <ModalStageOrder
+                          stages={gig.stages}
+                          gigId={gig.id}
+                          onOrderUpdate={handleStageOrderUpdate}
+                          trigger={
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-purple-600 border-purple-200 hover:bg-purple-50 flex items-center gap-1"
+                            >
+                              <MoveVertical size={14} />
+                              Ordenar
+                            </Button>
+                          }
+                        />
+                      )}
+                      <Link href={`/gigs/${gig.id}/stages/create`}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-purple-600 border-purple-200 hover:bg-purple-50"
+                        >
+                          Añadir Etapa
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-6">
@@ -183,20 +266,35 @@ export default function GigDetailPage() {
                           </span>
                           {stage.name}
                         </h3>
-                        <Badge
-                          className={`${
-                            stage.isCompleted
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          } px-3 py-1 rounded-full flex items-center gap-1`}
-                        >
-                          {stage.isCompleted ? (
-                            <Check size={14} />
-                          ) : (
-                            <Clock size={14} />
+                        <div className="flex items-center gap-2">
+                          <Badge
+                            className={`${
+                              stage.isCompleted
+                                ? "bg-green-100 text-green-800"
+                                : "bg-yellow-100 text-yellow-800"
+                            } px-3 py-1 rounded-full flex items-center gap-1`}
+                          >
+                            {stage.isCompleted ? (
+                              <Check size={14} />
+                            ) : (
+                              <Clock size={14} />
+                            )}
+                            {stage.isCompleted ? "Completado" : "Pendiente"}
+                          </Badge>
+                          {isGigOwner && (
+                            <Link
+                              href={`/gigs/${gig.id}/stages/${stage.id}/edit`}
+                            >
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0"
+                              >
+                                <Edit size={16} className="text-gray-500" />
+                              </Button>
+                            </Link>
                           )}
-                          {stage.isCompleted ? "Completado" : "Pendiente"}
-                        </Badge>
+                        </div>
                       </div>
                       <p className="text-gray-600 mt-3 leading-relaxed">
                         {stage.description}

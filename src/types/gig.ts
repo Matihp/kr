@@ -32,7 +32,7 @@ export interface Gig {
         email: string
       }
     }
-    stages?: GigStage[]
+    stages: GigStage[]
     rewards?: {
       id: string
       name: string
@@ -56,7 +56,7 @@ export interface Gig {
     name: string;
     description: string;
     payment: number;
-    order: number;
+    order?: number;
     isCompleted: boolean;
     gig?: Gig;
   }
