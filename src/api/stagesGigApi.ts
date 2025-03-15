@@ -39,7 +39,7 @@ export const fetchGigStages = async (gigId: string) => {
 
   export const updateGigStageOrder = async (gigId: string, stagesOrder: { id: string, order: number }[]) => {
     try {
-      const response = await api.put(`/gigs/${gigId}/stages/reorder`, { stages: stagesOrder });
+      const response = await api.put(`/gigs/${gigId}/stages-reorder`, { stages: stagesOrder });
       return response.data;
     } catch (error) {
       console.error('Error in updateGigStageOrder API call:', error);
