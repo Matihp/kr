@@ -5,7 +5,6 @@ export const createGigStageSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
   payment: z.number().positive(),
-  order: z.number().int().min(0)
 });
 
 export const createGigRewardSchema = z.object({
@@ -30,6 +29,16 @@ export const createGigSchema = z.object({
   message: "Maximum budget must be greater than or equal to minimum budget"
 });
 
+// Actualizado para incluir todos los campos que pueden ser actualizados
 export const updateGigStageSchema = z.object({
-  completed: z.boolean()
+  name: z.string().min(1).optional(),
+  description: z.string().min(1).optional(),
+  payment: z.number().positive().optional(),
+  order: z.number().int().min(0).optional(),
+  isCompleted: z.boolean().optional()
+});
+
+// Para la ruta PATCH que solo actualiza el estado de completado
+export const updateGigStageCompletionSchema = z.object({
+  isCompleted: z.boolean()
 });
