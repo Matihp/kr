@@ -1,22 +1,5 @@
 import { api } from '@/api/api';
-
-export interface ProfileCompletion {
-  basicInfo: boolean;
-  description: boolean;
-  avatar: boolean;
-  skills: boolean;
-  languages: boolean;
-  projects: boolean;
-  certifications: boolean;
-}
-
-export interface LevelProgress {
-  id: string;
-  level: number;
-  experiencePoints: number;
-  completedAchievements: Record<string, boolean>;
-  profileCompletion: ProfileCompletion;
-}
+import { LevelProgress } from '@/types/levelProgress';
 
 // Función para obtener el progreso del nivel de un usuario
 export const fetchLevelProgress = async (userId: string): Promise<LevelProgress> => {
