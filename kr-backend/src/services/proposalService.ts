@@ -78,6 +78,63 @@ export class ProposalService {
     }) as Promise<Proposal>;
   }
 
+  async updateProposal(
+    proposalId: string,
+    freelancerId: string,
+    updateProposalDto: any
+  ): Promise<Proposal> {
+    const proposal = await this.proposalRepository.findOne({
+      where: { id: proposalId, freelancer: { id: freelancerId } },
+      relations: ['freelancer', 'gig']
+    });
+  
+    if (!proposal) {
+      throw new Error('Propuesta no encontrada o no tienes permiso para editarla');
+    }
+  
+    // Solo permitir editar propuestas pendientes
+    if (proposal.status !== ProposalStatus.PENDING) {
+      throw new Error('Solo se pueden editar propuestas que estén en estado pendiente');
+    }
+  
+    // Actualizar los campos proporcionados
+    if (updateProposalDto.price !== undefined) {
+      proposal.price = updateProposalDto.price;
+    }
+    
+    if (updateProposalDto.description !== undefined) {
+      proposal.description = updateProposalDto.description;
+    }
+    
+    if (updateProposalDto.videoUrl !== undefined) {
+      proposal.videoUrl = updateProposalDto.videoUrl;
+    }
+    
+    if (updateProposalDto.priceOptions !== undefined) {
+      proposal.priceOptions = updateProposalDto.priceOptions;
+    }
+  
+    return this.proposalRepository.save(proposal);
+  }
+  
+  async deleteProposal(proposalId: string, freelancerId: string): Promise<void> {
+    const proposal = await this.proposalRepository.findOne({
+      where: { id: proposalId, freelancer: { id: freelancerId } },
+      relations: ['freelancer']
+    });
+  
+    if (!proposal) {
+      throw new Error('Propuesta no encontrada o no tienes permiso para eliminarla');
+    }
+  
+    // Solo permitir eliminar propuestas pendientes
+    if (proposal.status !== ProposalStatus.PENDING) {
+      throw new Error('Solo se pueden eliminar propuestas que estén en estado pendiente');
+    }
+  
+    await this.proposalRepository.remove(proposal);
+  }
+
   async updateProposalStatus(
     proposalId: string,
     updateStatusDto: UpdateProposalStatusDto
@@ -137,7 +194,6 @@ export class ProposalService {
       proposal.status = ProposalStatus.REJECTED;
       await this.proposalRepository.save(proposal);
 
-      // Add null check for freelancer
       if (proposal.freelancer && proposal.freelancer.id && proposal.gig) {
         // Notificar a los freelancers rechazados
         await this.notificationService.create({

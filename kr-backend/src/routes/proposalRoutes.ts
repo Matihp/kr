@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { ProposalController } from '../controllers/proposalController';
 import { validate } from '../middleware/validationMiddleware';
 import { getUserType, isFreelancer, isRecruiter } from '../middleware/userTypeMiddleware';
-import { createProposalSchema, updateProposalStatusSchema } from '../validators/proposalValidators';
+import { createProposalSchema, updateProposalSchema, updateProposalStatusSchema } from '../validators/proposalValidators';
 
 const router = Router();
 const proposalController = new ProposalController();
@@ -12,6 +12,19 @@ router.post(
   isFreelancer,
   validate(createProposalSchema),
   proposalController.createProposal.bind(proposalController)
+);
+
+router.put(
+  '/:proposalId',
+  isFreelancer,
+  validate(updateProposalSchema),
+  proposalController.updateProposal.bind(proposalController)
+);
+
+router.delete(
+  '/:proposalId',
+  isFreelancer,
+  proposalController.deleteProposal.bind(proposalController)
 );
 
 router.patch(

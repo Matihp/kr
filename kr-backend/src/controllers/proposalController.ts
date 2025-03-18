@@ -18,6 +18,40 @@ export class ProposalController {
     }
   }
 
+  async updateProposal(req: Request, res: Response) {
+    try {
+      const { proposalId } = req.params;
+      const freelancerId = req.userId;
+      if (!freelancerId) {
+        return res.status(401).json({ message: 'No autorizado' });
+      }    
+      const proposal = await this.proposalService.updateProposal(
+        proposalId,
+        freelancerId,
+        req.body
+      );
+      res.json(proposal);
+    } catch (error: any) {
+      console.error('Error al actualizar la propuesta:', error);
+      res.status(400).json({ message: error.message });
+    }
+  }
+  
+  async deleteProposal(req: Request, res: Response) {
+    try {
+      const { proposalId } = req.params;
+      const freelancerId = req.userId;   
+      if (!freelancerId) {
+        return res.status(401).json({ message: 'No autorizado' });
+      }   
+      await this.proposalService.deleteProposal(proposalId, freelancerId);   
+      res.status(204).send();
+    } catch (error: any) {
+      console.error('Error al eliminar la propuesta:', error);
+      res.status(400).json({ message: error.message });
+    }
+  }
+
   async updateProposalStatus(req: Request, res: Response) {
     try {
       const { proposalId } = req.params;
