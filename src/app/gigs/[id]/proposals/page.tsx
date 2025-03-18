@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { fetchGigProposals } from '@/api/proposalApi'
+import { proposalStatusTranslations } from '@/lang/translations'
 
 interface Proposal {
   id: string
@@ -49,6 +50,11 @@ export default function GigProposalsPage() {
     fetchProposals()
   }, [id, user, router])
 
+  const getStatusText = (status: string) => {
+    const statusKey = status.toLowerCase() as keyof typeof proposalStatusTranslations;
+    return proposalStatusTranslations[statusKey] || status;
+  }
+
   if (loading) return <div className="flex justify-center items-center h-screen">Cargando...</div>
   if (error) return <div className="flex justify-center items-center h-screen text-red-500">Error: {error}</div>
 
@@ -75,8 +81,8 @@ export default function GigProposalsPage() {
                     <CardTitle className="text-xl">{proposal.freelancer.name}</CardTitle>
                     <CardDescription>{proposal.freelancer.email}</CardDescription>
                   </div>
-                  <Badge variant={proposal.status === 'ACCEPTED' ? 'default' : 'outline'}>
-                    {proposal.status}
+                  <Badge variant={proposal.status === 'accepted' ? 'default' : 'destructive'}>
+                    {getStatusText(proposal.status)}
                   </Badge>
                 </div>
               </CardHeader>
