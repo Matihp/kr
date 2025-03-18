@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import ProfilesList from '@/components/ProfilesList/ProfilesList';
 import { Skill, UserData } from '@/types/user';
 import { debounce } from 'lodash';
+import { fetchFreelancers, fetchSkills } from '@/api/usersApi';
 
 function List() {
   const [users, setUsers] = useState<UserData>({
@@ -14,32 +15,34 @@ function List() {
   });
   const [skills, setSkills] = useState<Skill[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchUsers = async (page: number) => {
+  const loadUsers = async (page: number) => {
     try {
-      const skillsParam = selectedSkills.length > 0 ? selectedSkills.join(',') : '';
-      const response = await fetch(`${apiUrl}/users?skillName=${skillsParam}&page=${page}`);
-      const data = await response.json();
+      setIsLoading(true);
+      const data = await fetchFreelancers(page, selectedSkills);
       setUsers(data);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
-  const debouncedFetchUsers = debounce(fetchUsers, 300);
-  const fetchSkills = async () => {
+  
+  const debouncedLoadUsers = debounce(loadUsers, 300);
+  
+  const loadSkills = async () => {
     try {
-      const response = await fetch(`${apiUrl}/skills/`);
-      const data = await response.json();
+      const data = await fetchSkills();
       setSkills(data);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching skills:", error);
     }
   };
 
   useEffect(() => {
-    fetchUsers(1); 
-    fetchSkills();
+    loadUsers(1); 
+    loadSkills();
   }, [selectedSkills]);
 
   const handleSkillChange = (skill: string): void => {
@@ -57,7 +60,7 @@ function List() {
   };
 
   const handlePageChange = (page: number) => {
-    fetchUsers(page);
+    loadUsers(page);
   };
 
   return (

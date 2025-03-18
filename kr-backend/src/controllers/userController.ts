@@ -4,6 +4,7 @@ import { plainToInstance } from 'class-transformer';
 import { NotFoundError, handleError } from '../utils/errorUtils';
 import { UpdateUserDto } from '../dtos/userDto';
 import { z } from 'zod';
+import { UserType } from '../models/onboardingModel';
 
 const paginationSchema = z.object({
   page: z
@@ -15,6 +16,7 @@ const paginationSchema = z.object({
     .optional()
     .transform((val) => (val ? parseInt(val, 10) : 18)),
   skillName: z.string().optional(),
+  userType: z.nativeEnum(UserType).optional(),
 });
 
 export class UserController {
@@ -31,8 +33,8 @@ export class UserController {
         return res.status(400).json({ message: validationResult.error.errors });
       }
 
-      const { page, limit, skillName } = validationResult.data;
-      const { users, total, pages } = await this.userService.findAll(page, limit, skillName);
+      const { page, limit, skillName, userType } = validationResult.data;
+      const { users, total, pages } = await this.userService.findAll(page, limit, skillName, userType);
 
       res.json({
         users,

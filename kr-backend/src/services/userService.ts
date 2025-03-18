@@ -1,20 +1,20 @@
 import { AppDataSource } from '../config/data-source';
 import { User } from '../models/userModel';
 import { NotFoundError } from '../utils/errorUtils';
-import { Role, RoleType } from '../models/roleModel';
 import { UpdateUserDto, UserResponseDto } from '../dtos/userDto';
+import { Onboarding, UserType } from '../models/onboardingModel';
 
 export class UserService {
   private userRepository = AppDataSource.getRepository(User);
-  private roleRepository = AppDataSource.getRepository(Role);
 
-  async findAll(page: number, limit: number, skillName?: string): Promise<{ users: UserResponseDto[], total: number, pages: number }> {
+  async findAll(page: number, limit: number, skillName?: string, userType?: UserType): Promise<{ users: UserResponseDto[], total: number, pages: number }> {
     const skills = skillName ? skillName.split(',') : [];
     const offset = (page - 1) * limit;
 
     let query = this.userRepository.createQueryBuilder("user")
       .leftJoinAndSelect("user.skills", "skill")
       .leftJoinAndSelect("user.role", "role")
+      .leftJoinAndSelect("onboarding", "onboarding", "onboarding.userId = user.id")
       .select([
         "user.id",
         "user.firstName",
@@ -27,6 +27,10 @@ export class UserService {
         "skill.name",
         "role"
       ]);
+
+    if (userType) {
+      query = query.andWhere("onboarding.userType = :userType", { userType });
+    }
 
     if (skills.length > 0) {
       query = query
