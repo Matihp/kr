@@ -1,5 +1,11 @@
 import { User } from "./user"
 
+export enum ProposalStatus {
+  PENDING = "pending",
+  ACCEPTED = "accepted",
+  REJECTED = "rejected"
+}
+
 export interface Proposal {
     id: string
     price: number
@@ -28,3 +34,10 @@ export interface PriceOption {
     price: number
     scope: string
   }
+
+export interface UpdateProposalDto {
+  price?: number;
+  description?: string;
+  videoUrl?: string | null;
+  priceOptions?: PriceOption[];
+}
